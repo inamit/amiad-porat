@@ -1,6 +1,6 @@
-import 'package:amiadporat/data/lessons.dart';
-import 'package:amiadporat/data/messages.dart';
-import 'package:amiadporat/data/tests.dart';
+import '../../data/lessons.dart';
+import '../../data/messages.dart';
+import '../../data/tests.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
