@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import '../home/home.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -109,11 +110,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Processing Data')));
       _formKey.currentState!.save();
 
       // TODO: CONNECT TO SERVER AND LOGIN
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
     }
   }
 
