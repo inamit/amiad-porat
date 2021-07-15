@@ -1,3 +1,4 @@
+import 'package:amiadporat/screens/schedule_lessons/schedule_lessons.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -11,6 +12,7 @@ class MyBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
+      alignment: Alignment.center,
       children: [
         BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -23,15 +25,15 @@ class MyBottomNavBar extends StatelessWidget {
           selectedItemColor: neonBlue,
         ),
         Positioned(
-          right: 140,
+          // right: 140,
           bottom: 3,
-          child: _buildAddButton(),
+          child: _buildAddButton(context),
         ),
       ],
     );
   }
 
-  ElevatedButton _buildAddButton() {
+  ElevatedButton _buildAddButton(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
           shape: MaterialStateProperty.all(CircleBorder()),
@@ -44,7 +46,10 @@ class MyBottomNavBar extends StatelessWidget {
         decoration: BoxDecoration(shape: BoxShape.circle),
         child: Icon(Icons.add),
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => ScheduleLessons()));
+      },
     );
   }
 }
