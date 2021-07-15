@@ -32,70 +32,85 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 3 * 2,
-              child: Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height / 1.7,
-                    child: ListView.builder(
-                      itemCount: this.lessons.length,
-                      itemBuilder: (context, index) {
-                        return AddLessonBlock(
-                            onDeletePressed: () {
-                              if (this.lessons.length > 1) {
-                                setState(() {
-                                  this.lessons.removeAt(index);
-                                });
-                              }
-                            },
-                            lesson: this.lessons[index]);
-                      },
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(CircleBorder()),
-                        backgroundColor: MaterialStateProperty.all(neonBlue),
-                        shadowColor: MaterialStateProperty.all(Colors.black)),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: Icon(Icons.add),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        this.lessons.add(LessonBlock());
-                      });
-                    },
-                  ),
-                ],
-              ),
+            Column(
+              children: [
+                _buildListView(context),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: _buildAddButton(),
+                ),
+              ],
             ),
-            Container(
-              padding: EdgeInsets.only(top: 8.0),
-              height: MediaQuery.of(context).size.height / 14,
-              width: MediaQuery.of(context).size.width / 2,
-              child: ElevatedButton(
-                  onPressed: () {
-                    if (validateForm()) {
-                      this.lessons.forEach((element) {
-                        print(element);
-                      });
-                    } else {
-                      print("COMPLETE FORM");
-                    }
-                  },
-                  child: Text(
-                    "קבענו! \n ניפגש במרכז",
-                    textAlign: TextAlign.center,
-                  )),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: _buildSubmitButton(context),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Container _buildListView(BuildContext context) {
+    return Container(
+      height: (MediaQuery.of(context).size.height / 3) * 2,
+      child: ListView.builder(
+        itemCount: this.lessons.length,
+        itemBuilder: (context, index) {
+          return AddLessonBlock(
+              onDeletePressed: () {
+                if (this.lessons.length > 1) {
+                  setState(() {
+                    this.lessons.removeAt(index);
+                  });
+                }
+              },
+              lesson: this.lessons[index]);
+        },
+      ),
+    );
+  }
+
+  Container _buildSubmitButton(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 8.0),
+      height: MediaQuery.of(context).size.height / 14,
+      width: MediaQuery.of(context).size.width / 2,
+      child: ElevatedButton(
+          onPressed: () {
+            if (validateForm()) {
+              this.lessons.forEach((element) {
+                print(element);
+              });
+            } else {
+              print("COMPLETE FORM");
+            }
+          },
+          child: Text(
+            "קבענו! \n ניפגש במרכז",
+            textAlign: TextAlign.center,
+          )),
+    );
+  }
+
+  ElevatedButton _buildAddButton() {
+    return ElevatedButton(
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all(CircleBorder()),
+          backgroundColor: MaterialStateProperty.all(neonBlue),
+          shadowColor: MaterialStateProperty.all(Colors.black)),
+      child: Container(
+        width: 50,
+        height: 50,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(shape: BoxShape.circle),
+        child: Icon(Icons.add),
+      ),
+      onPressed: () {
+        setState(() {
+          this.lessons.add(LessonBlock());
+        });
+      },
     );
   }
 
