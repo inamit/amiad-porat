@@ -6,10 +6,14 @@ import '../../../constants.dart';
 
 class AddLessonBlock extends StatefulWidget {
   AddLessonBlock(
-      {Key? key, required this.onDeletePressed, required this.lesson})
+      {Key? key,
+      required this.onDeletePressed,
+      required this.lesson,
+      required this.validateForm})
       : super(key: key);
 
   final void Function() onDeletePressed;
+  final void Function() validateForm;
 
   LessonBlock lesson;
 
@@ -42,49 +46,13 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "נתראה בזמן \n הזה כל שבוע?",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Checkbox(
-                    value: widget.lesson.isPermanent,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.lesson.isPermanent = value!;
-                      });
-                    },
-                    fillColor: MaterialStateProperty.all(neonBlue),
-                  ),
-                ),
+                _buildCheckbox(),
                 Expanded(child: Container()),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: IconButton(
-                    onPressed: widget.onDeletePressed,
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
+                _buildDeleteButton(),
               ],
             ),
           ),
-          CupertinoSlidingSegmentedControl<int>(
-            thumbColor: neonBlue,
-            groupValue: widget.lesson.selectedSubject,
-            children: _subjects,
-            onValueChanged: (int? index) {
-              setState(() {
-                widget.lesson.selectedSubject = index!;
-              });
-            },
-          ),
+          _buildSubjectSegmentedControl(),
           Padding(
             padding: const EdgeInsets.only(top: 10, right: 25.0),
             child: _getDropdowns(context),
@@ -92,6 +60,59 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
           Divider(thickness: 2),
         ],
       ),
+    );
+  }
+
+  CupertinoSlidingSegmentedControl<int> _buildSubjectSegmentedControl() {
+    return CupertinoSlidingSegmentedControl<int>(
+      thumbColor: neonBlue,
+      groupValue: widget.lesson.selectedSubject,
+      children: _subjects,
+      onValueChanged: (int? index) {
+        setState(() {
+          widget.lesson.selectedSubject = index!;
+        });
+      },
+    );
+  }
+
+  Padding _buildDeleteButton() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: IconButton(
+        onPressed: () {
+          widget.onDeletePressed();
+          widget.validateForm();
+        },
+        icon: Icon(
+          Icons.delete,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  Row _buildCheckbox() {
+    return Row(
+      children: [
+        Text(
+          "נתראה בזמן \n הזה כל שבוע?",
+          textAlign: TextAlign.center,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: Checkbox(
+            value: widget.lesson.isPermanent,
+            onChanged: (value) {
+              setState(() {
+                widget.lesson.isPermanent = value!;
+              });
+              widget.validateForm();
+            },
+            fillColor: MaterialStateProperty.all(neonBlue),
+          ),
+        ),
+      ],
     );
   }
 
@@ -114,8 +135,10 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                       : DateTime.thursday)),
             );
             setState(() {
-              widget.lesson.selectedDate = picked;
+              widget.lesson.selectedDate = picked ?? widget.lesson.selectedDate;
             });
+
+            widget.validateForm();
           }),
         ),
         Container(
@@ -137,6 +160,8 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                   setState(() {
                     widget.lesson.selectedHour = value!;
                   });
+
+                  widget.validateForm();
                 },
               ),
             ),
