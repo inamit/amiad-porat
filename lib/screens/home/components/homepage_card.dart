@@ -22,7 +22,13 @@ class HomepageCard extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [content, button ?? Container()],
+          children: [
+            content,
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: button ?? Container(),
+            ),
+          ],
         ),
         decoration: BoxDecoration(
           gradient: gradient,
