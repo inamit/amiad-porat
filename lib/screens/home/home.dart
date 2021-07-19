@@ -29,8 +29,9 @@ class _HomeState extends State<Home> {
           child: Column(
             children: [
               HomepageCard(
-                  content:
-                      lessons.isEmpty ? noLessonMessage() : noLessonMessage(),
+                  content: lessonsData.isEmpty
+                      ? noLessonMessage()
+                      : noLessonMessage(),
                   button: buildButton(
                       "לקבוע תרגול?",
                       () => Navigator.of(context).push(MaterialPageRoute(

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'components/add_lesson_block.dart';
+import '../../../data/lessons.dart';
 
 class ScheduleLessons extends StatefulWidget {
   const ScheduleLessons({Key? key}) : super(key: key);
@@ -110,9 +111,14 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
       child: TextButton(
         onPressed: () {
           if (validateForm()) {
+            // TODO: CONNECT TO SERVER
+            lessonsData.addAll(this.lessons);
+
             this.lessons.forEach((element) {
               print(element);
             });
+
+            Navigator.of(context).pop();
           } else {
             print("COMPLETE FORM");
           }

@@ -1,1 +1,1 @@
-var lessons = [];
+var lessonsData = [];
