@@ -1,4 +1,4 @@
-import 'package:amiadporat/screens/schedule_lessons/schedule_lessons.dart';
+import '../schedule_lessons/schedule_lessons.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';

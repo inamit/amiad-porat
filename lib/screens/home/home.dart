@@ -1,3 +1,5 @@
+import '../schedule_lessons/schedule_lessons.dart';
+
 import '../../data/lessons.dart';
 import '../../data/messages.dart';
 import '../../data/tests.dart';
@@ -29,26 +31,33 @@ class _HomeState extends State<Home> {
               HomepageCard(
                   content:
                       lessons.isEmpty ? noLessonMessage() : noLessonMessage(),
-                  button: buildButton("לקבוע תרגול?", () {}),
+                  button: buildButton(
+                      "לקבוע תרגול?",
+                      () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ScheduleLessons()))),
                   color: orange),
               HomepageCard(
                   content: tests.isEmpty ? noTestMessage() : noTestMessage(),
                   button: buildButton("רוצה לשתף?", () {}),
                   color: red),
-              HomepageCard(
-                  content: messages.isEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            "אין הודעות",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        )
-                      : _messagesCardContent(),
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: redOrangeGradient)),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 13.0),
+                child: HomepageCard(
+                    content: messages.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              "אין הודעות",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                          )
+                        : _messagesCardContent(),
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: redOrangeGradient)),
+              ),
             ],
           ),
         ),
