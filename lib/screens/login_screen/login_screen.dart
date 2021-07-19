@@ -1,9 +1,13 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+
 import '../home/home.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
+import 'components/login_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -20,14 +24,45 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool passwordShown = false;
 
+  FocusNode passwordFocus = new FocusNode();
+  FocusNode _emailFocus = new FocusNode();
+  final GlobalKey<FormFieldState> _emailFieldState =
+      GlobalKey<FormFieldState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    this._emailFocus.addListener(() {
+      if (!this._emailFocus.hasFocus) {
+        this._emailFieldState.currentState!.validate();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    this.passwordFocus.dispose();
+    this._emailFocus.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
           child: Form(
             key: _formKey,
             child: Column(
@@ -60,7 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     _submitForm();
                   },
-                  child: roundedRectButton("התחבר", redOrangeGradient),
+                  child:
+                      LoginButton(title: "התחבר", gradient: redOrangeGradient),
                 ),
               ],
             ),
@@ -70,22 +106,24 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // TODO: CONNECT TO SERVER AND LOGIN
+      Navigator.of(context)
+          .pushReplacement(CupertinoPageRoute(builder: (context) => Home()));
+    }
+  }
+
   Padding _buildPasswordTextField(Size size) {
     return Padding(
       padding: EdgeInsets.only(
           top: size.height / 20, right: size.width / 20, left: size.width / 20),
       child: TextFormField(
+        focusNode: this.passwordFocus,
         textDirection: TextDirection.ltr,
         onSaved: (value) => password = value!,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return kPassNullError;
-          } else if (value.length < 8) {
-            return kShortPassError;
-          }
-
-          return null;
-        },
+        validator: RequiredValidator(errorText: kPassNullError),
         obscureText: !passwordShown,
         onEditingComplete: () {
           FocusScope.of(context).unfocus();
@@ -95,49 +133,40 @@ class _LoginScreenState extends State<LoginScreen> {
           hintTextDirection: TextDirection.rtl,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
           hintText: "סיסמה",
-          suffixIcon: IconButton(
+          suffixIcon: Icon(Icons.lock),
+          prefixIcon: IconButton(
             onPressed: () {
               setState(() {
                 passwordShown = !passwordShown;
               });
             },
-            icon: Icon(passwordShown ? Icons.lock_open : Icons.lock),
+            icon: Icon(passwordShown ? Icons.visibility_off : Icons.visibility),
           ),
         ),
       ),
     );
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      // TODO: CONNECT TO SERVER AND LOGIN
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
-    }
-  }
-
   Padding _buildEmailTextField(Size size) {
     final node = FocusScope.of(context);
+    MultiValidator validate = MultiValidator([
+      RequiredValidator(errorText: kEmailNullError),
+      EmailValidator(errorText: kInvalidEmailError),
+    ]);
+
     return Padding(
       padding: EdgeInsets.only(
           top: size.height / 20, right: size.width / 20, left: size.width / 20),
       child: TextFormField(
+        key: this._emailFieldState,
+        focusNode: this._emailFocus,
         textDirection: TextDirection.ltr,
         onSaved: (value) => email = value!,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return kEmailNullError;
-          } else if (!emailValidatorRegExp.hasMatch(value)) {
-            return kInvalidEmailError;
-          }
-
-          return null;
-        },
+        validator: validate,
+        textInputAction: TextInputAction.next,
         keyboardType: TextInputType.emailAddress,
         autocorrect: false,
-        onEditingComplete: () => node.nextFocus(),
+        onEditingComplete: () => node.requestFocus(this.passwordFocus),
         decoration: InputDecoration(
           hintTextDirection: TextDirection.rtl,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
@@ -146,36 +175,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  Widget roundedRectButton(String title, List<Color> gradient) {
-    return Builder(builder: (BuildContext mContext) {
-      return Padding(
-        padding: EdgeInsets.only(bottom: 10),
-        child: Stack(
-          alignment: Alignment(1.0, 0.0),
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(mContext).size.width / 1.7,
-              decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
-                gradient: LinearGradient(
-                    colors: gradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight),
-              ),
-              child: Text(title,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500)),
-              padding: EdgeInsets.only(top: 16, bottom: 16),
-            ),
-          ],
-        ),
-      );
-    });
   }
 }

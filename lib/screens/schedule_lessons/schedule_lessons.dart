@@ -1,0 +1,176 @@
+import 'dart:async';
+
+import 'package:amiadporat/constants.dart';
+import 'package:amiadporat/models/lesson_block.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'components/add_lesson_block.dart';
+
+class ScheduleLessons extends StatefulWidget {
+  const ScheduleLessons({Key? key}) : super(key: key);
+
+  @override
+  _ScheduleLessonsState createState() => _ScheduleLessonsState();
+}
+
+class _ScheduleLessonsState extends State<ScheduleLessons> {
+  List<LessonBlock> lessons = [];
+
+  bool valid = false;
+
+  ScrollController _scrollController = new ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      this.lessons.add(LessonBlock());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("קביעת תגבורים חדשים"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: neonBlue,
+        onPressed: () {
+          setState(() {
+            this.lessons.add(LessonBlock());
+          });
+          this.validateForm();
+          Timer(
+              Duration(milliseconds: 100),
+              () => this._scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut));
+        },
+        child: Icon(Icons.add),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildListView(context),
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 20.0,
+                  ),
+                  child: _buildSubmitButton(context),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListView(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: (MediaQuery.of(context).size.height / 3) * 2,
+      ),
+      child: ListView.builder(
+        controller: this._scrollController,
+        shrinkWrap: true,
+        itemCount: this.lessons.length,
+        itemBuilder: (context, index) {
+          return AddLessonBlock(
+            onDeletePressed: () {
+              if (this.lessons.length > 1) {
+                setState(() {
+                  this.lessons.removeAt(index);
+                });
+              }
+            },
+            lesson: this.lessons[index],
+            validateForm: this.validateForm,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: valid ? Theme.of(context).primaryColor : Colors.grey),
+      // padding: EdgeInsets.only(top: 8.0),
+      height: MediaQuery.of(context).size.height / 14,
+      width: MediaQuery.of(context).size.width / 2,
+      child: TextButton(
+        // style: ButtonStyle(
+        // backgroundColor: valid
+        //     ? MaterialStateProperty.all(Theme.of(context).primaryColor)
+        //     : MaterialStateProperty.all(Colors.grey)),
+        onPressed: () {
+          if (validateForm()) {
+            this.lessons.forEach((element) {
+              print(element);
+            });
+          } else {
+            print("COMPLETE FORM");
+          }
+        },
+        child: Text(
+          "קבענו! \n ניפגש במרכז",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  ElevatedButton _buildAddButton() {
+    return ElevatedButton(
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all(CircleBorder()),
+          backgroundColor: MaterialStateProperty.all(neonBlue),
+          shadowColor: MaterialStateProperty.all(Colors.black)),
+      child: Container(
+        width: 50,
+        height: 50,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(shape: BoxShape.circle),
+        child: Icon(Icons.add),
+      ),
+      onPressed: () {
+        setState(() {
+          this.lessons.add(LessonBlock());
+        });
+
+        this.validateForm();
+
+        this._scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut);
+      },
+    );
+  }
+
+  bool validateForm() {
+    bool valid = true;
+    this.lessons.forEach((lesson) {
+      if (!lesson.isValid()) {
+        valid = false;
+      }
+    });
+
+    setState(() {
+      this.valid = valid;
+    });
+
+    return valid;
+  }
+}
