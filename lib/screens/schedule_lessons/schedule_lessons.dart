@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:amiadporat/constants.dart';
-import 'package:amiadporat/models/lesson_block.dart';
+import '../../constants.dart';
+import '../../models/lesson_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -105,14 +105,9 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: valid ? Theme.of(context).primaryColor : Colors.grey),
-      // padding: EdgeInsets.only(top: 8.0),
       height: MediaQuery.of(context).size.height / 14,
       width: MediaQuery.of(context).size.width / 2,
       child: TextButton(
-        // style: ButtonStyle(
-        // backgroundColor: valid
-        //     ? MaterialStateProperty.all(Theme.of(context).primaryColor)
-        //     : MaterialStateProperty.all(Colors.grey)),
         onPressed: () {
           if (validateForm()) {
             this.lessons.forEach((element) {
@@ -128,34 +123,6 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-    );
-  }
-
-  ElevatedButton _buildAddButton() {
-    return ElevatedButton(
-      style: ButtonStyle(
-          shape: MaterialStateProperty.all(CircleBorder()),
-          backgroundColor: MaterialStateProperty.all(neonBlue),
-          shadowColor: MaterialStateProperty.all(Colors.black)),
-      child: Container(
-        width: 50,
-        height: 50,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(shape: BoxShape.circle),
-        child: Icon(Icons.add),
-      ),
-      onPressed: () {
-        setState(() {
-          this.lessons.add(LessonBlock());
-        });
-
-        this.validateForm();
-
-        this._scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut);
-      },
     );
   }
 

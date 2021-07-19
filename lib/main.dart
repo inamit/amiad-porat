@@ -1,9 +1,10 @@
 import 'dart:ui';
 
-import 'constants.dart';
-import 'screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'constants.dart';
+import 'screens/splash_screen/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
