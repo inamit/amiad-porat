@@ -29,11 +29,11 @@ class _HomeState extends State<Home> {
               HomepageCard(
                   content:
                       lessons.isEmpty ? noLessonMessage() : noLessonMessage(),
-                  button: buildButton("לחיצה קטנה כאן וזה מטופל", () {}),
+                  button: buildButton("לקבוע תרגול?", () {}),
                   color: orange),
               HomepageCard(
                   content: tests.isEmpty ? noTestMessage() : noTestMessage(),
-                  button: buildButton("לחיצה פה ונתקדם לציון טוב", () {}),
+                  button: buildButton("רוצה לשתף?", () {}),
                   color: red),
               HomepageCard(
                   content: messages.isEmpty
@@ -103,14 +103,22 @@ class _HomeState extends State<Home> {
 
   Padding buildButton(String title, void Function() onPressed) {
     return Padding(
-      padding: const EdgeInsets.only(right: 18.0, bottom: 18.0),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        child: Text(title),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(neonBlue),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      padding: const EdgeInsets.only(left: 18.0, bottom: 18.0),
+      child: Container(
+        height: 35,
+        width: 220,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 16),
+          ),
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(6.0),
+            backgroundColor: MaterialStateProperty.all(neonBlue),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
           ),
         ),
       ),
@@ -123,13 +131,16 @@ class _HomeState extends State<Home> {
       child: Row(
         children: [
           Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Image.asset("assets/emoji.png"),
+          ),
+          Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "עוד לא קבעת תגבורים לשבוע הקרוב",
+              "אין לך עדיין תגבורים השבוע",
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
-          Image.asset("assets/emoji.png"),
         ],
       ),
     );
