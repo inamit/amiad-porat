@@ -1,3 +1,5 @@
+import 'package:amiadporat/models/lesson_block.dart';
+
 import '../schedule_lessons/schedule_lessons.dart';
 
 import '../../data/lessons.dart';
@@ -19,6 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    List<LessonBlock> lessons = lessonsData;
     return Scaffold(
       appBar: AppBar(
         title: Text('שלום, עמית'),
@@ -29,13 +32,14 @@ class _HomeState extends State<Home> {
           child: Column(
             children: [
               HomepageCard(
-                  content: lessonsData.isEmpty
-                      ? noLessonMessage()
-                      : noLessonMessage(),
-                  button: buildButton(
-                      "לקבוע תרגול?",
-                      () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ScheduleLessons()))),
+                  content:
+                      lessons.isEmpty ? noLessonMessage() : _closestLesson(),
+                  button: lessons.isEmpty
+                      ? buildButton(
+                          "לקבוע תרגול?",
+                          () => Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ScheduleLessons())))
+                      : Container(),
                   color: orange),
               HomepageCard(
                   content: tests.isEmpty ? noTestMessage() : noTestMessage(),
@@ -63,6 +67,66 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _closestLesson() {
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 20.0, right: 20.0, top: 8.0, bottom: 20.0),
+      child: Column(
+        children: [_closestLessonHeader(), _closestLessonDetails()],
+      ),
+    );
+  }
+
+  Row _closestLessonDetails() {
+    List<String> days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי'];
+
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Icon(
+            lessonsData[0].selectedSubject == 0
+                ? Icons.calculate_outlined
+                : Icons.font_download_outlined,
+            size: 64,
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "יום ${days[lessonsData[0].selectedDay!.weekday]}, ${lessonsData[0].selectedDay!.day}/${lessonsData[0].selectedDay!.month}/${lessonsData[0].selectedDay!.year}",
+              style: TextStyle(fontSize: 18),
+            ),
+            Text(
+              "שעה: ${lessonsData[0].selectedDay!.hour}:${lessonsData[0].selectedDay!.minute.toString().padLeft(2, '0')}",
+              style: TextStyle(fontSize: 18),
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  Row _closestLessonHeader() {
+    return Row(
+      children: [
+        Text(
+          "התגבור הקרוב שלי:",
+          style: TextStyle(color: Colors.black, fontSize: 18),
+        ),
+        Expanded(child: Container()),
+        TextButton(
+          onPressed: () {},
+          child: Text(
+            "כל התגבורים שלי",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+      ],
     );
   }
 

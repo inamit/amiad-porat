@@ -29,10 +29,10 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
 
   final Map<int, Widget> _subjects = {0: Text("מתמטיקה"), 1: Text("אנגלית")};
   final Map<String, String> _dropdownItems = {
-    "1": "14:00",
-    "2": "15:00",
-    "3": "16:00",
-    "4": "18:00"
+    "14:00": "14:00",
+    "15:00": "15:00",
+    "16:00": "16:00",
+    "18:00": "18:00"
   };
 
   @override
@@ -136,6 +136,16 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
             );
             setState(() {
               widget.lesson.selectedDate = picked ?? widget.lesson.selectedDate;
+              widget.lesson.selectedDay = new DateTime(
+                  picked!.year,
+                  picked.month,
+                  picked.day,
+                  widget.lesson.selectedDay != null
+                      ? widget.lesson.selectedDay!.hour
+                      : 0,
+                  widget.lesson.selectedDay != null
+                      ? widget.lesson.selectedDay!.minute
+                      : 0);
             });
 
             widget.validateForm();
@@ -159,6 +169,12 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                 onChanged: (String? value) {
                   setState(() {
                     widget.lesson.selectedHour = value!;
+                    widget.lesson.selectedDay = new DateTime(
+                        widget.lesson.selectedDay!.year,
+                        widget.lesson.selectedDay!.month,
+                        widget.lesson.selectedDay!.day,
+                        int.parse(value.split(":")[0]),
+                        int.parse(value.split(":")[1]));
                   });
 
                   widget.validateForm();

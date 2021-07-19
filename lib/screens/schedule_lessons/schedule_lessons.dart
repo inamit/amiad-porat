@@ -112,7 +112,9 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
         onPressed: () {
           if (validateForm()) {
             // TODO: CONNECT TO SERVER
-            lessonsData.addAll(this.lessons);
+            setState(() {
+              lessonsData.addAll(this.lessons);
+            });
 
             this.lessons.forEach((element) {
               print(element);
