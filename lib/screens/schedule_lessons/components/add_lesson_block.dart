@@ -41,6 +41,11 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
       padding: const EdgeInsets.only(right: 10, top: 20),
       child: Column(
         children: [
+          _buildSubjectSegmentedControl(),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, right: 25.0),
+            child: _getDropdowns(context),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -51,11 +56,6 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                 _buildDeleteButton(),
               ],
             ),
-          ),
-          _buildSubjectSegmentedControl(),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, right: 25.0),
-            child: _getDropdowns(context),
           ),
           Divider(thickness: 2),
         ],
@@ -96,7 +96,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
     return Row(
       children: [
         Text(
-          "נתראה בזמן \n הזה כל שבוע?",
+          "נתראה בזמן הזה כל שבוע?",
           textAlign: TextAlign.center,
         ),
         Padding(
