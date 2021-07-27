@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:amiadporat/screens/components/template.dart';
+
 import '../../constants.dart';
 import '../../models/lesson_block.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,7 +52,7 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeOut));
         },
-        child: Icon(Icons.add),
+        child: Icon(addIcon),
       ),
       body: SafeArea(
         child: Column(
@@ -120,7 +122,8 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
               print(element);
             });
 
-            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Template()));
           } else {
             print("COMPLETE FORM");
           }

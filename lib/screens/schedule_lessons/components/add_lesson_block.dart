@@ -85,7 +85,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
           widget.validateForm();
         },
         icon: Icon(
-          Icons.delete,
+          deleteIcon,
           color: Colors.red,
         ),
       ),
@@ -121,7 +121,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: _getDropdown(
+          child: _getDatePicker(
               widget.lesson.selectedDate != null
                   ? "${widget.lesson.selectedDate!.day}/${widget.lesson.selectedDate!.month}/${widget.lesson.selectedDate!.year}"
                   : "יום", () async {
@@ -192,7 +192,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
     );
   }
 
-  OutlinedButton _getDropdown(String text, void Function() onPressed) {
+  OutlinedButton _getDatePicker(String text, void Function() onPressed) {
     return OutlinedButton(
       onPressed: onPressed,
       child: Row(
@@ -202,7 +202,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
             text,
             style: TextStyle(fontSize: 15),
           )),
-          Icon(Icons.keyboard_arrow_down)
+          Icon(weeklyScheduleIcon)
         ],
       ),
       style: ButtonStyle(
