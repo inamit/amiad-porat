@@ -33,3 +33,15 @@ const redOrangeGradient = [red, orange];
 const whiteGreyGradient = [white, grey];
 
 /// * Messages
+
+/// * Icons
+const mathIcon = Icons.calculate_outlined;
+const englishIcon = Icons.explicit_outlined;
+const homeIcon = Icons.home_outlined;
+const weeklyScheduleIcon = Icons.calendar_today_outlined;
+const addIcon = Icons.add;
+const passwordIcon = Icons.lock;
+const showPasswordIcon = Icons.visibility;
+const hidePasswordIcon = Icons.visibility_off;
+const mailIcon = Icons.mail;
+const deleteIcon = Icons.delete;

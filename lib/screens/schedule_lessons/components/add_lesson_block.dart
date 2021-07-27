@@ -41,6 +41,11 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
       padding: const EdgeInsets.only(right: 10, top: 20),
       child: Column(
         children: [
+          _buildSubjectSegmentedControl(),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, right: 25.0),
+            child: _getDropdowns(context),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -51,11 +56,6 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                 _buildDeleteButton(),
               ],
             ),
-          ),
-          _buildSubjectSegmentedControl(),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, right: 25.0),
-            child: _getDropdowns(context),
           ),
           Divider(thickness: 2),
         ],
@@ -85,7 +85,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
           widget.validateForm();
         },
         icon: Icon(
-          Icons.delete,
+          deleteIcon,
           color: Colors.red,
         ),
       ),
@@ -96,7 +96,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
     return Row(
       children: [
         Text(
-          "נתראה בזמן \n הזה כל שבוע?",
+          "נתראה בזמן הזה כל שבוע?",
           textAlign: TextAlign.center,
         ),
         Padding(
@@ -121,7 +121,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: _getDropdown(
+          child: _getDatePicker(
               widget.lesson.selectedDate != null
                   ? "${widget.lesson.selectedDate!.day}/${widget.lesson.selectedDate!.month}/${widget.lesson.selectedDate!.year}"
                   : "יום", () async {
@@ -192,7 +192,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
     );
   }
 
-  OutlinedButton _getDropdown(String text, void Function() onPressed) {
+  OutlinedButton _getDatePicker(String text, void Function() onPressed) {
     return OutlinedButton(
       onPressed: onPressed,
       child: Row(
@@ -202,7 +202,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
             text,
             style: TextStyle(fontSize: 15),
           )),
-          Icon(Icons.keyboard_arrow_down)
+          Icon(weeklyScheduleIcon)
         ],
       ),
       style: ButtonStyle(

@@ -1,14 +1,13 @@
-import 'package:amiadporat/models/lesson_block.dart';
+import 'dart:async';
 
-import '../schedule_lessons/schedule_lessons.dart';
-
-import '../../data/lessons.dart';
-import '../../data/messages.dart';
-import '../../data/tests.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
-import '../components/my_bottom_nav_bar.dart';
+import '../../data/lessons.dart';
+import '../../data/messages.dart';
+import '../../data/tests.dart';
+import '../../models/lesson_block.dart';
+import '../schedule_lessons/schedule_lessons.dart';
 import 'components/homepage_card.dart';
 
 class Home extends StatefulWidget {
@@ -22,50 +21,40 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     List<LessonBlock> lessons = lessonsData;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('שלום, עמית'),
-      ),
-      bottomNavigationBar: MyBottomNavBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              HomepageCard(
-                  content:
-                      lessons.isEmpty ? noLessonMessage() : _closestLesson(),
-                  button: lessons.isEmpty
-                      ? buildButton(
-                          "לקבוע תרגול?",
-                          () => Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ScheduleLessons())))
-                      : Container(),
-                  color: orange),
-              HomepageCard(
-                  content: tests.isEmpty ? noTestMessage() : noTestMessage(),
-                  button: buildButton("רוצה לשתף?", () {}),
-                  color: red),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 13.0),
-                child: HomepageCard(
-                    content: messages.isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              "אין הודעות",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
-                          )
-                        : _messagesCardContent(),
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: redOrangeGradient)),
-              ),
-            ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          HomepageCard(
+              content: lessons.isEmpty ? noLessonMessage() : _closestLesson(),
+              button: lessons.isEmpty
+                  ? buildButton(
+                      "לקבוע תגבור?",
+                      () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ScheduleLessons())))
+                  : Container(),
+              color: orange),
+          HomepageCard(
+              content: tests.isEmpty ? noTestMessage() : noTestMessage(),
+              button: buildButton("רוצה לשתף?", () {}),
+              color: red),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 13.0),
+            child: HomepageCard(
+                content: messages.isEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          "אין הודעות",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      )
+                    : _messagesCardContent(),
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: redOrangeGradient)),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -88,9 +77,7 @@ class _HomeState extends State<Home> {
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: Icon(
-            lessonsData[0].selectedSubject == 0
-                ? Icons.calculate_outlined
-                : Icons.font_download_outlined,
+            lessonsData[0].selectedSubject == 0 ? mathIcon : englishIcon,
             size: 64,
           ),
         ),
@@ -109,6 +96,10 @@ class _HomeState extends State<Home> {
         )
       ],
     );
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
   }
 
   Row _closestLessonHeader() {

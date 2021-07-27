@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../schedule_lessons/schedule_lessons.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +8,14 @@ import '../../constants.dart';
 class MyBottomNavBar extends StatelessWidget {
   const MyBottomNavBar({
     Key? key,
+    required this.selectedIndex,
+    required this.onTap,
+    required this.onGoBack,
   }) : super(key: key);
+
+  final int selectedIndex;
+  final void Function(int) onTap;
+  final FutureOr Function(dynamic) onGoBack;
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +26,13 @@ class MyBottomNavBar extends StatelessWidget {
         BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: [
+            BottomNavigationBarItem(icon: Icon(homeIcon), label: "דף הבית"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined), label: "דף הבית"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today_outlined), label: "לוז שבועי")
+                icon: Icon(weeklyScheduleIcon), label: "לוז שבועי")
           ],
           selectedItemColor: neonBlue,
+          currentIndex: selectedIndex,
+          onTap: onTap,
         ),
         Positioned(
           // right: 140,
@@ -44,11 +54,12 @@ class MyBottomNavBar extends StatelessWidget {
         height: 90,
         alignment: Alignment.center,
         decoration: BoxDecoration(shape: BoxShape.circle),
-        child: Icon(Icons.add),
+        child: Icon(addIcon),
       ),
       onPressed: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => ScheduleLessons()));
+            .push(MaterialPageRoute(builder: (context) => ScheduleLessons()))
+            .then((value) => onGoBack);
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import '../components/template.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -110,8 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // TODO: CONNECT TO SERVER AND LOGIN
-      Navigator.of(context)
-          .pushReplacement(CupertinoPageRoute(builder: (context) => Home()));
+      Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(builder: (context) => Template()));
     }
   }
 
@@ -133,14 +134,14 @@ class _LoginScreenState extends State<LoginScreen> {
           hintTextDirection: TextDirection.rtl,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
           hintText: "סיסמה",
-          suffixIcon: Icon(Icons.lock),
+          suffixIcon: Icon(passwordIcon),
           prefixIcon: IconButton(
             onPressed: () {
               setState(() {
                 passwordShown = !passwordShown;
               });
             },
-            icon: Icon(passwordShown ? Icons.visibility_off : Icons.visibility),
+            icon: Icon(passwordShown ? hidePasswordIcon : showPasswordIcon),
           ),
         ),
       ),
@@ -171,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hintTextDirection: TextDirection.rtl,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
           hintText: "אימייל",
-          suffixIcon: Icon(Icons.mail),
+          suffixIcon: Icon(mailIcon),
         ),
       ),
     );
