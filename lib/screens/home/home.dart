@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
               content: lessons.isEmpty ? noLessonMessage() : _closestLesson(),
               button: lessons.isEmpty
                   ? buildButton(
-                      "לקבוע תרגול?",
+                      "לקבוע תגבור?",
                       () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ScheduleLessons())))
                   : Container(),
