@@ -1,16 +1,13 @@
 import 'dart:async';
 
-import 'package:amiadporat/models/lesson_block.dart';
-
-import '../schedule_lessons/schedule_lessons.dart';
-
-import '../../data/lessons.dart';
-import '../../data/messages.dart';
-import '../../data/tests.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
-import '../components/my_bottom_nav_bar.dart';
+import '../../data/lessons.dart';
+import '../../data/messages.dart';
+import '../../data/tests.dart';
+import '../../models/lesson_block.dart';
+import '../schedule_lessons/schedule_lessons.dart';
 import 'components/homepage_card.dart';
 
 class Home extends StatefulWidget {

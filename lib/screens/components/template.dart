@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:amiadporat/screens/home/home.dart';
-import 'package:amiadporat/screens/weekly_schedule/weekly_schedule.dart';
+import '../home/home.dart';
+import '../weekly_schedule/weekly_schedule.dart';
 import 'package:flutter/material.dart';
 
 import 'my_bottom_nav_bar.dart';

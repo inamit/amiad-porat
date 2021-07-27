@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:amiadporat/screens/components/template.dart';
+import '../components/template.dart';
 
 import '../../constants.dart';
 import '../../models/lesson_block.dart';

@@ -1,7 +1,7 @@
-import 'package:amiadporat/constants.dart';
-import 'package:amiadporat/data/lessons.dart';
-import 'package:amiadporat/models/lesson_block.dart';
-import 'package:amiadporat/screens/home/components/homepage_card.dart';
+import '../../constants.dart';
+import '../../data/lessons.dart';
+import '../../models/lesson_block.dart';
+import '../home/components/homepage_card.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../utils/date_ext.dart';

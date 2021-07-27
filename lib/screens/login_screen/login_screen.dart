@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:amiadporat/screens/components/template.dart';
+import '../components/template.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
