@@ -67,21 +67,29 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
             });
           },
         ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: _selectedDayLessons.length,
-              itemBuilder: (context, index) {
-                return HomepageCard(
-                    color: backgrounds[index % backgrounds.length],
-                    content: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _lessonDetails(
-                        _selectedDayLessons[index].selectedSubject,
-                        _selectedDayLessons[index].selectedDay!,
-                      ),
-                    ));
-              }),
-        ),
+        _selectedDayLessons.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  "אין לך תגבורים ביום הזה",
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              )
+            : Expanded(
+                child: ListView.builder(
+                    itemCount: _selectedDayLessons.length,
+                    itemBuilder: (context, index) {
+                      return HomepageCard(
+                          color: backgrounds[index % backgrounds.length],
+                          content: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _lessonDetails(
+                              _selectedDayLessons[index].selectedSubject,
+                              _selectedDayLessons[index].selectedDay!,
+                            ),
+                          ));
+                    }),
+              ),
       ],
     );
   }
