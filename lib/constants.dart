@@ -32,6 +32,9 @@ MaterialColor neonBlueMaterial = MaterialColor(0xFF6D78FF, {
 const redOrangeGradient = [red, orange];
 const whiteGreyGradient = [white, grey];
 
+const englishColor = Color(0xFF0aaafa);
+const mathColor = orange;
+
 /// * Messages
 
 /// * Icons
