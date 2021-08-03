@@ -1,3 +1,5 @@
+import 'package:amiadporat/models/subjects.dart';
+
 import '../../../models/lesson_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,10 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
   String? selectedHour;
   DateTime? selectedDate;
 
-  final Map<int, Widget> _subjects = {0: Text("מתמטיקה"), 1: Text("אנגלית")};
+  final Map<int, Widget> _subjects = {
+    Subjects.Math.index: Text("מתמטיקה"),
+    Subjects.English.index: Text("אנגלית")
+  };
   final Map<String, String> _dropdownItems = {
     "14:00": "14:00",
     "15:00": "15:00",
@@ -66,11 +71,11 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
   CupertinoSlidingSegmentedControl<int> _buildSubjectSegmentedControl() {
     return CupertinoSlidingSegmentedControl<int>(
       thumbColor: neonBlue,
-      groupValue: widget.lesson.selectedSubject,
+      groupValue: widget.lesson.selectedSubject.index,
       children: _subjects,
       onValueChanged: (int? index) {
         setState(() {
-          widget.lesson.selectedSubject = index!;
+          widget.lesson.selectedSubject = Subjects.values[index!];
         });
       },
     );

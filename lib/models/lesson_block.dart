@@ -1,6 +1,8 @@
+import 'package:amiadporat/models/subjects.dart';
+
 class LessonBlock {
   bool _isPermanent = false;
-  int _selectedSubject = 0;
+  Subjects _selectedSubject = Subjects.Math;
   String? _selectedHour;
   DateTime? _selectedDate;
   DateTime? _selectedDay;
@@ -8,7 +10,7 @@ class LessonBlock {
   LessonBlock();
 
   bool get isPermanent => this._isPermanent;
-  int get selectedSubject => this._selectedSubject;
+  Subjects get selectedSubject => this._selectedSubject;
   DateTime? get selectedDay => this._selectedDay;
   String? get selectedHour => this._selectedHour;
   DateTime? get selectedDate => this._selectedDate;

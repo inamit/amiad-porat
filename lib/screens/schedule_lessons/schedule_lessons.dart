@@ -116,14 +116,15 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
             // TODO: CONNECT TO SERVER
             setState(() {
               lessonsData.addAll(this.lessons);
+              lessonsData.sort((first, second) =>
+                  first.selectedDay!.difference(second.selectedDay!).inMinutes);
             });
 
             this.lessons.forEach((element) {
               print(element);
             });
 
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Template()));
+            Navigator.of(context).pop();
           } else {
             print("COMPLETE FORM");
           }

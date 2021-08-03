@@ -1,3 +1,5 @@
+import 'package:amiadporat/models/subjects.dart';
+
 import '../../constants.dart';
 import '../../data/lessons.dart';
 import '../../models/lesson_block.dart';
@@ -83,7 +85,10 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
           itemCount: _selectedDayLessons.length,
           itemBuilder: (context, index) {
             return HomepageCard(
-                color: backgrounds[index % backgrounds.length],
+                color:
+                    _selectedDayLessons[index].selectedSubject == Subjects.Math
+                        ? mathColor
+                        : englishColor,
                 content: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: _lessonDetails(
@@ -105,13 +110,13 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
     );
   }
 
-  Row _lessonDetails(int selectedSubject, DateTime hour) {
+  Row _lessonDetails(Subjects selectedSubject, DateTime hour) {
     return Row(
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: Icon(
-            selectedSubject == 0 ? mathIcon : englishIcon,
+            selectedSubject == Subjects.Math ? mathIcon : englishIcon,
             size: 64,
           ),
         ),

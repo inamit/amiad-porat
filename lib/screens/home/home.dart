@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:amiadporat/models/subjects.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -29,8 +30,10 @@ class _HomeState extends State<Home> {
               button: lessons.isEmpty
                   ? buildButton(
                       "לקבוע תגבור?",
-                      () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ScheduleLessons())))
+                      () => Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => ScheduleLessons()))
+                          .then((_) => setState(() {})))
                   : Container(),
               color: orange),
           HomepageCard(
@@ -77,7 +80,9 @@ class _HomeState extends State<Home> {
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: Icon(
-            lessonsData[0].selectedSubject == 0 ? mathIcon : englishIcon,
+            lessonsData[0].selectedSubject == Subjects.Math
+                ? mathIcon
+                : englishIcon,
             size: 64,
           ),
         ),
