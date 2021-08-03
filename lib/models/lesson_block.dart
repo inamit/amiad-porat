@@ -1,4 +1,4 @@
-import 'package:amiadporat/models/subjects.dart';
+import 'subjects.dart';
 
 class LessonBlock {
   bool _isPermanent = false;

@@ -1,4 +1,4 @@
-import 'package:amiadporat/models/subjects.dart';
+import '../../../models/subjects.dart';
 
 import '../../../models/lesson_block.dart';
 import 'package:flutter/cupertino.dart';

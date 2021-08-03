@@ -74,6 +74,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "grouped_list",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/grouped_list-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "intl",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0",
       "packageUri": "lib/",
@@ -170,7 +176,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-07-21T09:42:37.143562Z",
+  "generated": "2021-08-03T10:53:07.245988Z",
   "generator": "pub",
   "generatorVersion": "2.13.0"
 }

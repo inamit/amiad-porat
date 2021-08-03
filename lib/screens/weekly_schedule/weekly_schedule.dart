@@ -1,4 +1,5 @@
-import 'package:amiadporat/models/subjects.dart';
+import '../../models/subjects.dart';
+import '../components/lessonTile.dart';
 
 import '../../constants.dart';
 import '../../data/lessons.dart';
@@ -84,18 +85,19 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
       child: ListView.builder(
           itemCount: _selectedDayLessons.length,
           itemBuilder: (context, index) {
-            return HomepageCard(
-                color:
-                    _selectedDayLessons[index].selectedSubject == Subjects.Math
-                        ? mathColor
-                        : englishColor,
-                content: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _lessonDetails(
-                    _selectedDayLessons[index].selectedSubject,
-                    _selectedDayLessons[index].selectedDay!,
-                  ),
-                ));
+            return LessonTile(lesson: _selectedDayLessons[index]);
+            // return HomepageCard(
+            //     color:
+            //         _selectedDayLessons[index].selectedSubject == Subjects.Math
+            //             ? mathColor
+            //             : englishColor,
+            //     content: Padding(
+            //       padding: const EdgeInsets.all(8.0),
+            //       child: _lessonDetails(
+            //         _selectedDayLessons[index].selectedSubject,
+            //         _selectedDayLessons[index].selectedDay!,
+            //       ),
+            //     ));
           }),
     );
   }
@@ -110,26 +112,26 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
     );
   }
 
-  Row _lessonDetails(Subjects selectedSubject, DateTime hour) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Icon(
-            selectedSubject == Subjects.Math ? mathIcon : englishIcon,
-            size: 64,
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${hour.hour}:${hour.minute.toString().padLeft(2, '0')}-${hour.hour + 1}:${hour.minute.toString().padLeft(2, '0')}",
-              style: TextStyle(fontSize: 18),
-            )
-          ],
-        )
-      ],
-    );
-  }
+  // Row _lessonDetails(Subjects selectedSubject, DateTime hour) {
+  //   return Row(
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.only(left: 10.0),
+  //         child: Icon(
+  //           selectedSubject == Subjects.Math ? mathIcon : englishIcon,
+  //           size: 64,
+  //         ),
+  //       ),
+  //       Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             "${hour.hour}:${hour.minute.toString().padLeft(2, '0')}-${hour.hour + 1}:${hour.minute.toString().padLeft(2, '0')}",
+  //             style: TextStyle(fontSize: 18),
+  //           )
+  //         ],
+  //       )
+  //     ],
+  //   );
+  // }
 }

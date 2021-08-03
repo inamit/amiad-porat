@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:amiadporat/models/subjects.dart';
+import '../../models/subjects.dart';
+import '../all_lessons_list_screen/all_lessons_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -116,7 +117,10 @@ class _HomeState extends State<Home> {
         ),
         Expanded(child: Container()),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AllLessons()));
+          },
           child: Text(
             "כל התגבורים שלי",
             style: TextStyle(color: Colors.white, fontSize: 18),
