@@ -1,4 +1,4 @@
-package com.example.amiadporat
+package com.amitinbar.amiadporat
 
 import io.flutter.embedding.android.FlutterActivity
 

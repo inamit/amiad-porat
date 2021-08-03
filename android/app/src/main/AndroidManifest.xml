@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.amiadporat">
+    package="com.amitinbar.amiadporat">
    <application
-        android:label="amiadporat"
-        android:icon="@mipmap/ic_launcher">
+        android:label="עמיעד פורת"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
