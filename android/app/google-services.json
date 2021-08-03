@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "143245038527",
+    "project_id": "amiadporat-81137",
+    "storage_bucket": "amiadporat-81137.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143245038527:android:02fac7f7385c433f4a470a",
+        "android_client_info": {
+          "package_name": "com.amitinbar.amiadporat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143245038527-3vi6qkunfbcrt9iv882ppavhq04leb42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwV5WrCpoKzAQzil5s80h7WD7bBdPTTBQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143245038527-3vi6qkunfbcrt9iv882ppavhq04leb42.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
