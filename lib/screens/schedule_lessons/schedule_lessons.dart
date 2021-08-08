@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import '../components/template.dart';
+import '../../utils/db.dart';
 
-import '../../constants.dart';
+import '../../models/constants.dart';
 import '../../models/lesson_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +24,22 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
 
   ScrollController _scrollController = new ScrollController();
 
+  List<DateTime> dates = [];
+
   @override
   void initState() {
     super.initState();
+    getDates();
     setState(() {
       this.lessons.add(LessonBlock());
+    });
+  }
+
+  getDates() async {
+    List<DateTime> temp = await DB().getLessonDates();
+
+    setState(() {
+      this.dates = temp;
     });
   }
 
@@ -96,6 +107,7 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
             },
             lesson: this.lessons[index],
             validateForm: this.validateForm,
+            dates: this.dates,
           );
         },
       ),

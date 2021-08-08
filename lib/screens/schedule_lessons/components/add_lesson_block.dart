@@ -1,23 +1,26 @@
-import '../../../models/subjects.dart';
-
-import '../../../models/lesson_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants.dart';
+import '../../../models/constants.dart';
+import '../../../models/lesson_block.dart';
+import '../../../models/subjects.dart';
+import '../../../utils/date_ext.dart';
 
 class AddLessonBlock extends StatefulWidget {
   AddLessonBlock(
       {Key? key,
       required this.onDeletePressed,
       required this.lesson,
-      required this.validateForm})
+      required this.validateForm,
+      required this.dates})
       : super(key: key);
 
   final void Function() onDeletePressed;
   final void Function() validateForm;
 
-  LessonBlock lesson;
+  final LessonBlock lesson;
+
+  final List<DateTime> dates;
 
   @override
   _AddLessonBlockState createState() => _AddLessonBlockState();
@@ -33,12 +36,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
     Subjects.Math.index: Text("מתמטיקה"),
     Subjects.English.index: Text("אנגלית")
   };
-  final Map<String, String> _dropdownItems = {
-    "14:00": "14:00",
-    "15:00": "15:00",
-    "16:00": "16:00",
-    "18:00": "18:00"
-  };
+  Map<String, String> _dropdownItems = {};
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +149,17 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                   widget.lesson.selectedDay != null
                       ? widget.lesson.selectedDay!.minute
                       : 0);
+
+              if (picked != null) {
+                this._dropdownItems = {};
+                widget.dates
+                    .where((date) => date.isSameDate(picked))
+                    .forEach((date) {
+                  this._dropdownItems[
+                          "${date.hour}:${date.minute.toString().padLeft(2, '0')}"] =
+                      "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+                });
+              }
             });
 
             widget.validateForm();
@@ -171,19 +180,21 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                   padding: const EdgeInsets.only(left: 12),
                   child: Icon(Icons.keyboard_arrow_down),
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    widget.lesson.selectedHour = value!;
-                    widget.lesson.selectedDay = new DateTime(
-                        widget.lesson.selectedDay!.year,
-                        widget.lesson.selectedDay!.month,
-                        widget.lesson.selectedDay!.day,
-                        int.parse(value.split(":")[0]),
-                        int.parse(value.split(":")[1]));
-                  });
+                onChanged: this._dropdownItems.length > 0
+                    ? (String? value) {
+                        setState(() {
+                          widget.lesson.selectedHour = value!;
+                          widget.lesson.selectedDay = new DateTime(
+                              widget.lesson.selectedDay!.year,
+                              widget.lesson.selectedDay!.month,
+                              widget.lesson.selectedDay!.day,
+                              int.parse(value.split(":")[0]),
+                              int.parse(value.split(":")[1]));
+                        });
 
-                  widget.validateForm();
-                },
+                        widget.validateForm();
+                      }
+                    : null,
               ),
             ),
           ),
@@ -191,7 +202,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: neonBlue.withOpacity(0.5), width: 2)),
           height: 40,
-          width: 150,
+          width: 170,
         ),
       ],
     );
@@ -226,6 +237,8 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
       items.add(DropdownMenuItem(child: Text(value), value: key));
     });
 
-    return items;
+    return items.isNotEmpty
+        ? items
+        : [DropdownMenuItem(child: Text("אין שעות פנויות"))];
   }
 }
