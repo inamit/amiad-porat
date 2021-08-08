@@ -1,13 +1,15 @@
 import 'dart:ui';
 
+import '../../utils/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../components/template.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../home/home.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../models/constants.dart';
 import 'components/login_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode _emailFocus = new FocusNode();
   final GlobalKey<FormFieldState> _emailFieldState =
       GlobalKey<FormFieldState>();
+
+  AuthHandler authHandler = AuthHandler();
 
   @override
   void initState() {
@@ -107,12 +111,32 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // TODO: CONNECT TO SERVER AND LOGIN
-      Navigator.of(context).pushReplacement(
-          CupertinoPageRoute(builder: (context) => Template()));
+      try {
+        UserCredential user =
+            await this.authHandler.signIn(this.email, this.password);
+
+        if (user.user != null) {
+          Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(builder: (context) => Template()));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("ההתחברות נכשלה")));
+        }
+      } on FirebaseAuthException catch (e) {
+        print(e.code);
+        if (e.code == 'user-not-found') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("אימייל לא קיים")));
+        } else if (e.code == 'wrong-password') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("סיסמה שגוייה")));
+          print('Wrong password provided for that user.');
+        }
+      }
     }
   }
 
