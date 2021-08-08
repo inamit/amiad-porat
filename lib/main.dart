@@ -1,17 +1,22 @@
 import 'dart:ui';
 
+import 'screens/components/template.dart';
+import 'screens/login_screen/login_screen.dart';
+import 'utils/auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'constants.dart';
+import 'models/constants.dart';
 import 'screens/splash_screen/splash_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,7 +45,29 @@ class MyApp extends StatelessWidget {
           appBarTheme:
               AppBarTheme(backgroundColor: neonBlue, centerTitle: true)),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: FutureBuilder(
+        future: Future.wait(
+            [_initialization, Future.delayed(Duration(seconds: 3))]),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print("Error initializing firebase");
+          }
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            print(AuthHandler().currentUser);
+            if (AuthHandler().currentUser == null) {
+              Navigator.of(context).pushReplacement(PageRouteBuilder(
+                pageBuilder: (_, __, ___) => new LoginScreen(),
+                transitionDuration: Duration(milliseconds: 2000),
+              ));
+            }
+
+            return Template();
+          }
+
+          return SplashScreen();
+        },
+      ),
     );
   }
 }
