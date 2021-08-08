@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+
+import '../../models/constants.dart';
 import '../../models/lesson_block.dart';
 import '../../models/subjects.dart';
 import '../home/components/homepage_card.dart';
-import 'package:flutter/material.dart';
-
-import '../../constants.dart';
 
 class LessonTile extends StatelessWidget {
   const LessonTile({Key? key, required this.lesson}) : super(key: key);

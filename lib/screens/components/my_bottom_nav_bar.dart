@@ -3,7 +3,7 @@ import 'dart:async';
 import '../schedule_lessons/schedule_lessons.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../models/constants.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   const MyBottomNavBar({

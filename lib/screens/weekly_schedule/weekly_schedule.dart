@@ -1,10 +1,8 @@
-import '../../models/subjects.dart';
 import '../components/lessonTile.dart';
 
-import '../../constants.dart';
+import '../../models/constants.dart';
 import '../../data/lessons.dart';
 import '../../models/lesson_block.dart';
-import '../home/components/homepage_card.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../utils/date_ext.dart';

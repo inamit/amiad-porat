@@ -4,7 +4,7 @@ import '../../models/subjects.dart';
 import '../all_lessons_list_screen/all_lessons_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../models/constants.dart';
 import '../../data/lessons.dart';
 import '../../data/messages.dart';
 import '../../data/tests.dart';
