@@ -132,10 +132,14 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
               context: context,
               initialDate: widget.lesson.selectedDate ?? DateTime.now(),
               firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(Duration(
-                  days: DateTime.now().weekday < DateTime.thursday
-                      ? DateTime.thursday - DateTime.now().weekday
-                      : DateTime.thursday)),
+              lastDate: DateTime.now().add(
+                Duration(
+                    days: DateTime.now().weekday < DateTime.thursday
+                        ? DateTime.thursday - DateTime.now().weekday + 7
+                        : DateTime.thursday + 7),
+              ),
+              selectableDayPredicate: (DateTime val) =>
+                  val.weekday == 5 || val.weekday == 6 ? false : true,
             );
             setState(() {
               widget.lesson.selectedDate = picked ?? widget.lesson.selectedDate;
