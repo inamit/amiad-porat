@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'screens/components/template.dart';
+import 'package:amiadporat/router/routes.dart';
+
 import 'screens/login_screen/login_screen.dart';
-import 'utils/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,7 +16,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,6 +27,17 @@ class MyApp extends StatelessWidget {
       supportedLocales: [
         Locale("he", "IL"), // OR Locale('ar', 'AE') OR Other RTL locales
       ],
+      routes: routes,
+      initialRoute: SplashScreen.route,
+      onGenerateRoute: (settings) {
+        if (settings.name == LoginScreen.route) {
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (_, __, ___) => LoginScreen(),
+            transitionDuration: Duration(milliseconds: 2000),
+          );
+        }
+      },
       locale: Locale("he", "IL"),
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -45,29 +55,7 @@ class MyApp extends StatelessWidget {
           appBarTheme:
               AppBarTheme(backgroundColor: neonBlue, centerTitle: true)),
       debugShowCheckedModeBanner: false,
-      home: FutureBuilder(
-        future: Future.wait(
-            [_initialization, Future.delayed(Duration(seconds: 3))]),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print("Error initializing firebase");
-          }
-
-          if (snapshot.connectionState == ConnectionState.done) {
-            print(AuthHandler().currentUser);
-            if (AuthHandler().currentUser == null) {
-              Navigator.of(context).pushReplacement(PageRouteBuilder(
-                pageBuilder: (_, __, ___) => new LoginScreen(),
-                transitionDuration: Duration(milliseconds: 2000),
-              ));
-            }
-
-            return Template();
-          }
-
-          return SplashScreen();
-        },
-      ),
+      home: SplashScreen(),
     );
   }
 }

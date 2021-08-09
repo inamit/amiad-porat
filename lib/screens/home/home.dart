@@ -32,8 +32,7 @@ class _HomeState extends State<Home> {
                   ? buildButton(
                       "לקבוע תגבור?",
                       () => Navigator.of(context)
-                          .push(MaterialPageRoute(
-                              builder: (context) => ScheduleLessons()))
+                          .pushNamed(ScheduleLessons.route)
                           .then((_) => setState(() {})))
                   : Container(),
               color: orange),

@@ -12,6 +12,8 @@ import 'my_bottom_nav_bar.dart';
 class Template extends StatefulWidget {
   const Template({Key? key}) : super(key: key);
 
+  static const String route = '/student/home';
+
   @override
   _TemplateState createState() => _TemplateState();
 }

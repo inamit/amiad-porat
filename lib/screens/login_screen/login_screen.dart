@@ -15,6 +15,8 @@ import 'components/login_button.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
+  static const String route = '/login';
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -120,8 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
             await this.authHandler.signIn(this.email, this.password);
 
         if (user.user != null) {
-          Navigator.of(context).pushReplacement(
-              CupertinoPageRoute(builder: (context) => Template()));
+          Navigator.of(context).pushReplacementNamed(Template.route);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text("ההתחברות נכשלה")));

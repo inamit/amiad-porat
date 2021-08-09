@@ -58,7 +58,7 @@ class MyBottomNavBar extends StatelessWidget {
       ),
       onPressed: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => ScheduleLessons()))
+            .pushNamed(ScheduleLessons.route)
             .then((value) => onGoBack);
       },
     );

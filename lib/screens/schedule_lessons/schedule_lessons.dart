@@ -13,6 +13,8 @@ import '../../../data/lessons.dart';
 class ScheduleLessons extends StatefulWidget {
   const ScheduleLessons({Key? key}) : super(key: key);
 
+  static const String route = "/student/schedule";
+
   @override
   _ScheduleLessonsState createState() => _ScheduleLessonsState();
 }
