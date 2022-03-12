@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../models/constants.dart';
 import '../models/student.dart';
 import 'auth.dart';
@@ -13,7 +15,8 @@ class DB {
     if (studentInfo.exists) {
       Map<String, dynamic> infoMap = studentInfo.data()!;
       infoMap["email"] = AuthHandler().currentUser!.email;
-      Student student = Student.fromMap(infoMap);
+      Student student =
+          Student.fromMap(FirebaseAuth.instance.currentUser!, infoMap);
 
       return student;
     } else {
@@ -37,6 +40,7 @@ class DB {
         ._firestore
         .collection('lessons')
         .where('date', isGreaterThanOrEqualTo: now)
+        .where('is')
         .where('date',
             isLessThanOrEqualTo: now.add(Duration(
                 days: now.weekday < DateTime.thursday

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/constants.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class MyBottomNavBar extends StatelessWidget {
   const MyBottomNavBar({
     Key? key,
@@ -36,7 +38,7 @@ class MyBottomNavBar extends StatelessWidget {
         ),
         Positioned(
           // right: 140,
-          bottom: 3,
+          bottom: 100.h,
           child: _buildAddButton(context),
         ),
       ],

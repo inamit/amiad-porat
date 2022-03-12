@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    initFirebase();
+    // initFirebase();
   }
 
   initFirebase() async {

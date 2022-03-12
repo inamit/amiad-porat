@@ -56,6 +56,5 @@ const int MIN_STUDENTS = 3;
 /// * Role Types
 const String student = "תלמיד";
 const String teacher = "מורה";
-const String admin = "מנהל";
 const String office = "משרד";
 const String tutor = "מתרגל";

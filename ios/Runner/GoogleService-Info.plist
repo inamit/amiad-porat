@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>143245038527-ahoiam0s5dt8c2inc5uo5j04c5cdpn9h.apps.googleusercontent.com</string>
+	<string>459963001535-rhk25bkbofij6ar2dg9q2o7fat1p05a1.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.143245038527-ahoiam0s5dt8c2inc5uo5j04c5cdpn9h</string>
+	<string>com.googleusercontent.apps.459963001535-rhk25bkbofij6ar2dg9q2o7fat1p05a1</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAeRVcKtkCrCwMSWFe5e8Jh3VU2x7MCSO4</string>
+	<string>AIzaSyB-V4f678NofW6LBmB-qU_ig9SBjth5BOM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>143245038527</string>
+	<string>459963001535</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.amitinbar.amiadporat</string>
 	<key>PROJECT_ID</key>
-	<string>amiadporat-81137</string>
+	<string>amiad-porat</string>
 	<key>STORAGE_BUCKET</key>
-	<string>amiadporat-81137.appspot.com</string>
+	<string>amiad-porat.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:143245038527:ios:afed459204b512a64a470a</string>
+	<string>1:459963001535:ios:e2866114ff1251288f340a</string>
 </dict>
 </plist>

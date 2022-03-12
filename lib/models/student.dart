@@ -1,27 +1,37 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import 'user.dart';
 
-class Student extends User {
-  final String phone;
-  final int grade;
-  final String group;
-  final List<String> subjects;
+class Student extends MyUser {
+  int? grade;
+  String? group;
+  List<dynamic>? subjects;
 
   Student(
-      {required String firstName,
-      required String lastName,
-      required this.grade,
-      required String birthdate,
-      required this.phone,
-      required this.subjects,
-      required this.group})
-      : super(firstName: firstName, lastName: lastName, birthdate: birthdate);
+      {required String uid,
+      required String email,
+      String? firstName,
+      String? lastName,
+      this.grade,
+      String? birthdate,
+      String? phone,
+      this.subjects,
+      this.group})
+      : super(
+            uid: uid,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            birthdate: birthdate,
+            phone: phone);
 
   Student copyWith(
-      {String? firstName,
+      {String? uid,
+      String? firstName,
       String? lastName,
       int? grade,
       String? birthdate,
@@ -31,6 +41,8 @@ class Student extends User {
       String? group,
       String? type}) {
     return Student(
+        uid: uid ?? this.uid,
+        email: email ?? this.email,
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
         grade: grade ?? this.grade,
@@ -52,8 +64,10 @@ class Student extends User {
     };
   }
 
-  factory Student.fromMap(Map<String, dynamic> map) {
+  factory Student.fromMap(User user, Map<String, dynamic> map) {
     return Student(
+        uid: user.uid,
+        email: user.email!,
         firstName: map['firstName'],
         lastName: map['lastName'],
         grade: map['grade'],
@@ -65,8 +79,29 @@ class Student extends User {
 
   String toJson() => json.encode(toMap());
 
-  factory Student.fromJson(String source) =>
-      Student.fromMap(json.decode(source));
+  factory Student.fromJson(String source, User user) =>
+      Student.fromMap(user, json.decode(source));
+
+  factory Student.fromFirebaseUser(User user) => Student(
+        uid: user.uid,
+        email: user.email!,
+      );
+
+  @override
+  addInfoFromFirestore() async {
+    DocumentSnapshot userInfo = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(this.uid)
+        .get();
+
+    this.firstName = userInfo['firstName'];
+    this.lastName = userInfo['lastName'];
+    this.birthdate = userInfo['birthDate'];
+    this.phone = userInfo['phoneNo'];
+    this.grade = userInfo['grade'];
+    this.group = userInfo['group'];
+    this.subjects = userInfo['subjects'];
+  }
 
   @override
   String toString() {

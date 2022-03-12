@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "143245038527",
-    "project_id": "amiadporat-81137",
-    "storage_bucket": "amiadporat-81137.appspot.com"
+    "project_number": "459963001535",
+    "project_id": "amiad-porat",
+    "storage_bucket": "amiad-porat.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:143245038527:android:02fac7f7385c433f4a470a",
+        "mobilesdk_app_id": "1:459963001535:android:ef6d86756034a66e8f340a",
         "android_client_info": {
           "package_name": "com.amitinbar.amiadporat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "143245038527-3vi6qkunfbcrt9iv882ppavhq04leb42.apps.googleusercontent.com",
+          "client_id": "459963001535-qm97mnvcimtibpdr0dbceian3jtjh85m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAwV5WrCpoKzAQzil5s80h7WD7bBdPTTBQ"
+          "current_key": "AIzaSyDz1Mv-3_eAiwpU9Qcb9SG3-ayrtax-whk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "143245038527-3vi6qkunfbcrt9iv882ppavhq04leb42.apps.googleusercontent.com",
+              "client_id": "459963001535-qm97mnvcimtibpdr0dbceian3jtjh85m.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "459963001535-rhk25bkbofij6ar2dg9q2o7fat1p05a1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.amitinbar.amiadporat"
+              }
             }
           ]
         }

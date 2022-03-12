@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:amiadporat/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 import '../../models/student.dart';
 import '../../utils/auth.dart';
 import '../../utils/db.dart';
@@ -22,26 +25,27 @@ class _TemplateState extends State<Template> {
   int _selectedIndex = 0;
   List<Widget> pages = [Home(), WeeklySchedule()];
 
-  Student? student;
-
+  // Student? student;
+  String name = "";
   @override
   void initState() {
-    getStudent();
+    // getStudent();
     super.initState();
+    getName();
   }
 
-  Future<void> getStudent() async {
-    Student fetched = await DB().getStudentInfo(AuthHandler().currentUser!.uid);
-    setState(() {
-      student = fetched;
-    });
-  }
+  // Future<void> getStudent() async {
+  //   Student fetched = await DB().getStudentInfo(AuthHandler().currentUser!.uid);
+  //   setState(() {
+  //     student = fetched;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('שלום, ${getName()}'),
+        title: Text('שלום $name'),
       ),
       bottomNavigationBar: MyBottomNavBar(
         selectedIndex: _selectedIndex,
@@ -54,10 +58,22 @@ class _TemplateState extends State<Template> {
     );
   }
 
-  String getName() {
-    if (this.student != null) {
-      return this.student!.firstName;
-    }
+  String? getName() {
+    final authService = Provider.of<AuthProvider>(context, listen: false);
+    authService.user.then((user) {
+      print(user);
+      setState(() {
+        this.name = user?.firstName ?? '';
+      });
+    });
+    // authService.user.listen((user) {
+    //   setState(() {
+    //     this.name = user?.firstName ?? '';
+    //   });
+    // });
+    // if (this.student != null) {
+    //   return this.student!.firstName;
+    // }
 
     return "";
   }
