@@ -1,3 +1,4 @@
+import 'lesson/tutorLesson/lesson.dart';
 import 'subjects.dart';
 
 class LessonBlock {
@@ -8,6 +9,13 @@ class LessonBlock {
   DateTime? _selectedDay;
 
   LessonBlock();
+  factory LessonBlock.fromLesson(Lesson lesson) {
+    LessonBlock block = new LessonBlock();
+    block._selectedSubject = SubjectsHelper().getEnum(lesson.subject)!;
+    block._selectedHour = "${lesson.date.hour}:${lesson.date.minute}";
+
+    return block;
+  }
 
   bool get isPermanent => this._isPermanent;
   Subjects get selectedSubject => this._selectedSubject;

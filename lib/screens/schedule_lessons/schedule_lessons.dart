@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import '../../utils/db.dart';
+import '../../providers/auth_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../data/lessons.dart';
 import '../../models/constants.dart';
 import '../../models/lesson_block.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
+import '../../utils/db.dart';
 import 'components/add_lesson_block.dart';
-import '../../../data/lessons.dart';
 
 class ScheduleLessons extends StatefulWidget {
   const ScheduleLessons({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class ScheduleLessons extends StatefulWidget {
 }
 
 class _ScheduleLessonsState extends State<ScheduleLessons> {
+  late AuthProvider authService;
   List<LessonBlock> lessons = [];
 
   bool valid = false;
@@ -30,6 +32,7 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
 
   @override
   void initState() {
+    authService = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
     getDates();
     setState(() {
@@ -38,11 +41,18 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
   }
 
   getDates() async {
-    List<DateTime> temp = await DB().getLessonDates();
-
-    setState(() {
-      this.dates = temp;
-    });
+    if (authService.status == Status.Authenticated) {
+      try {
+        List<DateTime> temp = await DB.getLessonDates(authService.uid);
+        setState(() {
+          this.dates = temp;
+        });
+      } on FirebaseException catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text('לא הצלחנו למצוא תגבורים. שווה לנסות שוב מאוחר יותר.')));
+      }
+    }
   }
 
   @override

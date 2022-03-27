@@ -1,58 +1,42 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../models/constants.dart';
-import '../models/student.dart';
-import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DB {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<Student> getStudentInfo(String uid) async {
-    DocumentSnapshot<Map<String, dynamic>?> studentInfo =
-        await _firestore.collection('users').doc(uid).get();
-
-    if (studentInfo.exists) {
-      Map<String, dynamic> infoMap = studentInfo.data()!;
-      infoMap["email"] = AuthHandler().currentUser!.email;
-      Student student =
-          Student.fromMap(FirebaseAuth.instance.currentUser!, infoMap);
-
-      return student;
-    } else {
-      throw new Exception("לא ניתן לטעון את פרטי התלמיד");
-    }
+  static addLesson(DateTime date, String subject) {
+    _firestore.collection('lessons').add({"date": date, "subject": subject});
   }
 
-  addLesson(DateTime date, String subject) {
-    this
-        ._firestore
-        .collection('lessons')
-        .add({"date": date, "subject": subject});
-  }
-
-  Future<List<DateTime>> getLessonDates() async {
+  static Future<List<DateTime>> getLessonDates(uid) async {
     List<DateTime> dates = [];
 
     DateTime now = DateTime.now().add(Duration(hours: 1));
 
-    QuerySnapshot<Map<String, dynamic>> lessons = await this
-        ._firestore
+    QuerySnapshot<Map<String, dynamic>> lessons = await _firestore
         .collection('lessons')
         .where('date', isGreaterThanOrEqualTo: now)
-        .where('is')
-        .where('date',
-            isLessThanOrEqualTo: now.add(Duration(
-                days: now.weekday < DateTime.thursday
-                    ? DateTime.thursday - now.weekday
-                    : DateTime.thursday)))
+        // .where('date',
+        //     isLessThanOrEqualTo: now.add(Duration(
+        //         days: now.weekday < DateTime.thursday
+        //             ? DateTime.thursday - now.weekday
+        //             : DateTime.thursday)))
+        // .where('isOpen', isEqualTo: true)
         .get();
+    print(lessons);
+    print(lessons.docs);
 
     lessons.docs.forEach((lesson) {
+      print(lesson);
+      print(lesson.data());
       List<dynamic> students = lesson.get("students");
 
-      if (!students.contains(AuthHandler().currentUser!.uid) &&
-          students.length < 5) {
+      bool studentScheduled =
+          students.any((element) => element["student"] == uid);
+
+      if (!studentScheduled && students.length < lesson.get('maxStudents')) {
         dates.add(lesson.get("date").toDate());
       }
     });
@@ -60,13 +44,13 @@ class DB {
     return dates;
   }
 
-  getLessonId(DateTime date) async {
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> lessons = (await this
-            ._firestore
-            .collection('lessons')
-            .where('date', isEqualTo: date)
-            .get())
-        .docs;
+  static getLessonId(DateTime date) async {
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> lessons =
+        (await _firestore
+                .collection('lessons')
+                .where('date', isEqualTo: date)
+                .get())
+            .docs;
 
     String underMax = "";
 
@@ -87,8 +71,8 @@ class DB {
     return underMax;
   }
 
-  addStudentToLesson(String uid, DateTime lessonDate) {
-    this._firestore.collection('lessons').doc(getLessonId(lessonDate)).update({
+  static addStudentToLesson(String uid, DateTime lessonDate) {
+    _firestore.collection('lessons').doc(getLessonId(lessonDate)).update({
       "students": FieldValue.arrayUnion([uid])
     });
   }

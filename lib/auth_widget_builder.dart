@@ -1,7 +1,8 @@
-import 'package:amiadporat/models/user.dart';
-import 'package:amiadporat/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'models/user/user.dart';
+import 'providers/auth_provider.dart';
 
 class AuthWidgetBuilder extends StatelessWidget {
   const AuthWidgetBuilder({
@@ -17,7 +18,7 @@ class AuthWidgetBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthProvider>(context, listen: true);
 
-    return FutureBuilder(
+    return FutureBuilder<MyUser?>(
         future: authService.user,
         builder: (BuildContext context, AsyncSnapshot<MyUser?> snapshot) {
           final MyUser? user = snapshot.data;

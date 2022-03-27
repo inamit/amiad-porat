@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:amiadporat/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:amiadporat/screens/login_screen/login_screen.dart';
 
-import '../../models/student.dart';
-import '../../utils/auth.dart';
-import '../../utils/db.dart';
+import '../../providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import '../home/home.dart';
@@ -25,27 +23,28 @@ class _TemplateState extends State<Template> {
   int _selectedIndex = 0;
   List<Widget> pages = [Home(), WeeklySchedule()];
 
-  // Student? student;
   String name = "";
   @override
   void initState() {
-    // getStudent();
     super.initState();
     getName();
   }
-
-  // Future<void> getStudent() async {
-  //   Student fetched = await DB().getStudentInfo(AuthHandler().currentUser!.uid);
-  //   setState(() {
-  //     student = fetched;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('שלום $name'),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                AuthProvider authService =
+                    Provider.of<AuthProvider>(context, listen: false);
+                await authService.signOut();
+                Navigator.of(context).pushReplacementNamed(LoginScreen.route);
+              },
+              icon: Icon(Icons.logout))
+        ],
       ),
       bottomNavigationBar: MyBottomNavBar(
         selectedIndex: _selectedIndex,
@@ -61,19 +60,10 @@ class _TemplateState extends State<Template> {
   String? getName() {
     final authService = Provider.of<AuthProvider>(context, listen: false);
     authService.user.then((user) {
-      print(user);
       setState(() {
         this.name = user?.firstName ?? '';
       });
     });
-    // authService.user.listen((user) {
-    //   setState(() {
-    //     this.name = user?.firstName ?? '';
-    //   });
-    // });
-    // if (this.student != null) {
-    //   return this.student!.firstName;
-    // }
 
     return "";
   }

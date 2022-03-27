@@ -150,6 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         bool success = await authService.signInWithEmailAndPassword(
             this.email, this.password);
+
         if (success) {
           Navigator.of(context).pushReplacementNamed(Template.route);
         } else {

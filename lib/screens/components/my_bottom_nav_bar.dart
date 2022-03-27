@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import '../schedule_lessons/schedule_lessons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../models/constants.dart';
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../schedule_lessons/schedule_lessons.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   const MyBottomNavBar({

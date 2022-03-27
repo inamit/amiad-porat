@@ -154,16 +154,14 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                       ? widget.lesson.selectedDay!.minute
                       : 0);
 
-              if (picked != null) {
-                this._dropdownItems = {};
-                widget.dates
-                    .where((date) => date.isSameDate(picked))
-                    .forEach((date) {
-                  this._dropdownItems[
-                          "${date.hour}:${date.minute.toString().padLeft(2, '0')}"] =
-                      "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
-                });
-              }
+              this._dropdownItems = {};
+              widget.dates
+                  .where((date) => date.isSameDate(picked))
+                  .forEach((date) {
+                this._dropdownItems[
+                        "${date.hour}:${date.minute.toString().padLeft(2, '0')}"] =
+                    "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+              });
             });
 
             widget.validateForm();
