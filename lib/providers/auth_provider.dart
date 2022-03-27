@@ -1,4 +1,4 @@
-import 'package:amiadporat/models/user.dart';
+import '../models/user/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +13,7 @@ enum Status {
 class AuthProvider extends ChangeNotifier {
   //Firebase Auth object
   late FirebaseAuth _auth;
+  MyUser? _user;
 
   //Default status
   Status _status = Status.Uninitialized;
@@ -34,15 +35,17 @@ class AuthProvider extends ChangeNotifier {
   Future<MyUser?> _userFromFirebase(User? user) async {
     if (user == null) {
       return null;
-      // throw new Exception('User was not found');
     }
 
-    return MyUser.fromFirebaseUser(user);
+    if (_user == null) {
+      this._user = (await usersRef.doc(user.uid).get()).data;
+    }
+
+    return this._user;
   }
 
   //Method to detect live auth changes such as user sign in and sign out
   Future<void> onAuthStateChanged(User? firebaseUser) async {
-    print(firebaseUser);
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
     } else {
