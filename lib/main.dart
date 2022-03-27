@@ -1,14 +1,18 @@
-import 'dart:ui';
+import 'dart:io';
 
-import 'package:amiadporat/auth_widget_builder.dart';
-import 'package:amiadporat/providers/auth_provider.dart';
-import 'package:amiadporat/router/routes.dart';
-import 'package:amiadporat/screens/components/template.dart';
-import 'package:amiadporat/screens/home/home.dart';
+import 'auth_widget_builder.dart';
+import 'firebase_options.dart';
+import 'providers/auth_provider.dart';
+import 'router/routes.dart';
+import 'screens/components/template.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
-import 'models/user.dart';
+import 'models/user/user.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,8 +22,23 @@ import 'screens/splash_screen/splash_screen.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+      webRecaptchaSiteKey: '6LcwFwMeAAAAAE6CpkXyXHGFT2IDifldXUIySZsQ');
+
+  if (kDebugMode) {
+    String host = Platform.isAndroid ? '10.0.2.2' : 'localhost';
+    FirebaseFirestore.instance.settings = Settings(
+        host: '192.168.1.161:8082',
+        sslEnabled: false,
+        persistenceEnabled: false);
+
+    await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+  }
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -54,6 +73,7 @@ class MyApp extends StatelessWidget {
               transitionDuration: Duration(milliseconds: 2000),
             );
           }
+          return null;
         },
         locale: Locale("he", "IL"),
         title: 'Flutter Demo',
@@ -71,10 +91,9 @@ class MyApp extends StatelessWidget {
             fontFamily: "Heebo",
             appBarTheme:
                 AppBarTheme(backgroundColor: neonBlue, centerTitle: true)),
-        debugShowCheckedModeBanner: false,
+        // debugShowCheckedModeBanner: false,
         home: FutureBuilder(
-          future: Future.wait(
-              [Firebase.initializeApp(), Future.delayed(Duration(seconds: 2))]),
+          future: Future.wait([Future.delayed(Duration(seconds: 2))]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Consumer<AuthProvider>(builder: (_, authProviderRef, __) {
@@ -88,9 +107,7 @@ class MyApp extends StatelessWidget {
                             : LoginScreen();
                       }
 
-                      return Material(
-                        child: CircularProgressIndicator(),
-                      );
+                      return SplashScreen();
                     },
                     key: Key('AuthWidget'));
               });
