@@ -21,6 +21,7 @@ class AuthProvider extends ChangeNotifier {
   Status get status => _status;
 
   Future<MyUser?> get user => _userFromFirebase(_auth.currentUser);
+  String? get uid => _auth.currentUser?.uid;
   // Stream<MyUser?> get user => _auth.authStateChanges().map(_userFromFirebase);
 
   AuthProvider() {
@@ -49,7 +50,7 @@ class AuthProvider extends ChangeNotifier {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
     } else {
-      _userFromFirebase(firebaseUser);
+      // _userFromFirebase(firebaseUser);
       _status = Status.Authenticated;
     }
     notifyListeners();

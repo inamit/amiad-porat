@@ -10,9 +10,7 @@ class AuthHandler {
     return _instance;
   }
 
-  User? get currentUser => auth.currentUser;
-
-  bool isLoggedIn() => currentUser != null;
+  User get currentUser => auth.currentUser!;
 
   Future<UserCredential> signIn(String email, String password) async {
     try {
