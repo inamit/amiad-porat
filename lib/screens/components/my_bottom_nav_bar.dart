@@ -60,7 +60,7 @@ class MyBottomNavBar extends StatelessWidget {
       onPressed: () {
         Navigator.of(context)
             .pushNamed(ScheduleLessons.route)
-            .then((value) => onGoBack);
+            .then((value) => value == true ? onGoBack(value) : null);
       },
     );
   }

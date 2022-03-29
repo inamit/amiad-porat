@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:amiadporat/dal/group.dal.dart';
+import 'package:amiadporat/screens/components/mainPage.dart';
 
 import '../../dal/lesson.dal.dart';
 import '../../models/lesson/absLesson.dart';
@@ -27,10 +28,9 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends MainPageState<Home> {
   late AuthProvider authService;
 
-  List<AbsLesson> lessons = [];
   Lesson? closestLesson;
   GroupLesson? groupLesson;
 
@@ -38,6 +38,10 @@ class _HomeState extends State<Home> {
   void initState() {
     authService = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
+  }
+
+  @override
+  refreshData() {
     getLatestLesson();
     getGroupLesson();
   }

@@ -1,3 +1,5 @@
+import 'package:amiadporat/screens/components/mainPage.dart';
+
 import '../../dal/lesson.dal.dart';
 import '../../models/group/group.dart';
 import '../../models/lesson/absLesson.dart';
@@ -23,7 +25,7 @@ class WeeklySchedule extends StatefulWidget {
   _WeeklyScheduleState createState() => _WeeklyScheduleState();
 }
 
-class _WeeklyScheduleState extends State<WeeklySchedule> {
+class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
   late AuthProvider authService;
   List<AbsLesson> lessonsData = [];
   DateTime _selectedDay = DateTime.now();
@@ -33,6 +35,11 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
   @override
   void initState() {
     authService = Provider.of<AuthProvider>(context, listen: false);
+    super.initState();
+  }
+
+  @override
+  refreshData() {
     getMyLessons();
     getGroupLesson();
     this._selectedDayLessons = <AbsLesson>[
@@ -42,7 +49,6 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
     ];
     _selectedDayLessons
         .sort((first, second) => first.date.difference(second.date).inMinutes);
-    super.initState();
   }
 
   void getMyLessons() async {
@@ -92,15 +98,9 @@ class _WeeklyScheduleState extends State<WeeklySchedule> {
         ref: LessonDal.getLessonByUser(authService.uid!),
         builder: (context, AsyncSnapshot<LessonQuerySnapshot> snapshot,
             Widget? child) {
-          if (snapshot.hasError) {
-            print('hasError');
-            print(snapshot.error);
-          }
-          if (!snapshot.hasData) print("loading...");
+          if (snapshot.hasError) {}
+          if (!snapshot.hasData) {}
 
-          print('hasData');
-
-          print(snapshot.data?.docs);
           return Column(
             children: [
               TableCalendar(

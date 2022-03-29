@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:amiadporat/screens/login_screen/login_screen.dart';
+import 'package:amiadporat/screens/components/mainPage.dart';
 
 import '../../providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,13 +21,20 @@ class Template extends StatefulWidget {
 
 class _TemplateState extends State<Template> {
   int _selectedIndex = 0;
-  List<Widget> pages = [Home(), WeeklySchedule()];
+  List<Widget> pages = [];
+  List<GlobalKey<MainPageState>> pagesKeys = [GlobalKey(), GlobalKey()];
 
   String name = "";
   @override
   void initState() {
-    super.initState();
     getName();
+
+    pages.add(Home(key: pagesKeys[0]));
+    pages.add(WeeklySchedule(
+      key: pagesKeys[1],
+    ));
+
+    super.initState();
   }
 
   @override
@@ -41,7 +48,6 @@ class _TemplateState extends State<Template> {
                 AuthProvider authService =
                     Provider.of<AuthProvider>(context, listen: false);
                 await authService.signOut();
-                Navigator.of(context).pushReplacementNamed(LoginScreen.route);
               },
               icon: Icon(Icons.logout))
         ],
@@ -57,19 +63,14 @@ class _TemplateState extends State<Template> {
     );
   }
 
-  String? getName() {
+  void getName() async {
     final authService = Provider.of<AuthProvider>(context, listen: false);
-    authService.user.then((user) {
-      setState(() {
-        this.name = user?.firstName ?? '';
-      });
-    });
 
-    return "";
+    this.name = (await authService.user)?.firstName ?? '';
   }
 
   FutureOr onGoBack(dynamic value) {
-    setState(() {});
+    pagesKeys[_selectedIndex].currentState?.refreshData();
   }
 
   void _onItemTapped(int index) {
