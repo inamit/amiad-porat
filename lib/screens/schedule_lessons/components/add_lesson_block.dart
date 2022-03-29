@@ -1,18 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../models/constants.dart';
 import '../../../models/lesson_block.dart';
 import '../../../models/subjects.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../utils/date_ext.dart';
+import '../../../utils/db.dart';
 
 class AddLessonBlock extends StatefulWidget {
   AddLessonBlock(
       {Key? key,
       required this.onDeletePressed,
       required this.lesson,
-      required this.validateForm,
-      required this.dates})
+      required this.validateForm})
       : super(key: key);
 
   final void Function() onDeletePressed;
@@ -20,13 +24,13 @@ class AddLessonBlock extends StatefulWidget {
 
   final LessonBlock lesson;
 
-  final List<DateTime> dates;
-
   @override
   _AddLessonBlockState createState() => _AddLessonBlockState();
 }
 
 class _AddLessonBlockState extends State<AddLessonBlock> {
+  late AuthProvider authService;
+
   bool isPermanent = false;
   int selectedSubject = 0;
   String? selectedHour;
@@ -38,6 +42,45 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
   };
   Map<String, String> _dropdownItems = {};
 
+  List<DateTime> dates = [];
+
+  bool isLoadingDates = true;
+
+  @override
+  void initState() {
+    authService = Provider.of<AuthProvider>(context, listen: false);
+
+    super.initState();
+    getDates();
+  }
+
+  getDates() async {
+    setState(() {
+      this.isLoadingDates = true;
+    });
+
+    if (authService.status == Status.Authenticated) {
+      try {
+        List<DateTime> mathDates = await DB.getLessonDates(
+            authService.uid, widget.lesson.selectedSubject);
+        setState(() {
+          this.dates = mathDates;
+        });
+      } on FirebaseException catch (error) {
+        FirebaseCrashlytics.instance.recordError(error, error.stackTrace,
+            reason: 'Exception while fetching lesson dates');
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text('לא הצלחנו למצוא תגבורים. שווה לנסות שוב מאוחר יותר.')));
+      }
+    }
+
+    setState(() {
+      this.isLoadingDates = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -45,16 +88,24 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
       child: Column(
         children: [
           _buildSubjectSegmentedControl(),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, right: 25.0),
-            child: _getDropdowns(context),
-          ),
+          if (this.isLoadingDates)
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: LinearProgressIndicator(),
+            ),
+          if (this.dates.isEmpty)
+            Text("אין תאריכים זמינים לתגבור 😢 כדאי לדבר עם המשרד!")
+          else
+            Padding(
+              padding: const EdgeInsets.only(top: 10, right: 25.0),
+              child: _getDropdowns(context),
+            ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildCheckbox(),
+                if (this.dates.isNotEmpty) _buildCheckbox(),
                 Expanded(child: Container()),
                 _buildDeleteButton(),
               ],
@@ -75,6 +126,8 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
         setState(() {
           widget.lesson.selectedSubject = Subjects.values[index!];
         });
+
+        this.getDates();
       },
     );
   }
@@ -120,6 +173,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
   }
 
   Row _getDropdowns(BuildContext context) {
+    print(this.dates);
     return Row(
       children: [
         Padding(
@@ -129,18 +183,26 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                   ? "${widget.lesson.selectedDate!.day}/${widget.lesson.selectedDate!.month}/${widget.lesson.selectedDate!.year}"
                   : "יום", () async {
             final DateTime? picked = await showDatePicker(
-              context: context,
-              initialDate: widget.lesson.selectedDate ?? DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(
-                Duration(
-                    days: DateTime.now().weekday < DateTime.thursday
-                        ? DateTime.thursday - DateTime.now().weekday + 7
-                        : DateTime.thursday + 7),
-              ),
-              selectableDayPredicate: (DateTime val) =>
-                  val.weekday == 5 || val.weekday == 6 ? false : true,
-            );
+                context: context,
+                initialDate:
+                    this.dates.isNotEmpty ? this.dates[0] : DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(
+                  Duration(
+                      days: DateTime.now().weekday < DateTime.thursday
+                          ? DateTime.thursday - DateTime.now().weekday + 7
+                          : DateTime.thursday + 7),
+                ),
+                selectableDayPredicate: (DateTime val) {
+                  bool hasDate = false;
+                  this.dates.forEach((element) {
+                    if (element.isSameDate(val)) {
+                      hasDate = true;
+                    }
+                  });
+
+                  return hasDate;
+                });
             setState(() {
               widget.lesson.selectedDate = picked ?? widget.lesson.selectedDate;
               widget.lesson.selectedDay = new DateTime(
@@ -155,7 +217,8 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
                       : 0);
 
               this._dropdownItems = {};
-              widget.dates
+              this
+                  .dates
                   .where((date) => date.isSameDate(picked))
                   .forEach((date) {
                 this._dropdownItems[

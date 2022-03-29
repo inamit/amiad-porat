@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:amiadporat/models/subjects.dart';
 
 import '../models/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,7 +10,8 @@ class DB {
     _firestore.collection('lessons').add({"date": date, "subject": subject});
   }
 
-  static Future<List<DateTime>> getLessonDates(uid) async {
+  static Future<List<DateTime>> getLessonDates(
+      String? uid, Subjects subject) async {
     List<DateTime> dates = [];
 
     DateTime now = DateTime.now().add(Duration(hours: 1));
@@ -18,19 +19,18 @@ class DB {
     QuerySnapshot<Map<String, dynamic>> lessons = await _firestore
         .collection('lessons')
         .where('date', isGreaterThanOrEqualTo: now)
-        // .where('date',
-        //     isLessThanOrEqualTo: now.add(Duration(
-        //         days: now.weekday < DateTime.thursday
-        //             ? DateTime.thursday - now.weekday
-        //             : DateTime.thursday)))
-        // .where('isOpen', isEqualTo: true)
+        .where('date',
+            isLessThanOrEqualTo: now.add(Duration(
+                days: now.weekday < DateTime.thursday
+                    ? DateTime.thursday - now.weekday
+                    : DateTime.thursday))) // TODO: Change this date
+        .where('isOpen', isEqualTo: true)
+        .where('subject', isEqualTo: SubjectsHelper().getValue(subject))
         .get();
-    print(lessons);
+
     print(lessons.docs);
 
     lessons.docs.forEach((lesson) {
-      print(lesson);
-      print(lesson.data());
       List<dynamic> students = lesson.get("students");
 
       bool studentScheduled =

@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import '../../providers/auth_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/lessons.dart';
 import '../../models/constants.dart';
 import '../../models/lesson_block.dart';
-import '../../utils/db.dart';
 import 'components/add_lesson_block.dart';
 
 class ScheduleLessons extends StatefulWidget {
@@ -28,31 +26,13 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
 
   ScrollController _scrollController = new ScrollController();
 
-  List<DateTime> dates = [];
-
   @override
   void initState() {
     authService = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
-    getDates();
     setState(() {
       this.lessons.add(LessonBlock());
     });
-  }
-
-  getDates() async {
-    if (authService.status == Status.Authenticated) {
-      try {
-        List<DateTime> temp = await DB.getLessonDates(authService.uid);
-        setState(() {
-          this.dates = temp;
-        });
-      } on FirebaseException catch (error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-                Text('לא הצלחנו למצוא תגבורים. שווה לנסות שוב מאוחר יותר.')));
-      }
-    }
   }
 
   @override
@@ -110,17 +90,15 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
         itemCount: this.lessons.length,
         itemBuilder: (context, index) {
           return AddLessonBlock(
-            onDeletePressed: () {
-              if (this.lessons.length > 1) {
-                setState(() {
-                  this.lessons.removeAt(index);
-                });
-              }
-            },
-            lesson: this.lessons[index],
-            validateForm: this.validateForm,
-            dates: this.dates,
-          );
+              onDeletePressed: () {
+                if (this.lessons.length > 1) {
+                  setState(() {
+                    this.lessons.removeAt(index);
+                  });
+                }
+              },
+              lesson: this.lessons[index],
+              validateForm: this.validateForm);
         },
       ),
     );
