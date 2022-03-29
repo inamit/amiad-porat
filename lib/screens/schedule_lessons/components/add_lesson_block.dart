@@ -126,6 +126,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
         setState(() {
           widget.lesson.selectedSubject = Subjects.values[index!];
         });
+        this._dropdownItems = {};
         widget.lesson.clean();
         this.getDates();
       },
