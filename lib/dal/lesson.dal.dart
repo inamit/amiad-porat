@@ -15,7 +15,6 @@ class LessonDal {
   }
 
   static Future<Lesson?> getClosestLessonByUser(String uid) async {
-    print(uid);
     Map<String, String> student = new Map();
     student.putIfAbsent('student', () => uid);
     student.putIfAbsent('status',

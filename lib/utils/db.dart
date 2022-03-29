@@ -28,8 +28,6 @@ class DB {
         .where('subject', isEqualTo: SubjectsHelper().getValue(subject))
         .get();
 
-    print(lessons.docs);
-
     lessons.docs.forEach((lesson) {
       List<dynamic> students = lesson.get("students");
 

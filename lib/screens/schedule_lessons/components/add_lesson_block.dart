@@ -173,7 +173,6 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
   }
 
   Row _getDropdowns(BuildContext context) {
-    print(this.dates);
     return Row(
       children: [
         Padding(

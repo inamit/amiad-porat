@@ -11,7 +11,6 @@ class GroupDal {
 
     if (group != null) {
       int day = DateTime.now().day;
-      print(group.dayInWeek);
 
       if (DateTime.now().weekday > group.dayInWeek) {
         day += (7 - DateTime.now().weekday) + group.dayInWeek;
