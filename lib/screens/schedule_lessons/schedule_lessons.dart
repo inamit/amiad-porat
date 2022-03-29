@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:amiadporat/dal/lessonScheduler.dart';
+import 'package:intl/intl.dart';
+
 import '../../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/lessons.dart';
 import '../../models/constants.dart';
 import '../../models/lesson_block.dart';
 import 'components/add_lesson_block.dart';
@@ -23,6 +25,7 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
   List<LessonBlock> lessons = [];
 
   bool valid = false;
+  bool isLoading = false;
 
   ScrollController _scrollController = new ScrollController();
 
@@ -113,31 +116,79 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
       height: MediaQuery.of(context).size.height / 14,
       width: MediaQuery.of(context).size.width / 2,
       child: TextButton(
-        onPressed: () {
+        onPressed: () async {
           if (validateForm()) {
-            // TODO: CONNECT TO SERVER
-            setState(() {
-              lessonsData.addAll(this.lessons);
-              lessonsData.sort((first, second) =>
-                  first.selectedDay!.difference(second.selectedDay!).inMinutes);
-            });
+            if (authService.status == Status.Authenticated) {
+              setState(() {
+                this.isLoading = true;
+              });
 
-            this.lessons.forEach((element) {
-              print(element);
-            });
+              ScheduleLessonsResponse response =
+                  await LessonScheduler.addStudentToLessons(
+                      (await authService.user)!,
+                      authService.uid!,
+                      this.lessons);
 
-            Navigator.of(context).pop();
+              setState(() {
+                this.isLoading = false;
+              });
+              if (response.failedLessons.length > 0) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(response.failureReason!),
+                  action: !response.isStudentFree
+                      ? SnackBarAction(
+                          label: "מתי קבעתי?",
+                          onPressed: () {
+                            showFailedLessonsAlert(response);
+                          },
+                        )
+                      : null,
+                ));
+              } else {
+                Navigator.pop(context, true);
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("הייתה בעיה. נסה שנית מאוחר יותר"),
+              ));
+              Navigator.of(context).pop();
+            }
           } else {
-            print("COMPLETE FORM");
+            // Form is not valid.
           }
         },
-        child: Text(
-          "קבענו! \n ניפגש במרכז",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
-        ),
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Text(
+                "קבענו! \n ניפגש במרכז",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
       ),
     );
+  }
+
+  showFailedLessonsAlert(ScheduleLessonsResponse response) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("התגבורים והשיעורים שלי"),
+            content: Container(
+              width: 100,
+              // height: 100,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: response.failedLessons.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                          "${DateFormat("EEE dd/MM/yyyy hh:mm", 'he_IL').format(response.failedLessons[index].selectedDate!)}"),
+                    );
+                  }),
+            ),
+          );
+        });
   }
 
   bool validateForm() {

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'auth_widget_builder.dart';
-import 'firebase_options.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'providers/auth_provider.dart';
 import 'router/routes.dart';
 import 'screens/components/template.dart';
@@ -12,7 +12,6 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
-import 'models/user/user.dart';
 import 'screens/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -31,12 +30,12 @@ void main() async {
 
   if (kDebugMode) {
     String host = Platform.isAndroid ? '10.0.2.2' : 'localhost';
-    FirebaseFirestore.instance.settings = Settings(
-        host: '192.168.1.161:8082',
-        sslEnabled: false,
-        persistenceEnabled: false);
+
+    FirebaseFirestore.instance.useFirestoreEmulator(host, 8082);
 
     await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   }
 
   runApp(MultiProvider(
@@ -97,19 +96,43 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Consumer<AuthProvider>(builder: (_, authProviderRef, __) {
-                return AuthWidgetBuilder(
-                    builder: (BuildContext context,
-                        AsyncSnapshot<MyUser?> userSnapshot) {
-                      if (userSnapshot.connectionState ==
-                          ConnectionState.done) {
-                        return userSnapshot.hasData && userSnapshot.data != null
-                            ? Template()
-                            : LoginScreen();
-                      }
+                if (authProviderRef.status == Status.Authenticated) {
+                  return Template();
+                }
 
-                      return SplashScreen();
-                    },
-                    key: Key('AuthWidget'));
+                if (authProviderRef.status == Status.Unauthenticated ||
+                    authProviderRef.status == Status.Authenticating) {
+                  return LoginScreen();
+                }
+
+                return SplashScreen();
+                // return FutureBuilder(
+                //     future: authProviderRef.user,
+                //     builder: ((context, userSnapshot) {
+                //       if (userSnapshot.connectionState ==
+                //           ConnectionState.done) {
+                //         return (userSnapshot.hasData &&
+                //                 userSnapshot.data != null)
+                //             ? Template()
+                //             : LoginScreen();
+                //       }
+
+                //       return SplashScreen();
+                //     }));
+                // return AuthWidgetBuilder(
+                //     builder: (BuildContext context,
+                //         AsyncSnapshot<MyUser?> userSnapshot) {
+                //       if (userSnapshot.connectionState ==
+                //           ConnectionState.done) {
+                //         print("AUTH WIDGET BUILDER");
+                //         return userSnapshot.hasData && userSnapshot.data != null
+                //             ? Template()
+                //             : LoginScreen();
+                //       }
+
+                //       return SplashScreen();
+                //     },
+                //     key: Key('AuthWidget'));
               });
             }
 
