@@ -35,7 +35,7 @@ class LessonScheduler {
     return !hasGroupLesson && !hasLesson;
   }
 
-  static Future<String?> getFirstLessonIdByDateAndSubject(
+  static Future<String?> _getFirstLessonIdByDateAndSubject(
       DateTime lessonDate, Subjects subject) async {
     String? lessonId;
 
@@ -56,6 +56,17 @@ class LessonScheduler {
     return lessonId;
   }
 
+  static Future<bool> _hasLessonToday(
+      String uid, DateTime date, Subjects subject) async {
+    DateTime startDate = DateTime(date.year, date.month, date.day);
+    DateTime endDate = DateTime(date.year, date.month, date.day + 1);
+
+    return (await LessonDal.getLessonByUserAndDateRangeAndSubject(
+                uid, startDate, endDate, subject))
+            .length >
+        0;
+  }
+
   static Future<ScheduleLessonsResponse> addStudentToLessons(
       MyUser user, String uid, List<LessonBlock> lessons) async {
     Map<String, String> student = new Map();
@@ -65,6 +76,7 @@ class LessonScheduler {
 
     ScheduleLessonsResponse response = ScheduleLessonsResponse();
 
+    // #region Check for student availability
     for (LessonBlock lesson in lessons) {
       bool isStudentFree =
           await _isStudentFree(user, uid, lesson.selectedDate!);
@@ -73,28 +85,51 @@ class LessonScheduler {
         response.addToFailedLessons(lesson);
       }
     }
+    // #endregion
 
-    if (response.failedLessons.length == 0) {
+    if (response.failedLessons.length > 0) {
+      response.isStudentFree = false;
+      response.failureReason = "אוי לא! נראה שכבר קבעת משהו באחד התאריכים.";
+    } else {
       response.isStudentFree = true;
 
-      WriteBatch batch = FirebaseFirestore.instance.batch();
-
+      // #region Check for scheduled lessons in the same day
       for (LessonBlock lesson in lessons) {
-        String? lessonId = await getFirstLessonIdByDateAndSubject(
-            lesson.selectedDate!, lesson.selectedSubject);
+        bool hasLessonToday = await _hasLessonToday(
+            uid, lesson.selectedDate!, lesson.selectedSubject);
 
-        if (lessonId != null) {
-          batch.update(lessonsRef.doc(lessonId).reference, {
-            "students": FieldValue.arrayUnion([student])
-          });
-        } else {
+        if (hasLessonToday) {
           response.addToFailedLessons(lesson);
+          response.failureReason =
+              "נראה שכבר קבעת תגבור ביום זה. שווה לנסות לדבר עם המשרד!";
         }
       }
+      // #endregion
 
-      await batch.commit();
-    } else {
-      response.isStudentFree = false;
+      if (response.failedLessons.length == 0) {
+        // #region Check maxStudents
+        // TODO: Check maxStudents
+        // #endregion
+
+        WriteBatch batch = FirebaseFirestore.instance.batch();
+
+        for (LessonBlock lesson in lessons) {
+          String? lessonId = await _getFirstLessonIdByDateAndSubject(
+              lesson.selectedDate!, lesson.selectedSubject);
+
+          if (lessonId != null) {
+            batch.update(lessonsRef.doc(lessonId).reference, {
+              "students": FieldValue.arrayUnion([student])
+            });
+          } else {
+            response.addToFailedLessons(lesson);
+            response.failureReason =
+                "לא הצלחנו לקבוע ${response.failedLessons.length} תגבורים.";
+          }
+        }
+
+        await batch.commit();
+      }
     }
 
     return response;
@@ -104,15 +139,18 @@ class LessonScheduler {
 class ScheduleLessonsResponse {
   List<LessonBlock> _failedLessons = [];
   bool _isStudentFree = false;
+  String? _failureReason;
 
   ScheduleLessonsResponse();
 
   List<LessonBlock> get failedLessons => this._failedLessons;
   bool get isStudentFree => this._isStudentFree;
+  String? get failureReason => this._failureReason;
 
   addToFailedLessons(LessonBlock lessonBlock) {
     _failedLessons.add(lessonBlock);
   }
 
   set isStudentFree(value) => this._isStudentFree = value;
+  set failureReason(value) => this._failureReason = value;
 }
