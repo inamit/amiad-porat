@@ -20,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  TextEditingController emailTextController = TextEditingController();
   String email = "";
   late String password;
 
@@ -98,8 +99,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     _submitForm();
                   },
-                  child:
-                      LoginButton(title: "התחבר", gradient: redOrangeGradient),
+                  child: LoginButton(
+                    title: "התחבר",
+                    gradient: redOrangeGradient,
+                    isLoading: authService.status == Status.Authenticating,
+                  ),
                 ),
               ],
             ),
@@ -111,9 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void sendResetPasswordLink() async {
     String snackBarMessage = "";
+
     if (this._emailFieldState.currentState!.validate()) {
       try {
-        await authService.sendPasswordResetEmail(this.email);
+        await authService.sendPasswordResetEmail(this.emailTextController.text);
         snackBarMessage = "שלחנו לך קישור לאיפוס סיסמה למייל!";
       } on FirebaseAuthException catch (err) {
         switch (err.code) {
@@ -152,7 +157,9 @@ class _LoginScreenState extends State<LoginScreen> {
             this.email, this.password);
 
         if (success) {
-          Navigator.of(context).pushReplacementNamed(Template.route);
+          if (mounted) {
+            Navigator.of(context).pushReplacementNamed(Template.route);
+          }
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text("ההתחברות נכשלה")));
@@ -193,9 +200,11 @@ class _LoginScreenState extends State<LoginScreen> {
           suffixIcon: Icon(passwordIcon),
           prefixIcon: IconButton(
             onPressed: () {
-              setState(() {
-                passwordShown = !passwordShown;
-              });
+              if (mounted) {
+                setState(() {
+                  passwordShown = !passwordShown;
+                });
+              }
             },
             icon: Icon(passwordShown ? hidePasswordIcon : showPasswordIcon),
           ),
@@ -217,9 +226,9 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextFormField(
         key: this._emailFieldState,
         focusNode: this._emailFocus,
+        controller: emailTextController,
         textDirection: TextDirection.ltr,
         onSaved: (value) => email = value!,
-        onChanged: (value) => email = value,
         validator: validate,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.emailAddress,
