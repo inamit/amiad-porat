@@ -17,11 +17,25 @@ class LessonBlock {
     return block;
   }
 
+  clean() {
+    this._selectedHour = null;
+    this._selectedDay = null;
+    this._selectedDate = null;
+  }
+
   bool get isPermanent => this._isPermanent;
   Subjects get selectedSubject => this._selectedSubject;
   DateTime? get selectedDay => this._selectedDay;
   String? get selectedHour => this._selectedHour;
-  DateTime? get selectedDate => this._selectedDate;
+  DateTime? get selectedDate =>
+      this._selectedDate != null && this._selectedHour != null
+          ? new DateTime(
+              this._selectedDate!.year,
+              this._selectedDate!.month,
+              this._selectedDate!.day,
+              int.parse(this.selectedHour!.split(":")[0]),
+              int.parse(this.selectedHour!.split(":")[1]))
+          : this._selectedDate;
 
   bool isValid() => this.selectedDate != null && this._selectedHour != null;
 
