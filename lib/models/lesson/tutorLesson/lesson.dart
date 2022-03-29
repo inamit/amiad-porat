@@ -12,12 +12,14 @@ class Lesson extends AbsLesson {
   final bool isOpen;
   final String subject;
   final List<Map<String, String>> students;
+  final int maxStudents;
 
   Lesson(
       {required this.date,
       required this.isOpen,
       required this.subject,
-      required this.students})
+      required this.students,
+      required this.maxStudents})
       : super(lessonType: 'תגבור', subject: subject, date: date);
 }
 

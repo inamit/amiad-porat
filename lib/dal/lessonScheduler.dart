@@ -50,7 +50,12 @@ class LessonScheduler {
         .get();
 
     if (lessons.docs.isNotEmpty) {
-      lessonId = lessons.docs.first.id;
+      for (QueryDocumentSnapshot<Lesson> lesson in lessons.docs) {
+        if (lesson.data().maxStudents > lesson.data().students.length) {
+          lessonId = lesson.id;
+          break;
+        }
+      }
     }
 
     return lessonId;
@@ -107,10 +112,6 @@ class LessonScheduler {
       // #endregion
 
       if (response.failedLessons.length == 0) {
-        // #region Check maxStudents
-        // TODO: Check maxStudents
-        // #endregion
-
         WriteBatch batch = FirebaseFirestore.instance.batch();
 
         for (LessonBlock lesson in lessons) {

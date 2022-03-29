@@ -117,6 +117,7 @@ abstract class LessonDocumentReference
     bool isOpen,
     String subject,
     List<Map<String, String>> students,
+    int maxStudents,
   });
 
   Future<void> set(Lesson value);
@@ -164,12 +165,14 @@ class _$LessonDocumentReference
     Object? isOpen = _sentinel,
     Object? subject = _sentinel,
     Object? students = _sentinel,
+    Object? maxStudents = _sentinel,
   }) async {
     final json = {
       if (isOpen != _sentinel) "isOpen": isOpen as bool,
       if (subject != _sentinel) "subject": subject as String,
       if (students != _sentinel)
         "students": students as List<Map<String, String>>,
+      if (maxStudents != _sentinel) "maxStudents": maxStudents as int,
     };
 
     return reference.update(json);
@@ -250,6 +253,17 @@ abstract class LessonQuery implements QueryReference<LessonQuerySnapshot> {
     bool? isNull,
     List<Map<String, String>>? arrayContainsAny,
   });
+  LessonQuery whereMaxStudents({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   LessonQuery orderByIsOpen({
     bool descending = false,
@@ -281,6 +295,18 @@ abstract class LessonQuery implements QueryReference<LessonQuerySnapshot> {
     List<Map<String, String>> startAfter,
     List<Map<String, String>> endAt,
     List<Map<String, String>> endBefore,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
+  });
+
+  LessonQuery orderByMaxStudents({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     LessonDocumentSnapshot? startAtDocument,
     LessonDocumentSnapshot? endAtDocument,
     LessonDocumentSnapshot? endBeforeDocument,
@@ -431,6 +457,34 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     );
   }
 
+  LessonQuery whereMaxStudents({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$LessonQuery(
+      reference.where(
+        'maxStudents',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   LessonQuery orderByIsOpen({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -557,6 +611,48 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     return _$LessonQuery(query, _collection);
   }
 
+  LessonQuery orderByMaxStudents({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('maxStudents', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$LessonQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$LessonQuery &&
@@ -612,6 +708,7 @@ Lesson _$LessonFromJson(Map<String, dynamic> json) => Lesson(
       students: (json['students'] as List<dynamic>)
           .map((e) => Map<String, String>.from(e as Map))
           .toList(),
+      maxStudents: json['maxStudents'] as int,
     );
 
 Map<String, dynamic> _$LessonToJson(Lesson instance) => <String, dynamic>{
@@ -619,4 +716,5 @@ Map<String, dynamic> _$LessonToJson(Lesson instance) => <String, dynamic>{
       'isOpen': instance.isOpen,
       'subject': instance.subject,
       'students': instance.students,
+      'maxStudents': instance.maxStudents,
     };
