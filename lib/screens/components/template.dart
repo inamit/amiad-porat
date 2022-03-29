@@ -66,7 +66,10 @@ class _TemplateState extends State<Template> {
   void getName() async {
     final authService = Provider.of<AuthProvider>(context, listen: false);
 
-    this.name = (await authService.user)?.firstName ?? '';
+    String? firstName = (await authService.user)?.firstName ?? '';
+    setState(() {
+      this.name = firstName;
+    });
   }
 
   FutureOr onGoBack(dynamic value) {
