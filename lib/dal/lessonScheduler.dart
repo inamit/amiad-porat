@@ -66,10 +66,11 @@ class LessonScheduler {
     DateTime startDate = DateTime(date.year, date.month, date.day);
     DateTime endDate = DateTime(date.year, date.month, date.day + 1);
 
-    return (await LessonDal.getLessonByUserAndDateRangeAndSubject(
-                uid, startDate, endDate, subject))
-            .length >
-        0;
+    List<Lesson> lessons =
+        await LessonDal.getLessonByUserAndDateRangeAndSubject(
+            uid, startDate, endDate, subject);
+
+    return lessons.length > 0;
   }
 
   static Future<ScheduleLessonsResponse> addStudentToLessons(
