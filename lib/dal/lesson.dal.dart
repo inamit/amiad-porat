@@ -1,4 +1,4 @@
-import 'package:amiadporat/models/subjects.dart';
+import '../models/subjects.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/lesson/tutorLesson/lesson.dart';

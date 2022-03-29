@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:amiadporat/dal/group.dal.dart';
-import 'package:amiadporat/screens/components/mainPage.dart';
+import '../../dal/group.dal.dart';
+import '../components/mainPage.dart';
 
 import '../../dal/lesson.dal.dart';
 import '../../models/lesson/absLesson.dart';

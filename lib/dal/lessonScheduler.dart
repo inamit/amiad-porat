@@ -1,8 +1,8 @@
-import 'package:amiadporat/dal/group.dal.dart';
-import 'package:amiadporat/dal/lesson.dal.dart';
-import 'package:amiadporat/models/lesson/groupLesson/groupLesson.dart';
-import 'package:amiadporat/models/lesson_block.dart';
-import 'package:amiadporat/models/user/user.dart';
+import 'group.dal.dart';
+import 'lesson.dal.dart';
+import '../models/lesson/groupLesson/groupLesson.dart';
+import '../models/lesson_block.dart';
+import '../models/user/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/lesson/tutorLesson/lesson.dart';

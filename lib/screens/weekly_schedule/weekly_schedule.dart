@@ -1,4 +1,4 @@
-import 'package:amiadporat/screens/components/mainPage.dart';
+import '../components/mainPage.dart';
 
 import '../../dal/lesson.dal.dart';
 import '../../models/group/group.dart';

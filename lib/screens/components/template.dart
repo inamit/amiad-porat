@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:amiadporat/screens/components/mainPage.dart';
+import 'mainPage.dart';
 
 import '../../providers/auth_provider.dart';
 import 'package:provider/provider.dart';

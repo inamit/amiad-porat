@@ -1,4 +1,4 @@
-import 'package:amiadporat/models/lesson/groupLesson/groupLesson.dart';
+import '../models/lesson/groupLesson/groupLesson.dart';
 
 import '../models/group/group.dart';
 

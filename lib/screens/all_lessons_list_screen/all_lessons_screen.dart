@@ -1,12 +1,11 @@
-import 'package:amiadporat/dal/group.dal.dart';
-import 'package:amiadporat/models/lesson/absLesson.dart';
-import 'package:amiadporat/providers/auth_provider.dart';
+import '../../dal/group.dal.dart';
+import '../../models/lesson/absLesson.dart';
+import '../../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/group/group.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
 import '../../models/lesson/tutorLesson/lesson.dart';
 import '../../models/lesson/tutorLesson/studentStatus.dart';

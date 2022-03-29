@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:amiadporat/dal/lessonScheduler.dart';
+import '../../dal/lessonScheduler.dart';
 import 'package:intl/intl.dart';
 
 import '../../providers/auth_provider.dart';
