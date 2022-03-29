@@ -1,23 +1,22 @@
 import 'dart:async';
 
-import '../../dal/group.dal.dart';
-import '../components/mainPage.dart';
-
-import '../../dal/lesson.dal.dart';
-import '../../models/lesson/absLesson.dart';
-import '../../models/lesson/groupLesson/groupLesson.dart';
-import '../../models/lesson/tutorLesson/lesson.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../dal/group.dal.dart';
+import '../../dal/lesson.dal.dart';
 import '../../data/messages.dart';
 import '../../data/tests.dart';
 import '../../models/constants.dart';
+import '../../models/lesson/absLesson.dart';
+import '../../models/lesson/groupLesson/groupLesson.dart';
+import '../../models/lesson/tutorLesson/lesson.dart';
 import '../../models/subjects.dart';
 import '../../models/user/user.dart';
 import '../../providers/auth_provider.dart';
 import '../all_lessons_list_screen/all_lessons_screen.dart';
+import '../components/mainPage.dart';
 import '../schedule_lessons/schedule_lessons.dart';
 import 'components/homepage_card.dart';
 
@@ -60,7 +59,7 @@ class _HomeState extends MainPageState<Home> {
     MyUser? user = await authService.user;
 
     if (user != null) {
-      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group);
+      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group!);
 
       setState(() {
         this.groupLesson = groupLesson;

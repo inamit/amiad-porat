@@ -53,7 +53,7 @@ class _AllLessonsState extends State<AllLessons> {
     MyUser? user = await authService.user;
 
     if (user != null) {
-      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group);
+      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group!);
 
       if (groupLesson != null) {
         setState(() {

@@ -13,7 +13,7 @@ class MyUser {
   final String phoneNo;
   final String birthDate;
   final int role;
-  final String group;
+  final String? group;
 
   MyUser(
       {required this.firstName,

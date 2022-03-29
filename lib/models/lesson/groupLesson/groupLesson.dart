@@ -1,14 +1,13 @@
 import '../absLesson.dart';
 
 class GroupLesson extends AbsLesson {
-  String teacher;
+  String? teacher;
 
   GroupLesson(
-      {required String subject,
-      required String this.teacher,
-      required DateTime date})
+      {required String subject, String? this.teacher, required DateTime date})
       : super(lessonType: 'שיעור', subject: subject, date: date);
 
   @override
-  String get title => super.title + " עם ${teacher}";
+  String get title =>
+      teacher != null ? super.title + " עם ${teacher}" : super.title;
 }

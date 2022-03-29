@@ -119,7 +119,7 @@ abstract class MyUserDocumentReference
     String phoneNo,
     String birthDate,
     int role,
-    String group,
+    String? group,
   });
 
   Future<void> set(MyUser value);
@@ -177,7 +177,7 @@ class _$MyUserDocumentReference
       if (phoneNo != _sentinel) "phoneNo": phoneNo as String,
       if (birthDate != _sentinel) "birthDate": birthDate as String,
       if (role != _sentinel) "role": role as int,
-      if (group != _sentinel) "group": group as String,
+      if (group != _sentinel) "group": group as String?,
     };
 
     return reference.update(json);
@@ -289,8 +289,8 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
     String? isGreaterThan,
     String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
+    List<String?>? whereIn,
+    List<String?>? whereNotIn,
   });
 
   MyUserQuery orderByFirstName({
@@ -355,10 +355,10 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
 
   MyUserQuery orderByGroup({
     bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
+    String? startAt,
+    String? startAfter,
+    String? endAt,
+    String? endBefore,
     MyUserDocumentSnapshot? startAtDocument,
     MyUserDocumentSnapshot? endAtDocument,
     MyUserDocumentSnapshot? endBeforeDocument,
@@ -575,8 +575,8 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     String? isGreaterThan,
     String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
+    List<String?>? whereIn,
+    List<String?>? whereNotIn,
   }) {
     return _$MyUserQuery(
       reference.where(
@@ -901,7 +901,7 @@ MyUser _$MyUserFromJson(Map<String, dynamic> json) => MyUser(
       phoneNo: json['phoneNo'] as String,
       birthDate: json['birthDate'] as String,
       role: json['role'] as int,
-      group: json['group'] as String,
+      group: json['group'] as String?,
     );
 
 Map<String, dynamic> _$MyUserToJson(MyUser instance) => <String, dynamic>{

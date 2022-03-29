@@ -11,7 +11,7 @@ import '../models/subjects.dart';
 
 class LessonScheduler {
   static Future<bool> _hasGroupLesson(MyUser student, DateTime date) async {
-    GroupLesson? groupLesson = await GroupDal.getGroupLesson(student.group);
+    GroupLesson? groupLesson = await GroupDal.getGroupLesson(student.group!);
     bool hasGroupLesson = true;
 
     if (groupLesson == null) {

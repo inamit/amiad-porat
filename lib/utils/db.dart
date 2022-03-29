@@ -1,7 +1,7 @@
-import '../models/subjects.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/subjects.dart';
 
 class DB {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;

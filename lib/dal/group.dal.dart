@@ -1,6 +1,9 @@
+import 'user.dal.dart';
+
 import '../models/lesson/groupLesson/groupLesson.dart';
 
 import '../models/group/group.dart';
+import '../models/user/user.dart';
 
 class GroupDal {
   static Future<GroupLesson?> getGroupLesson(String groupId) async {
@@ -24,9 +27,11 @@ class GroupDal {
       DateTime groupLessonDate = new DateTime(DateTime.now().year,
           DateTime.now().month, day, group.getHour.hour, group.getHour.minute);
 
+      MyUser? user = await UserDal.getUserById(group.teacher);
+
       groupLesson = GroupLesson(
           subject: group.subject,
-          teacher: group.teacher,
+          teacher: user?.firstName,
           date: groupLessonDate);
     }
 

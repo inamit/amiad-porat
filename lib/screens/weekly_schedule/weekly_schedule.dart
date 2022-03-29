@@ -1,3 +1,5 @@
+import '../../dal/user.dal.dart';
+
 import '../components/mainPage.dart';
 
 import '../../dal/lesson.dal.dart';
@@ -143,11 +145,15 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
     });
   }
 
-  void hasGroupLesson(DateTime selectedDay) {
+  void hasGroupLesson(DateTime selectedDay) async {
     DateTime groupLessonDate = new DateTime(selectedDay.year, selectedDay.month,
         selectedDay.day, myGroup!.getHour.hour, myGroup!.getHour.minute);
-    _selectedDayLessons.add(
-        GroupLesson(subject: 'math', teacher: 'עמית', date: groupLessonDate));
+
+    MyUser? teacher = await UserDal.getUserById(myGroup!.teacher);
+    _selectedDayLessons.add(GroupLesson(
+        subject: myGroup!.subject,
+        teacher: teacher?.firstName,
+        date: groupLessonDate));
   }
 
   DateTime _getEndOfWeek() {
