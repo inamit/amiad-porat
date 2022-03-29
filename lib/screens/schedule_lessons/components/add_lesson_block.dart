@@ -126,7 +126,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
         setState(() {
           widget.lesson.selectedSubject = Subjects.values[index!];
         });
-
+        widget.lesson.clean();
         this.getDates();
       },
     );
