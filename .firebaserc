@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "amiadporat-81137"
-  }
+    "default": "amiad-porat-staging",
+    "production": "amiad-porat",
+    "staging": "amiad-porat-staging"
+  },
+  "targets": {}
 }

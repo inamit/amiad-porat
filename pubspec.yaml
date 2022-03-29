@@ -27,11 +27,13 @@ dependencies:
   data_table_2: ^2.1.1
   firebase_analytics: ^9.1.2
   firebase_app_check: ^0.0.6+7
-  firebase_auth: ^3.3.10
+  firebase_auth: ^3.3.11
   firebase_core: ^1.13.1
+  firebase_crashlytics: ^2.5.3
   fl_chart: ^0.46.0
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.0.2
   flutter_localizations:
     sdk: flutter
   flutter_screenutil: ^5.0.0+2
