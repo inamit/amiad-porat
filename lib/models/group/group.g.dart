@@ -117,6 +117,8 @@ abstract class GroupDocumentReference
     String name,
     int dayInWeek,
     String hour,
+    String subject,
+    String teacher,
   });
 
   Future<void> set(Group value);
@@ -164,11 +166,15 @@ class _$GroupDocumentReference
     Object? name = _sentinel,
     Object? dayInWeek = _sentinel,
     Object? hour = _sentinel,
+    Object? subject = _sentinel,
+    Object? teacher = _sentinel,
   }) async {
     final json = {
       if (name != _sentinel) "name": name as String,
       if (dayInWeek != _sentinel) "dayInWeek": dayInWeek as int,
       if (hour != _sentinel) "hour": hour as String,
+      if (subject != _sentinel) "subject": subject as String,
+      if (teacher != _sentinel) "teacher": teacher as String,
     };
 
     return reference.update(json);
@@ -250,6 +256,28 @@ abstract class GroupQuery implements QueryReference<GroupQuerySnapshot> {
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  GroupQuery whereSubject({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  GroupQuery whereTeacher({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
 
   GroupQuery orderByName({
     bool descending = false,
@@ -276,6 +304,30 @@ abstract class GroupQuery implements QueryReference<GroupQuerySnapshot> {
   });
 
   GroupQuery orderByHour({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
+  });
+
+  GroupQuery orderBySubject({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
+  });
+
+  GroupQuery orderByTeacher({
     bool descending = false,
     String startAt,
     String startAfter,
@@ -433,6 +485,62 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     );
   }
 
+  GroupQuery whereSubject({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$GroupQuery(
+      reference.where(
+        'subject',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  GroupQuery whereTeacher({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$GroupQuery(
+      reference.where(
+        'teacher',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   GroupQuery orderByName({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -559,6 +667,90 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     return _$GroupQuery(query, _collection);
   }
 
+  GroupQuery orderBySubject({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('subject', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$GroupQuery(query, _collection);
+  }
+
+  GroupQuery orderByTeacher({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('teacher', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$GroupQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$GroupQuery &&
@@ -611,10 +803,14 @@ Group _$GroupFromJson(Map<String, dynamic> json) => Group(
       name: json['name'] as String,
       dayInWeek: json['dayInWeek'] as int,
       hour: json['hour'] as String,
+      subject: json['subject'] as String,
+      teacher: json['teacher'] as String,
     );
 
 Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
       'name': instance.name,
       'dayInWeek': instance.dayInWeek,
       'hour': instance.hour,
+      'subject': instance.subject,
+      'teacher': instance.teacher,
     };

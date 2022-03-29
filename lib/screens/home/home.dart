@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:amiadporat/dal/group.dal.dart';
+
 import '../../dal/lesson.dal.dart';
 import '../../models/lesson/absLesson.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
@@ -8,11 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/lessons.dart';
 import '../../data/messages.dart';
 import '../../data/tests.dart';
 import '../../models/constants.dart';
-import '../../models/group/group.dart';
 import '../../models/subjects.dart';
 import '../../models/user/user.dart';
 import '../../providers/auth_provider.dart';
@@ -56,36 +56,11 @@ class _HomeState extends State<Home> {
     MyUser? user = await authService.user;
 
     if (user != null) {
-      GroupDocumentSnapshot groupSnapshot =
-          await groupsRef.doc(user.group).get();
+      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group);
 
-      Group? group = groupSnapshot.data;
-
-      if (group != null) {
-        int day = DateTime.now().day;
-        print(group.dayInWeek);
-
-        if (DateTime.now().weekday > group.dayInWeek) {
-          day += (7 - DateTime.now().weekday) + group.dayInWeek;
-        } else if (DateTime.now().weekday < group.dayInWeek) {
-          day += group.dayInWeek - DateTime.now().weekday;
-        } else if (DateTime.now().hour >= group.getHour.hour &&
-            DateTime.now().minute >= group.getHour.minute) {
-          day += 7;
-        }
-
-        DateTime groupLessonDate = new DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-            day,
-            group.getHour.hour,
-            group.getHour.minute);
-
-        setState(() {
-          this.groupLesson = new GroupLesson(
-              subject: 'math', teacher: 'teacher', date: groupLessonDate);
-        });
-      }
+      setState(() {
+        this.groupLesson = groupLesson;
+      });
     }
   }
 

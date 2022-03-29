@@ -1,13 +1,11 @@
+import 'package:amiadporat/dal/group.dal.dart';
 import 'package:amiadporat/models/lesson/absLesson.dart';
 import 'package:amiadporat/providers/auth_provider.dart';
-import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../dal/lesson.dal.dart';
-import '../../data/lessons.dart';
 import '../../models/group/group.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
 import '../../models/lesson/tutorLesson/lesson.dart';
@@ -56,34 +54,11 @@ class _AllLessonsState extends State<AllLessons> {
     MyUser? user = await authService.user;
 
     if (user != null) {
-      GroupDocumentSnapshot groupSnapshot =
-          await groupsRef.doc(user.group).get();
+      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group);
 
-      Group? group = groupSnapshot.data;
-
-      if (group != null) {
-        int day = DateTime.now().day;
-        print(group.dayInWeek);
-
-        if (DateTime.now().weekday > group.dayInWeek) {
-          day += (7 - DateTime.now().weekday) + group.dayInWeek;
-        } else if (DateTime.now().weekday < group.dayInWeek) {
-          day += group.dayInWeek - DateTime.now().weekday;
-        } else if (DateTime.now().hour >= group.getHour.hour &&
-            DateTime.now().minute >= group.getHour.minute) {
-          day += 7;
-        }
-
-        DateTime groupLessonDate = new DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-            day,
-            group.getHour.hour,
-            group.getHour.minute);
-
+      if (groupLesson != null) {
         setState(() {
-          this.lessons.add(new GroupLesson(
-              subject: 'math', teacher: 'teacher', date: groupLessonDate));
+          this.lessons.add(groupLesson);
         });
       }
     }
