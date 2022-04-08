@@ -17,11 +17,13 @@ class AddLessonBlock extends StatefulWidget {
       {Key? key,
       required this.onDeletePressed,
       required this.lesson,
-      required this.validateForm})
+      required this.validateForm,
+      required this.lessons})
       : super(key: key);
 
   final void Function() onDeletePressed;
   final void Function() validateForm;
+  final List<LessonBlock> lessons;
 
   final LessonBlock lesson;
 
@@ -78,10 +80,20 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
 
     if (authService.status == Status.Authenticated) {
       try {
-        List<DateTime> mathDates = await DB.getLessonDates(
+        List<DateTime> lessonsDates = await DB.getLessonDates(
             authService.uid, widget.lesson.selectedSubject);
+
+        widget.lessons
+            .where((scheduledLesson) =>
+                scheduledLesson.selectedSubject ==
+                widget.lesson.selectedSubject)
+            .forEach((scheduledLesson) {
+          lessonsDates.removeWhere(
+              (date) => date.isSameDate(scheduledLesson.selectedDate));
+        });
+
         setState(() {
-          this.dates = mathDates;
+          this.dates = lessonsDates;
         });
       } on FirebaseException catch (error) {
         FirebaseCrashlytics.instance.recordError(error, error.stackTrace,

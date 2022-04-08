@@ -111,15 +111,17 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
         itemCount: this.lessons.length,
         itemBuilder: (context, index) {
           return AddLessonBlock(
-              onDeletePressed: () {
-                if (this.lessons.length > 1) {
-                  setState(() {
-                    this.lessons.removeAt(index);
-                  });
-                }
-              },
-              lesson: this.lessons[index],
-              validateForm: this.validateForm);
+            onDeletePressed: () {
+              if (this.lessons.length > 1) {
+                setState(() {
+                  this.lessons.removeAt(index);
+                });
+              }
+            },
+            lesson: this.lessons[index],
+            validateForm: this.validateForm,
+            lessons: this.lessons,
+          );
         },
       ),
     );
