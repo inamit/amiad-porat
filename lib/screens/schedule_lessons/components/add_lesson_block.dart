@@ -1,3 +1,4 @@
+import 'package:amiadporat/models/user/user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,16 +31,14 @@ class AddLessonBlock extends StatefulWidget {
 
 class _AddLessonBlockState extends State<AddLessonBlock> {
   late AuthProvider authService;
+  MyUser? currentUser;
 
   bool isPermanent = false;
   int selectedSubject = 0;
   String? selectedHour;
   DateTime? selectedDate;
 
-  final Map<int, Widget> _subjects = {
-    Subjects.Math.index: Text("מתמטיקה"),
-    Subjects.English.index: Text("אנגלית")
-  };
+  final Map<int, Widget> _subjects = {};
   Map<String, String> _dropdownItems = {};
 
   List<DateTime> dates = [];
@@ -49,9 +48,27 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
   @override
   void initState() {
     authService = Provider.of<AuthProvider>(context, listen: false);
+    initSubjects();
 
     super.initState();
     getDates();
+  }
+
+  initSubjects() async {
+    if (authService.status == Status.Authenticated) {
+      currentUser = await authService.user;
+
+      if (currentUser!.getSubjects!.isNotEmpty) {
+        if (currentUser!.getSubjects!.length == 1) {
+          this.selectedSubject = currentUser!.getSubjects!.first!.index;
+        } else {
+          currentUser!.getSubjects!.forEach((subject) {
+            _subjects.putIfAbsent(subject!.index,
+                () => Text(SubjectsHelper().getHebrew(subject)));
+          });
+        }
+      }
+    }
   }
 
   getDates() async {
@@ -87,19 +104,20 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
       padding: const EdgeInsets.only(right: 10, top: 20),
       child: Column(
         children: [
-          _buildSubjectSegmentedControl(),
-          if (this.isLoadingDates)
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: LinearProgressIndicator(),
-            ),
-          if (this.dates.isEmpty)
-            Text("אין תאריכים זמינים לתגבור 😢 כדאי לדבר עם המשרד!")
-          else
-            Padding(
-              padding: const EdgeInsets.only(top: 10, right: 25.0),
-              child: _getDropdowns(context),
-            ),
+          if (this.currentUser != null &&
+              this.currentUser!.subjects!.length > 1)
+            _buildSubjectSegmentedControl(),
+          this.isLoadingDates
+              ? Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: LinearProgressIndicator(),
+                )
+              : (!this.isLoadingDates && this.dates.isEmpty
+                  ? Text("אין תאריכים זמינים לתגבור 😢 כדאי לדבר עם המשרד!")
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 10, right: 25.0),
+                      child: _getDropdowns(context),
+                    )),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

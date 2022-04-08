@@ -120,6 +120,8 @@ abstract class MyUserDocumentReference
     String birthDate,
     int role,
     String? group,
+    List<String>? subjects,
+    List<Subjects?>? getSubjects,
   });
 
   Future<void> set(MyUser value);
@@ -170,6 +172,8 @@ class _$MyUserDocumentReference
     Object? birthDate = _sentinel,
     Object? role = _sentinel,
     Object? group = _sentinel,
+    Object? subjects = _sentinel,
+    Object? getSubjects = _sentinel,
   }) async {
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String,
@@ -178,6 +182,9 @@ class _$MyUserDocumentReference
       if (birthDate != _sentinel) "birthDate": birthDate as String,
       if (role != _sentinel) "role": role as int,
       if (group != _sentinel) "group": group as String?,
+      if (subjects != _sentinel) "subjects": subjects as List<String>?,
+      if (getSubjects != _sentinel)
+        "getSubjects": getSubjects as List<Subjects?>?,
     };
 
     return reference.update(json);
@@ -292,6 +299,26 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
     List<String?>? whereIn,
     List<String?>? whereNotIn,
   });
+  MyUserQuery whereSubjects({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? arrayContainsAny,
+  });
+  MyUserQuery whereGetSubjects({
+    List<Subjects?>? isEqualTo,
+    List<Subjects?>? isNotEqualTo,
+    List<Subjects?>? isLessThan,
+    List<Subjects?>? isLessThanOrEqualTo,
+    List<Subjects?>? isGreaterThan,
+    List<Subjects?>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Subjects?>? arrayContainsAny,
+  });
 
   MyUserQuery orderByFirstName({
     bool descending = false,
@@ -359,6 +386,30 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
     String? startAfter,
     String? endAt,
     String? endBefore,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
+  });
+
+  MyUserQuery orderBySubjects({
+    bool descending = false,
+    List<String>? startAt,
+    List<String>? startAfter,
+    List<String>? endAt,
+    List<String>? endBefore,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
+  });
+
+  MyUserQuery orderByGetSubjects({
+    bool descending = false,
+    List<Subjects?>? startAt,
+    List<Subjects?>? startAfter,
+    List<Subjects?>? endAt,
+    List<Subjects?>? endBefore,
     MyUserDocumentSnapshot? startAtDocument,
     MyUserDocumentSnapshot? endAtDocument,
     MyUserDocumentSnapshot? endBeforeDocument,
@@ -590,6 +641,58 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         isNull: isNull,
         whereIn: whereIn,
         whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  MyUserQuery whereSubjects({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? arrayContainsAny,
+  }) {
+    return _$MyUserQuery(
+      reference.where(
+        'subjects',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  MyUserQuery whereGetSubjects({
+    List<Subjects?>? isEqualTo,
+    List<Subjects?>? isNotEqualTo,
+    List<Subjects?>? isLessThan,
+    List<Subjects?>? isLessThanOrEqualTo,
+    List<Subjects?>? isGreaterThan,
+    List<Subjects?>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Subjects?>? arrayContainsAny,
+  }) {
+    return _$MyUserQuery(
+      reference.where(
+        'getSubjects',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContainsAny: arrayContainsAny,
       ),
       _collection,
     );
@@ -847,6 +950,90 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     return _$MyUserQuery(query, _collection);
   }
 
+  MyUserQuery orderBySubjects({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('subjects', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MyUserQuery(query, _collection);
+  }
+
+  MyUserQuery orderByGetSubjects({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('getSubjects', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MyUserQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$MyUserQuery &&
@@ -902,6 +1089,9 @@ MyUser _$MyUserFromJson(Map<String, dynamic> json) => MyUser(
       birthDate: json['birthDate'] as String,
       role: json['role'] as int,
       group: json['group'] as String?,
+      subjects: (json['subjects'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$MyUserToJson(MyUser instance) => <String, dynamic>{
@@ -911,4 +1101,5 @@ Map<String, dynamic> _$MyUserToJson(MyUser instance) => <String, dynamic>{
       'birthDate': instance.birthDate,
       'role': instance.role,
       'group': instance.group,
+      'subjects': instance.subjects,
     };

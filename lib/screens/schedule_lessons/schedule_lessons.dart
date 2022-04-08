@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:amiadporat/models/user/user.dart';
+
 import '../../dal/lessonScheduler.dart';
 import 'package:intl/intl.dart';
 
@@ -22,6 +24,7 @@ class ScheduleLessons extends StatefulWidget {
 
 class _ScheduleLessonsState extends State<ScheduleLessons> {
   late AuthProvider authService;
+  MyUser? user;
   List<LessonBlock> lessons = [];
 
   bool valid = false;
@@ -33,8 +36,23 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
   void initState() {
     authService = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
+    getSubject();
+  }
+
+  getSubject() async {
     setState(() {
-      this.lessons.add(LessonBlock());
+      isLoading = true;
+    });
+
+    if (authService.status == Status.Authenticated) {
+      user = await this.authService.user;
+      setState(() {
+        this.lessons.add(LessonBlock(user!.getSubjects!.first!));
+      });
+    }
+
+    setState(() {
+      this.isLoading = false;
     });
   }
 
@@ -48,7 +66,7 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
         backgroundColor: neonBlue,
         onPressed: () {
           setState(() {
-            this.lessons.add(LessonBlock());
+            this.lessons.add(LessonBlock(user!.getSubjects!.first!));
           });
           this.validateForm();
           Timer(

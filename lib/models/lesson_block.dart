@@ -8,10 +8,13 @@ class LessonBlock {
   DateTime? _selectedDate;
   DateTime? _selectedDay;
 
-  LessonBlock();
+  LessonBlock(Subjects subject) {
+    this._selectedSubject = subject;
+  }
+
   factory LessonBlock.fromLesson(Lesson lesson) {
-    LessonBlock block = new LessonBlock();
-    block._selectedSubject = SubjectsHelper().getEnum(lesson.subject)!;
+    LessonBlock block =
+        new LessonBlock(SubjectsHelper().getEnum(lesson.subject)!);
     block._selectedHour = "${lesson.date.hour}:${lesson.date.minute}";
 
     return block;

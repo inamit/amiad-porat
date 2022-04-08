@@ -26,8 +26,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate(
-      webRecaptchaSiteKey: '6LcwFwMeAAAAAE6CpkXyXHGFT2IDifldXUIySZsQ');
 
   if (kDebugMode) {
     String host = Platform.isAndroid ? '10.0.2.2' : '192.168.1.161';
@@ -37,6 +35,9 @@ void main() async {
     await FirebaseAuth.instance.useAuthEmulator(host, 9099);
 
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  } else {
+    await FirebaseAppCheck.instance.activate(
+        webRecaptchaSiteKey: '6LcwFwMeAAAAAE6CpkXyXHGFT2IDifldXUIySZsQ');
   }
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
