@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:amiadporat/dal/user.dal.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'mainPage.dart';
 
 import '../../providers/auth_provider.dart';
@@ -35,6 +38,20 @@ class _TemplateState extends State<Template> {
     ));
 
     super.initState();
+
+    saveFCMToken();
+  }
+
+  saveFCMToken() async {
+    AuthProvider authService =
+        Provider.of<AuthProvider>(context, listen: false);
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    await UserDal.addFCMToUser(authService.uid, token);
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      UserDal.addFCMToUser(authService.uid, token);
+    });
   }
 
   @override

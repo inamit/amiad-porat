@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'providers/auth_provider.dart';
 import 'router/routes.dart';
@@ -29,7 +30,7 @@ void main() async {
       webRecaptchaSiteKey: '6LcwFwMeAAAAAE6CpkXyXHGFT2IDifldXUIySZsQ');
 
   if (kDebugMode) {
-    String host = Platform.isAndroid ? '10.0.2.2' : 'localhost';
+    String host = Platform.isAndroid ? '10.0.2.2' : '192.168.1.161';
 
     FirebaseFirestore.instance.useFirestoreEmulator(host, 8082);
 
@@ -37,6 +38,17 @@ void main() async {
 
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   }
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true);
 
   runApp(MultiProvider(
     providers: [
