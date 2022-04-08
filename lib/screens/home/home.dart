@@ -90,7 +90,11 @@ class _HomeState extends MainPageState<Home> {
             ),
           HomepageCard(
               content: tests.isEmpty ? noTestMessage() : noTestMessage(),
-              button: buildButton("רוצה לשתף?", () {}),
+              button: buildButton("רוצה לשתף?", () {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        "הפיצ'ר הזה עוד לא קיים לצערנו. בקרוב מאוד יהיה אפשר לשתף בקליק!")));
+              }),
               color: red),
           Padding(
             padding: const EdgeInsets.only(bottom: 13.0),
