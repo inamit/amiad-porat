@@ -110,7 +110,7 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
                 weekendDays: [DateTime.friday, DateTime.saturday],
                 startingDayOfWeek: StartingDayOfWeek.sunday,
                 headerStyle: calendarHeader,
-                focusedDay: now,
+                focusedDay: _selectedDay,
                 firstDay: now.subtract(Duration(days: now.weekday)),
                 lastDay: _getEndOfWeek(),
                 calendarFormat: CalendarFormat.week,
