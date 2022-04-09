@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>298508107993-uvip7mk30l62mgdir52rnc7bmfkemf8k.apps.googleusercontent.com</string>
+	<string>298508107993-ob5l985vl558u7rjcgt73i6hg6c0hj1m.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.298508107993-uvip7mk30l62mgdir52rnc7bmfkemf8k</string>
+	<string>com.googleusercontent.apps.298508107993-ob5l985vl558u7rjcgt73i6hg6c0hj1m</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBxzXU-HHmJ0hPIO75jx-axyRf_kLmU5MM</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.amitinbar.amiadporat</string>
+	<string>com.amitinbar.amiadporat.staging</string>
 	<key>PROJECT_ID</key>
 	<string>amiad-porat-staging</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:298508107993:ios:9589dbb037e420cc9bbec8</string>
+	<string>1:298508107993:ios:be1d2e7705d4acad9bbec8</string>
 </dict>
 </plist>

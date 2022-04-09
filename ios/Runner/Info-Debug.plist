@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>עמיעד פורת</string>
+	<string>$(APP_DISPLAY_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -48,10 +48,10 @@
 	<array>
 		<string>_dartobservatory._tcp</string>
 	</array>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-    <key>NSAllowsLocalNetworking</key>
-    <true/>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
+	<key>NSAllowsLocalNetworking</key>
+	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Allow Flutter tools on your computer to connect and debug your application. THIS PROMPT WILL ONLY SHOW ON DEBUG</string>
 	<key>UIBackgroundModes</key>

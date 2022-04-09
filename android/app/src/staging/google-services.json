@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:298508107993:android:41771a2587470d6f9bbec8",
+        "mobilesdk_app_id": "1:298508107993:android:d9fda3c4fc8359799bbec8",
         "android_client_info": {
-          "package_name": "com.amitinbar.amiadporat"
+          "package_name": "com.amitinbar.amiadporat.staging"
         }
       },
       "oauth_client": [
@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "298508107993-uvip7mk30l62mgdir52rnc7bmfkemf8k.apps.googleusercontent.com",
+              "client_id": "298508107993-ob5l985vl558u7rjcgt73i6hg6c0hj1m.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.amitinbar.amiadporat"
+                "bundle_id": "com.amitinbar.amiadporat.staging"
               }
             }
           ]
