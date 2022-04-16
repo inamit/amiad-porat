@@ -37,5 +37,5 @@ jobs:
         run: flutter build appbundle --flavor=production
       - uses: actions/upload-artifact@v1
         with:
-          name: release-apk
+          name: release-appbundle
           path: build/app/outputs/bundle/productionRelease/app-production-release.aab
