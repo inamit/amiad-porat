@@ -1,17 +1,17 @@
-import 'dart:ui';
-
-import '../components/template.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-
-import '../home/home.dart';
+import '../../providers/auth_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:provider/provider.dart';
 
-import '../../constants.dart';
+import '../../models/constants.dart';
+import '../components/template.dart';
 import 'components/login_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  static const String route = '/login';
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -20,7 +20,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late String email;
+  TextEditingController emailTextController = TextEditingController();
+  String email = "";
   late String password;
 
   bool passwordShown = false;
@@ -29,9 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode _emailFocus = new FocusNode();
   final GlobalKey<FormFieldState> _emailFieldState =
       GlobalKey<FormFieldState>();
+  late AuthProvider authService;
 
   @override
   void initState() {
+    authService = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
 
     this._emailFocus.addListener(() {
@@ -86,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 _buildPasswordTextField(size),
                 Padding(padding: EdgeInsets.only(top: size.height / 40)),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: sendResetPasswordLink,
                     child: Text(
                       "שכחת סיסמה? לא נורא, קליק אחד כאן והכל מסתדר",
                       style: TextStyle(color: Colors.black),
@@ -96,8 +99,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     _submitForm();
                   },
-                  child:
-                      LoginButton(title: "התחבר", gradient: redOrangeGradient),
+                  child: LoginButton(
+                    title: "התחבר",
+                    gradient: redOrangeGradient,
+                    isLoading: authService.status == Status.Authenticating,
+                  ),
                 ),
               ],
             ),
@@ -107,12 +113,69 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _submitForm() {
+  void sendResetPasswordLink() async {
+    String snackBarMessage = "";
+
+    if (this._emailFieldState.currentState!.validate()) {
+      try {
+        await authService.sendPasswordResetEmail(this.emailTextController.text);
+        snackBarMessage = "שלחנו לך קישור לאיפוס סיסמה למייל!";
+      } on FirebaseAuthException catch (err) {
+        switch (err.code) {
+          case 'user-not-found':
+            snackBarMessage =
+                "לא ניתן לשלוח קישור למייל זה. אולי התכוונת לכתובת אחרת?";
+            break;
+          default:
+            snackBarMessage =
+                "לא ניתן לשלוח קישור איפוס סיסמה כרגע. שווה לנסות שוב מאוחר יותר ואם הבעיה ממשיכה, לפנות לתמיכה";
+        }
+      }
+    } else {
+      switch (_emailFieldState.currentState!.errorText) {
+        case kEmailNullError:
+          snackBarMessage =
+              "בכדי לקבל קישור לאיפוס סיסמה, יש להזין כתובת מייל קודם.";
+          break;
+        default:
+          snackBarMessage = "";
+      }
+    }
+
+    if (snackBarMessage.isNotEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(snackBarMessage)));
+    }
+  }
+
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // TODO: CONNECT TO SERVER AND LOGIN
-      Navigator.of(context).pushReplacement(
-          CupertinoPageRoute(builder: (context) => Template()));
+
+      try {
+        bool success = await authService.signInWithEmailAndPassword(
+            this.email, this.password);
+
+        if (success) {
+          if (mounted) {
+            Navigator.of(context).pushReplacementNamed(Template.route);
+          }
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("ההתחברות נכשלה")));
+        }
+      } on FirebaseAuthException catch (e) {
+        switch (e.code) {
+          case 'user-not-found':
+          case 'wrong-password':
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("אימייל או סיסמה שגויים. נסה שנית")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("ההתחברות נכשלה")));
+        }
+      }
     }
   }
 
@@ -137,9 +200,11 @@ class _LoginScreenState extends State<LoginScreen> {
           suffixIcon: Icon(passwordIcon),
           prefixIcon: IconButton(
             onPressed: () {
-              setState(() {
-                passwordShown = !passwordShown;
-              });
+              if (mounted) {
+                setState(() {
+                  passwordShown = !passwordShown;
+                });
+              }
             },
             icon: Icon(passwordShown ? hidePasswordIcon : showPasswordIcon),
           ),
@@ -161,6 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextFormField(
         key: this._emailFieldState,
         focusNode: this._emailFocus,
+        controller: emailTextController,
         textDirection: TextDirection.ltr,
         onSaved: (value) => email = value!,
         validator: validate,

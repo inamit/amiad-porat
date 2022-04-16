@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "298508107993",
+    "project_id": "amiad-porat-staging",
+    "storage_bucket": "amiad-porat-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298508107993:android:d9fda3c4fc8359799bbec8",
+        "android_client_info": {
+          "package_name": "com.amitinbar.amiadporat.staging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298508107993-eb7mldm5lo39ptdkm2198o8jbehr253a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCddV76XRuKtdHkEEnBLUQbrwNXd4epQLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298508107993-eb7mldm5lo39ptdkm2198o8jbehr253a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "298508107993-ob5l985vl558u7rjcgt73i6hg6c0hj1m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.amitinbar.amiadporat.staging"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

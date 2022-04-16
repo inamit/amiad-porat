@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import '../schedule_lessons/schedule_lessons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../constants.dart';
+import '../../models/constants.dart';
+import '../schedule_lessons/schedule_lessons.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   const MyBottomNavBar({
@@ -36,7 +37,7 @@ class MyBottomNavBar extends StatelessWidget {
         ),
         Positioned(
           // right: 140,
-          bottom: 3,
+          bottom: 100.h,
           child: _buildAddButton(context),
         ),
       ],
@@ -58,8 +59,8 @@ class MyBottomNavBar extends StatelessWidget {
       ),
       onPressed: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => ScheduleLessons()))
-            .then((value) => onGoBack);
+            .pushNamed(ScheduleLessons.route)
+            .then((value) => value == true ? onGoBack(value) : null);
       },
     );
   }

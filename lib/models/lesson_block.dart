@@ -1,3 +1,4 @@
+import 'lesson/tutorLesson/lesson.dart';
 import 'subjects.dart';
 
 class LessonBlock {
@@ -7,13 +8,37 @@ class LessonBlock {
   DateTime? _selectedDate;
   DateTime? _selectedDay;
 
-  LessonBlock();
+  LessonBlock(Subjects subject) {
+    this._selectedSubject = subject;
+  }
+
+  factory LessonBlock.fromLesson(Lesson lesson) {
+    LessonBlock block =
+        new LessonBlock(SubjectsHelper().getEnum(lesson.subject)!);
+    block._selectedHour = "${lesson.date.hour}:${lesson.date.minute}";
+
+    return block;
+  }
+
+  clean() {
+    this._selectedHour = null;
+    this._selectedDay = null;
+    this._selectedDate = null;
+  }
 
   bool get isPermanent => this._isPermanent;
   Subjects get selectedSubject => this._selectedSubject;
   DateTime? get selectedDay => this._selectedDay;
   String? get selectedHour => this._selectedHour;
-  DateTime? get selectedDate => this._selectedDate;
+  DateTime? get selectedDate =>
+      this._selectedDate != null && this._selectedHour != null
+          ? new DateTime(
+              this._selectedDate!.year,
+              this._selectedDate!.month,
+              this._selectedDate!.day,
+              int.parse(this.selectedHour!.split(":")[0]),
+              int.parse(this.selectedHour!.split(":")[1]))
+          : this._selectedDate;
 
   bool isValid() => this.selectedDate != null && this._selectedHour != null;
 
