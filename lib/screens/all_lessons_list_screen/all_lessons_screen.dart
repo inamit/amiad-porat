@@ -1,3 +1,5 @@
+import 'package:amiadporat/dal/lesson.dal.dart';
+
 import '../../dal/group.dal.dart';
 import '../../models/lesson/absLesson.dart';
 import '../../providers/auth_provider.dart';
@@ -33,19 +35,14 @@ class _AllLessonsState extends State<AllLessons> {
 
   void getMyLessons() async {
     if (authService.status == Status.Authenticated) {
-      Map<String, String> studentInfo = Map();
-      studentInfo.putIfAbsent('student', () => authService.uid!);
-      studentInfo.putIfAbsent('status',
-          () => StudentStatusHelper().getValue(StudentStatus.SCHEDULED));
+      List<Lesson>? lessons =
+          await LessonDal.getScheduledLessonsFromDateByUser(authService.uid!);
 
-      LessonQuerySnapshot snapshot =
-          await lessonsRef.whereStudents(arrayContainsAny: [studentInfo]).get();
-
-      setState(() {
-        this.lessons = <AbsLesson>[
-          ...snapshot.docs.map((e) => e.data).toList()
-        ];
-      });
+      if (lessons != null) {
+        setState(() {
+          this.lessons = <AbsLesson>[...lessons];
+        });
+      }
     }
   }
 

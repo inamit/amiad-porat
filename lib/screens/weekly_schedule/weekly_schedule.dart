@@ -1,9 +1,8 @@
-import '../../dal/user.dal.dart';
+import 'package:amiadporat/dal/group.dal.dart';
 
 import '../components/mainPage.dart';
 
 import '../../dal/lesson.dal.dart';
-import '../../models/group/group.dart';
 import '../../models/lesson/absLesson.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
 import '../../models/user/user.dart';
@@ -32,7 +31,7 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
   List<AbsLesson> lessonsData = [];
   DateTime _selectedDay = DateTime.now();
   late List<AbsLesson> _selectedDayLessons;
-  Group? myGroup;
+  GroupLesson? myGroup;
 
   @override
   void initState() {
@@ -72,14 +71,11 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
   getGroupLesson() async {
     MyUser? user = await authService.user;
 
-    if (user != null) {
-      GroupDocumentSnapshot groupSnapshot =
-          await groupsRef.doc(user.group).get();
+    if (user != null && user.group != null) {
+      myGroup = await GroupDal.getGroupLesson(user.group!);
 
-      myGroup = groupSnapshot.data;
-
-      if (myGroup != null && _selectedDay.weekday == myGroup?.dayInWeek) {
-        hasGroupLesson(_selectedDay);
+      if (myGroup != null && _selectedDay.weekday == myGroup?.date.weekday) {
+        _selectedDayLessons.add(myGroup!);
       }
     }
   }
@@ -136,8 +132,8 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
             .toList()
       ];
 
-      if (myGroup != null && _selectedDay.weekday == myGroup?.dayInWeek) {
-        hasGroupLesson(_selectedDay);
+      if (myGroup != null && _selectedDay.weekday == myGroup?.date.weekday) {
+        _selectedDayLessons.add(myGroup!);
       }
 
       _selectedDayLessons.sort(
@@ -145,22 +141,8 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
     });
   }
 
-  void hasGroupLesson(DateTime selectedDay) async {
-    DateTime groupLessonDate = new DateTime(selectedDay.year, selectedDay.month,
-        selectedDay.day, myGroup!.getHour.hour, myGroup!.getHour.minute);
-
-    MyUser? teacher = await UserDal.getUserById(myGroup!.teacher);
-    _selectedDayLessons.add(GroupLesson(
-        subject: myGroup!.subject,
-        teacher: teacher?.firstName,
-        date: groupLessonDate));
-  }
-
   DateTime _getEndOfWeek() {
-    return DateTime.now().add(Duration(
-        days: DateTime.now().weekday < DateTime.thursday
-            ? DateTime.thursday - DateTime.now().weekday
-            : DateTime.thursday));
+    return DateTime.now().add(Duration(days: 7));
   }
 
   Expanded _lessonsList(List<Color> backgrounds) {
