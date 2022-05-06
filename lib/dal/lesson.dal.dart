@@ -16,6 +16,34 @@ class LessonDal {
     return lessonsRef.whereStudents(arrayContainsAny: [student]);
   }
 
+  static Future<List<Lesson>?> getScheduledLessonsFromDateByUser(
+      String uid) async {
+    Map<String, String> student = new Map();
+    student.putIfAbsent('student', () => uid);
+    student.putIfAbsent('status',
+        () => StudentStatusHelper().getValue(StudentStatus.SCHEDULED));
+
+    try {
+      QuerySnapshot<Lesson> lessons = await FirebaseFirestore.instance
+          .collection('lessons')
+          .where('date', isGreaterThan: DateTime.now())
+          .where('students', arrayContains: student)
+          .withConverter(
+              fromFirestore: LessonCollectionReference.fromFirestore,
+              toFirestore: LessonCollectionReference.toFirestore)
+          .get();
+
+      return lessons.docs.map((e) => e.data()).toList();
+    } on FirebaseException catch (error) {
+      FirebaseCrashlytics.instance.log(
+          "Tried to fetch all scheduled lessons for student: ${uid} from date: ${DateTime.now()}");
+      FirebaseCrashlytics.instance.recordError(error, error.stackTrace,
+          reason: "Finding the closest lesson");
+    }
+
+    return null;
+  }
+
   static Future<Lesson?> getClosestLessonByUser(String uid) async {
     Map<String, String> student = new Map();
     student.putIfAbsent('student', () => uid);
