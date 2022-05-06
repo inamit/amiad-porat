@@ -32,6 +32,7 @@ class _HomeState extends MainPageState<Home> {
 
   Lesson? closestLesson;
   GroupLesson? groupLesson;
+  bool isLoadingClosestLesson = true;
 
   @override
   void initState() {
@@ -46,6 +47,10 @@ class _HomeState extends MainPageState<Home> {
   }
 
   getLatestLesson() async {
+    setState(() {
+      this.isLoadingClosestLesson = true;
+    });
+
     if (authService.status == Status.Authenticated) {
       Lesson? lesson = await LessonDal.getClosestLessonByUser(authService.uid!);
 
@@ -53,6 +58,10 @@ class _HomeState extends MainPageState<Home> {
         this.closestLesson = lesson;
       });
     }
+
+    setState(() {
+      isLoadingClosestLesson = false;
+    });
   }
 
   getGroupLesson() async {
@@ -73,8 +82,11 @@ class _HomeState extends MainPageState<Home> {
       child: Column(
         children: [
           HomepageCard(
-              content:
-                  closestLesson == null ? noLessonMessage() : _closestLesson(),
+              content: isLoadingClosestLesson
+                  ? _loadingLesson()
+                  : closestLesson == null
+                      ? noLessonMessage()
+                      : _closestLesson(),
               button: closestLesson == null
                   ? buildButton(
                       "לקבוע תגבור?",
@@ -118,7 +130,7 @@ class _HomeState extends MainPageState<Home> {
     );
   }
 
-  Widget _lesson(Row header, Row details) {
+  Widget _lesson(Row header, Widget details) {
     return Padding(
       padding: const EdgeInsets.only(
           left: 20.0, right: 20.0, top: 8.0, bottom: 20.0),
@@ -134,6 +146,15 @@ class _HomeState extends MainPageState<Home> {
 
   Widget _closestLesson() {
     return _lesson(_closestLessonHeader(), _lessonDetails(this.closestLesson!));
+  }
+
+  Widget _loadingLesson() {
+    return _lesson(
+        _closestLessonHeader(showAction: false),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(child: CircularProgressIndicator()),
+        ));
   }
 
   FutureOr onGoBack(dynamic value) {
@@ -184,19 +205,21 @@ class _HomeState extends MainPageState<Home> {
     );
   }
 
-  Row _closestLessonHeader() {
+  Row _closestLessonHeader({bool showAction = true}) {
     return _header(
       "התגבור הקרוב שלי:",
-      button: TextButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AllLessons()));
-        },
-        child: Text(
-          "כל התגבורים שלי",
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-      ),
+      button: showAction
+          ? TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => AllLessons()));
+              },
+              child: Text(
+                "כל התגבורים שלי",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            )
+          : null,
     );
   }
 
