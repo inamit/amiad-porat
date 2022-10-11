@@ -45,4 +45,30 @@ class HomepageCard extends StatelessWidget {
       ),
     );
   }
+
+  static Padding buildCardButton(
+      String title, Color backgroudColor, void Function() onPressed,
+      {double width = 220}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, bottom: 18.0),
+      child: Container(
+        height: 35,
+        width: width,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 16),
+          ),
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(6.0),
+            backgroundColor: MaterialStateProperty.all(backgroudColor),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

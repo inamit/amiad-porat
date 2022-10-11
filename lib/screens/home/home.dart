@@ -88,8 +88,9 @@ class _HomeState extends MainPageState<Home> {
                       ? noLessonMessage()
                       : _closestLesson(),
               button: closestLesson == null
-                  ? buildButton(
+                  ? HomepageCard.buildCardButton(
                       "לקבוע תגבור?",
+                      neonBlue,
                       () => Navigator.of(context)
                           .pushNamed(ScheduleLessons.route)
                           .then((_) => setState(() {})))
@@ -102,7 +103,7 @@ class _HomeState extends MainPageState<Home> {
             ),
           HomepageCard(
               content: tests.isEmpty ? noTestMessage() : noTestMessage(),
-              button: buildButton("רוצה לשתף?", () {
+              button: HomepageCard.buildCardButton("רוצה לשתף?", neonBlue, () {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(
                         "הפיצ'ר הזה עוד לא קיים לצערנו. בקרוב מאוד יהיה אפשר לשתף בקליק!")));
@@ -264,30 +265,6 @@ class _HomeState extends MainPageState<Home> {
       child: Text(
         "מתי המבחן הקרוב שלך?",
         style: TextStyle(fontSize: 18, color: Colors.white),
-      ),
-    );
-  }
-
-  Padding buildButton(String title, void Function() onPressed) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 18.0, bottom: 18.0),
-      child: Container(
-        height: 35,
-        width: 220,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 16),
-          ),
-          style: ButtonStyle(
-            elevation: MaterialStateProperty.all(6.0),
-            backgroundColor: MaterialStateProperty.all(neonBlue),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            ),
-          ),
-        ),
       ),
     );
   }
