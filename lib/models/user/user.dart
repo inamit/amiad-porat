@@ -7,7 +7,14 @@ import 'userRoles.dart';
 
 part 'user.g.dart';
 
-@JsonSerializable()
+const firestoreSerializable = JsonSerializable(
+  converters: firestoreJsonConverters,
+  // The following values could alternatively be set inside your `build.yaml`
+  explicitToJson: true,
+  createFieldMap: true,
+);
+
+@firestoreSerializable
 class MyUser {
   final String firstName;
   final String lastName;

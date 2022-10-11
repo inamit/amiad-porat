@@ -7,7 +7,7 @@ part of 'group.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -19,7 +19,9 @@ const _sentinel = _Sentinel();
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class GroupCollectionReference
-    implements GroupQuery, FirestoreCollectionReference<GroupQuerySnapshot> {
+    implements
+        GroupQuery,
+        FirestoreCollectionReference<Group, GroupQuerySnapshot> {
   factory GroupCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$GroupCollectionReference;
@@ -37,6 +39,9 @@ abstract class GroupCollectionReference
   ) {
     return _$GroupToJson(value);
   }
+
+  @override
+  CollectionReference<Group> get reference;
 
   @override
   GroupDocumentReference doc([String? id]);
@@ -61,7 +66,7 @@ class _$GroupCollectionReference extends _$GroupQuery
 
   _$GroupCollectionReference._(
     CollectionReference<Group> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -71,6 +76,10 @@ class _$GroupCollectionReference extends _$GroupQuery
 
   @override
   GroupDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return GroupDocumentReference(
       reference.doc(id),
     );
@@ -93,7 +102,7 @@ class _$GroupCollectionReference extends _$GroupQuery
 }
 
 abstract class GroupDocumentReference
-    extends FirestoreDocumentReference<GroupDocumentSnapshot> {
+    extends FirestoreDocumentReference<Group, GroupDocumentSnapshot> {
   factory GroupDocumentReference(DocumentReference<Group> reference) =
       _$GroupDocumentReference;
 
@@ -113,19 +122,43 @@ abstract class GroupDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String name,
+    FieldValue nameFieldValue,
     int dayInWeek,
+    FieldValue dayInWeekFieldValue,
     String hour,
+    FieldValue hourFieldValue,
     String subject,
+    FieldValue subjectFieldValue,
     String teacher,
+    FieldValue teacherFieldValue,
   });
 
-  Future<void> set(Group value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String name,
+    FieldValue nameFieldValue,
+    int dayInWeek,
+    FieldValue dayInWeekFieldValue,
+    String hour,
+    FieldValue hourFieldValue,
+    String subject,
+    FieldValue subjectFieldValue,
+    String teacher,
+    FieldValue teacherFieldValue,
+  });
 }
 
 class _$GroupDocumentReference
-    extends FirestoreDocumentReference<GroupDocumentSnapshot>
+    extends FirestoreDocumentReference<Group, GroupDocumentSnapshot>
     implements GroupDocumentReference {
   _$GroupDocumentReference(this.reference);
 
@@ -158,30 +191,110 @@ class _$GroupDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<GroupDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return GroupDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? name = _sentinel,
+    FieldValue? nameFieldValue,
     Object? dayInWeek = _sentinel,
+    FieldValue? dayInWeekFieldValue,
     Object? hour = _sentinel,
+    FieldValue? hourFieldValue,
     Object? subject = _sentinel,
+    FieldValue? subjectFieldValue,
     Object? teacher = _sentinel,
+    FieldValue? teacherFieldValue,
   }) async {
+    assert(
+      name == _sentinel || nameFieldValue == null,
+      "Cannot specify both name and nameFieldValue",
+    );
+    assert(
+      dayInWeek == _sentinel || dayInWeekFieldValue == null,
+      "Cannot specify both dayInWeek and dayInWeekFieldValue",
+    );
+    assert(
+      hour == _sentinel || hourFieldValue == null,
+      "Cannot specify both hour and hourFieldValue",
+    );
+    assert(
+      subject == _sentinel || subjectFieldValue == null,
+      "Cannot specify both subject and subjectFieldValue",
+    );
+    assert(
+      teacher == _sentinel || teacherFieldValue == null,
+      "Cannot specify both teacher and teacherFieldValue",
+    );
     final json = {
-      if (name != _sentinel) "name": name as String,
-      if (dayInWeek != _sentinel) "dayInWeek": dayInWeek as int,
-      if (hour != _sentinel) "hour": hour as String,
-      if (subject != _sentinel) "subject": subject as String,
-      if (teacher != _sentinel) "teacher": teacher as String,
+      if (name != _sentinel) 'name': name as String,
+      if (nameFieldValue != null) 'name': nameFieldValue,
+      if (dayInWeek != _sentinel) 'dayInWeek': dayInWeek as int,
+      if (dayInWeekFieldValue != null) 'dayInWeek': dayInWeekFieldValue,
+      if (hour != _sentinel) 'hour': hour as String,
+      if (hourFieldValue != null) 'hour': hourFieldValue,
+      if (subject != _sentinel) 'subject': subject as String,
+      if (subjectFieldValue != null) 'subject': subjectFieldValue,
+      if (teacher != _sentinel) 'teacher': teacher as String,
+      if (teacherFieldValue != null) 'teacher': teacherFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Group value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? name = _sentinel,
+    FieldValue? nameFieldValue,
+    Object? dayInWeek = _sentinel,
+    FieldValue? dayInWeekFieldValue,
+    Object? hour = _sentinel,
+    FieldValue? hourFieldValue,
+    Object? subject = _sentinel,
+    FieldValue? subjectFieldValue,
+    Object? teacher = _sentinel,
+    FieldValue? teacherFieldValue,
+  }) {
+    assert(
+      name == _sentinel || nameFieldValue == null,
+      "Cannot specify both name and nameFieldValue",
+    );
+    assert(
+      dayInWeek == _sentinel || dayInWeekFieldValue == null,
+      "Cannot specify both dayInWeek and dayInWeekFieldValue",
+    );
+    assert(
+      hour == _sentinel || hourFieldValue == null,
+      "Cannot specify both hour and hourFieldValue",
+    );
+    assert(
+      subject == _sentinel || subjectFieldValue == null,
+      "Cannot specify both subject and subjectFieldValue",
+    );
+    assert(
+      teacher == _sentinel || teacherFieldValue == null,
+      "Cannot specify both teacher and teacherFieldValue",
+    );
+    final json = {
+      if (name != _sentinel) 'name': name as String,
+      if (nameFieldValue != null) 'name': nameFieldValue,
+      if (dayInWeek != _sentinel) 'dayInWeek': dayInWeek as int,
+      if (dayInWeekFieldValue != null) 'dayInWeek': dayInWeekFieldValue,
+      if (hour != _sentinel) 'hour': hour as String,
+      if (hourFieldValue != null) 'hour': hourFieldValue,
+      if (subject != _sentinel) 'subject': subject as String,
+      if (subjectFieldValue != null) 'subject': subjectFieldValue,
+      if (teacher != _sentinel) 'teacher': teacher as String,
+      if (teacherFieldValue != null) 'teacher': teacherFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -196,7 +309,7 @@ class _$GroupDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class GroupDocumentSnapshot extends FirestoreDocumentSnapshot {
+class GroupDocumentSnapshot extends FirestoreDocumentSnapshot<Group> {
   GroupDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -216,13 +329,89 @@ class GroupDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Group? data;
 }
 
-abstract class GroupQuery implements QueryReference<GroupQuerySnapshot> {
+abstract class GroupQuery implements QueryReference<Group, GroupQuerySnapshot> {
   @override
   GroupQuery limit(int limit);
 
   @override
   GroupQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  GroupQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  GroupQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  GroupQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   GroupQuery whereName({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -277,6 +466,18 @@ abstract class GroupQuery implements QueryReference<GroupQuerySnapshot> {
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
+  });
+
+  GroupQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
   });
 
   GroupQuery orderByName({
@@ -340,17 +541,18 @@ abstract class GroupQuery implements QueryReference<GroupQuerySnapshot> {
   });
 }
 
-class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
+class _$GroupQuery extends QueryReference<Group, GroupQuerySnapshot>
     implements GroupQuery {
   _$GroupQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<Group> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<Group> reference;
 
   GroupQuerySnapshot _decodeSnapshot(
     QuerySnapshot<Group> snapshot,
@@ -388,16 +590,153 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
   @override
   GroupQuery limit(int limit) {
     return _$GroupQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   GroupQuery limitToLast(int limit) {
     return _$GroupQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  GroupQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
+  }) {
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  GroupQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  GroupQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -413,8 +752,9 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$GroupQuery(
-      reference.where(
-        'name',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$GroupFieldMap['name']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -425,7 +765,7 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -441,8 +781,9 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     List<int>? whereNotIn,
   }) {
     return _$GroupQuery(
-      reference.where(
-        'dayInWeek',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$GroupFieldMap['dayInWeek']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -453,7 +794,7 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -469,8 +810,9 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$GroupQuery(
-      reference.where(
-        'hour',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$GroupFieldMap['hour']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -481,7 +823,7 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -497,8 +839,9 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$GroupQuery(
-      reference.where(
-        'subject',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$GroupFieldMap['subject']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -509,7 +852,7 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -525,8 +868,9 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$GroupQuery(
-      reference.where(
-        'teacher',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$GroupFieldMap['teacher']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -537,7 +881,79 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  GroupQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    GroupDocumentSnapshot? startAtDocument,
+    GroupDocumentSnapshot? endAtDocument,
+    GroupDocumentSnapshot? endBeforeDocument,
+    GroupDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$GroupQuery(
       _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -552,35 +968,65 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     GroupDocumentSnapshot? endBeforeDocument,
     GroupDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('name', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$GroupFieldMap['name']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$GroupQuery(query, _collection);
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   GroupQuery orderByDayInWeek({
@@ -594,35 +1040,65 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     GroupDocumentSnapshot? endBeforeDocument,
     GroupDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('dayInWeek', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$GroupFieldMap['dayInWeek']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$GroupQuery(query, _collection);
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   GroupQuery orderByHour({
@@ -636,35 +1112,65 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     GroupDocumentSnapshot? endBeforeDocument,
     GroupDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('hour', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$GroupFieldMap['hour']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$GroupQuery(query, _collection);
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   GroupQuery orderBySubject({
@@ -678,35 +1184,65 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     GroupDocumentSnapshot? endBeforeDocument,
     GroupDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('subject', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$GroupFieldMap['subject']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$GroupQuery(query, _collection);
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   GroupQuery orderByTeacher({
@@ -720,35 +1256,65 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
     GroupDocumentSnapshot? endBeforeDocument,
     GroupDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('teacher', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$GroupFieldMap['teacher']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$GroupQuery(query, _collection);
+    return _$GroupQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -763,7 +1329,7 @@ class _$GroupQuery extends QueryReference<GroupQuerySnapshot>
 }
 
 class GroupQuerySnapshot
-    extends FirestoreQuerySnapshot<GroupQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Group, GroupQueryDocumentSnapshot> {
   GroupQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -779,7 +1345,7 @@ class GroupQuerySnapshot
   final List<FirestoreDocumentChange<GroupDocumentSnapshot>> docChanges;
 }
 
-class GroupQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class GroupQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Group>
     implements GroupDocumentSnapshot {
   GroupQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -806,6 +1372,14 @@ Group _$GroupFromJson(Map<String, dynamic> json) => Group(
       subject: json['subject'] as String,
       teacher: json['teacher'] as String,
     );
+
+const _$GroupFieldMap = <String, String>{
+  'name': 'name',
+  'dayInWeek': 'dayInWeek',
+  'hour': 'hour',
+  'subject': 'subject',
+  'teacher': 'teacher',
+};
 
 Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
       'name': instance.name,

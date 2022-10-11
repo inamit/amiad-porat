@@ -28,7 +28,7 @@ void main() async {
   await Firebase.initializeApp();
 
   if (kDebugMode) {
-    String host = Platform.isAndroid ? '10.0.2.2' : '192.168.1.161';
+    String host = Platform.isAndroid ? '10.0.2.2' : '169.254.83.58';
 
     FirebaseFirestore.instance.useFirestoreEmulator(host, 8082);
 
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(1440, 3040),
-      builder: () => MaterialApp(
+      builder: (BuildContext c, _) => MaterialApp(
         localizationsDelegates: [
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

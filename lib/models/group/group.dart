@@ -5,7 +5,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'group.g.dart';
 
-@JsonSerializable()
+const firestoreSerializable = JsonSerializable(
+  converters: firestoreJsonConverters,
+  // The following values could alternatively be set inside your `build.yaml`
+  explicitToJson: true,
+  createFieldMap: true,
+);
+
+@firestoreSerializable
 class Group {
   final String name;
   final int dayInWeek;
