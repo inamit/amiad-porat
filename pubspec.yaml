@@ -37,7 +37,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_localizations:
     sdk: flutter
-  flutter_screenutil: ^5.0.0+2
+  flutter_screenutil: ^5.7.0
   flutter_svg: ^1.0.3
   form_field_validator: ^1.1.0
   google_fonts: ^2.1.0
