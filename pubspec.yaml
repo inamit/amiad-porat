@@ -44,7 +44,7 @@ dependencies:
   grouped_list: ^4.1.0
   intl: ^0.17.0
   json_annotation: ^4.4.0
-  provider: ^6.0.2
+  provider: ^6.0.5
   table_calendar: ^3.0.1
 
 dev_dependencies:
