@@ -61,7 +61,10 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
             ),
             getLessonsList(<AbsLesson>[
               ...values
-                  .where((element) => element.date.isSameDate(_selectedDay))
+                  .where((element) =>
+                      element.date.isSameDate(_selectedDay) ||
+                      (element.isRecurring &&
+                          element.date.weekday == _selectedDay.weekday))
                   .toList()
             ]),
           ],

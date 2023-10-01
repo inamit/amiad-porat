@@ -1,7 +1,7 @@
-import '../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../constants.dart';
 import '../subjects.dart';
 
 abstract class AbsLesson {
@@ -9,6 +9,8 @@ abstract class AbsLesson {
   String lessonType;
   String subject;
   DateTime date;
+
+  get isRecurring;
 
   AbsLesson(
       {required this.lessonType, required this.subject, required this.date});

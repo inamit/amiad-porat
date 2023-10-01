@@ -6,6 +6,8 @@ class GroupLesson extends AbsLesson {
 
   static get groupLessonType => 'שיעור';
 
+  get isRecurring => true;
+
   GroupLesson({required String this.id,
     required String subject,
     String? this.teacher,
