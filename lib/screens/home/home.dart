@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
 import '../../dal/group.dal.dart';
-import '../../dal/lesson.dal.dart';
 import '../../data/messages.dart';
 import '../../data/tests.dart';
 import '../../models/constants.dart';
@@ -36,7 +35,6 @@ class _HomeState extends MainPageState<Home> {
 
   Lesson? closestLesson;
   List<GroupLesson?>? groupLesson;
-  bool isLoadingClosestLesson = true;
 
   @override
   void initState() {
@@ -46,26 +44,7 @@ class _HomeState extends MainPageState<Home> {
 
   @override
   refreshData() {
-    getLatestLesson();
     getGroupLesson();
-  }
-
-  getLatestLesson() async {
-    setState(() {
-      this.isLoadingClosestLesson = true;
-    });
-
-    if (authService.status == Status.Authenticated) {
-      Lesson? lesson = await LessonDal.getClosestLessonByUser(authService.uid!);
-
-      setState(() {
-        this.closestLesson = lesson;
-      });
-    }
-
-    setState(() {
-      isLoadingClosestLesson = false;
-    });
   }
 
   getGroupLesson() async {
@@ -93,7 +72,7 @@ class _HomeState extends MainPageState<Home> {
               children: [
                 HomepageCard(
                     content: getClosestLessonWidget(lessonsState),
-                    button: closestLesson == null
+                    button: !lessonsState.isLoading && closestLesson == null
                         ? HomepageCard.buildCardButton(
                             "לקבוע תגבור?",
                             neonBlue,
@@ -157,7 +136,8 @@ class _HomeState extends MainPageState<Home> {
         if (sortedLessonsFromNow.first == null) {
           return noLessonMessage();
         } else {
-          return _closestLesson(sortedLessonsFromNow.first!);
+          closestLesson = sortedLessonsFromNow.first;
+          return _closestLesson(closestLesson!);
         }
       }
     }
