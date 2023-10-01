@@ -30,14 +30,14 @@ abstract class GroupCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$GroupFromJson(snapshot.data()!);
+    return _$GroupFromJson({'id': snapshot.id, ...?snapshot.data()});
   }
 
   static Map<String, Object?> toFirestore(
     Group value,
     SetOptions? options,
   ) {
-    return _$GroupToJson(value);
+    return {..._$GroupToJson(value)}..remove('id');
   }
 
   @override
@@ -1365,6 +1365,7 @@ class GroupQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Group>
 // **************************************************************************
 
 Group _$GroupFromJson(Map<String, dynamic> json) => Group(
+      id: json['id'] as String,
       name: json['name'] as String,
       dayInWeek: json['dayInWeek'] as int,
       hour: json['hour'] as String,
@@ -1373,6 +1374,7 @@ Group _$GroupFromJson(Map<String, dynamic> json) => Group(
     );
 
 const _$GroupFieldMap = <String, String>{
+  'id': 'id',
   'name': 'name',
   'dayInWeek': 'dayInWeek',
   'hour': 'hour',
@@ -1381,6 +1383,7 @@ const _$GroupFieldMap = <String, String>{
 };
 
 Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'dayInWeek': instance.dayInWeek,
       'hour': instance.hour,

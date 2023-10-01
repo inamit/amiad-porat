@@ -1,12 +1,15 @@
 import '../absLesson.dart';
 
 class GroupLesson extends AbsLesson {
+  String id;
   String? teacher;
 
   static get groupLessonType => 'שיעור';
 
-  GroupLesson(
-      {required String subject, String? this.teacher, required DateTime date})
+  GroupLesson({required String this.id,
+    required String subject,
+    String? this.teacher,
+    required DateTime date})
       : super(
             lessonType: GroupLesson.groupLessonType,
             subject: subject,

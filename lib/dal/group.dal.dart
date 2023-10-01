@@ -1,16 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
+import '../models/group/group.dart';
+import '../models/lesson/groupLesson/groupLesson.dart';
+import '../models/user/user.dart';
 import 'user.dal.dart';
 
-import '../models/lesson/groupLesson/groupLesson.dart';
-
-import '../models/group/group.dart';
-import '../models/user/user.dart';
-
 class GroupDal {
-  static Future<Group?> getGroup(String groupId) async {
+  static Future<Group?> _getGroup(String groupId) async {
     GroupDocumentSnapshot? groupSnapshot;
 
     try {
@@ -30,7 +27,7 @@ class GroupDal {
   static Future<GroupLesson?> getGroupLesson(String groupId) async {
     GroupLesson? groupLesson = null;
 
-    Group? group = await getGroup(groupId);
+    Group? group = await _getGroup(groupId);
 
     if (group != null) {
       int day = DateTime.now().day;
@@ -50,11 +47,17 @@ class GroupDal {
       MyUser? user = await UserDal.getUserById(group.teacher);
 
       groupLesson = GroupLesson(
+          id: group.id,
           subject: group.subject,
           teacher: user?.firstName,
           date: groupLessonDate);
     }
 
     return groupLesson;
+  }
+
+  static Future<List<GroupLesson?>> getGroupLessonsByUser(
+      Future<MyUser?> user) async {
+    return Future.wait((await user)!.group!.map((e) => getGroupLesson(e)));
   }
 }
