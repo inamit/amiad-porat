@@ -1,16 +1,11 @@
-import 'package:amiadporat/dal/group.dal.dart';
 import 'package:amiadporat/store/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../models/constants.dart';
 import '../../models/lesson/absLesson.dart';
-import '../../models/lesson/groupLesson/groupLesson.dart';
-import '../../models/user/user.dart';
-import '../../providers/auth_provider.dart';
 import '../../utils/date_ext.dart';
 import '../components/lessonTile.dart';
 import '../components/mainPage.dart';
@@ -23,36 +18,10 @@ class WeeklySchedule extends StatefulWidget {
 }
 
 class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
-  late AuthProvider authService;
   DateTime _selectedDay = DateTime.now();
-  late List<AbsLesson> _selectedDayLessons = [];
-  List<GroupLesson?> myGroups = [];
 
   @override
-  void initState() {
-    authService = Provider.of<AuthProvider>(context, listen: false);
-    super.initState();
-  }
-
-  @override
-  refreshData() {
-    getGroupLesson();
-  }
-
-  getGroupLesson() async {
-    MyUser? user = await authService.user;
-
-    if (user != null && user.group != null) {
-      user.group!.forEach((element) async {
-        GroupLesson? lesson = await GroupDal.getGroupLesson(element);
-        myGroups.add(lesson);
-
-        if (lesson != null && _selectedDay.weekday == lesson?.date.weekday) {
-          _selectedDayLessons.add(lesson!);
-        }
-      });
-    }
-  }
+  refreshData() {}
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +37,10 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
     return StoreConnector(
       distinct: true,
       converter: (Store<AppState> store) {
-        return [...store.state.lessonsState.lessons.values];
+        return [
+          ...store.state.lessonsState.lessons.values,
+          ...store.state.groupsState.groups.values
+        ];
       },
       builder: (BuildContext context, List<AbsLesson> values) {
         return Column(
@@ -101,12 +73,6 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
   void _onDaySelected(selectedDay, focusedDay) {
     setState(() {
       _selectedDay = selectedDay;
-
-      myGroups.forEach((group) {
-        if (group != null && _selectedDay.weekday == group?.date.weekday) {
-          _selectedDayLessons.add(group!);
-        }
-      });
     });
   }
 
