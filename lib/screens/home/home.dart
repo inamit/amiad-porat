@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
-import '../../dal/group.dal.dart';
 import '../../data/messages.dart';
 import '../../data/tests.dart';
 import '../../models/constants.dart';
@@ -16,7 +15,6 @@ import '../../models/lesson/absLesson.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
 import '../../models/lesson/tutorLesson/lesson.dart';
 import '../../models/subjects.dart';
-import '../../models/user/user.dart';
 import '../../providers/auth_provider.dart';
 import '../all_lessons_list_screen/all_lessons_screen.dart';
 import '../components/mainPage.dart';
@@ -34,7 +32,6 @@ class _HomeState extends MainPageState<Home> {
   late AuthProvider authService;
 
   Lesson? closestLesson;
-  List<GroupLesson?>? groupLesson;
 
   @override
   void initState() {
@@ -43,36 +40,23 @@ class _HomeState extends MainPageState<Home> {
   }
 
   @override
-  refreshData() {
-    getGroupLesson();
-  }
-
-  getGroupLesson() async {
-    MyUser? user = await authService.user;
-
-    if (user != null && user.group != null) {
-      List<GroupLesson?>? lessons = [];
-      user.group!.forEach((element) async {
-        lessons.add(await GroupDal.getGroupLesson(element));
-      });
-
-      setState(() {
-        this.groupLesson = lessons;
-      });
-    }
-  }
+  refreshData() {}
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector(
-        converter: (Store<AppState> store) => store.state.lessonsState,
-        builder: (BuildContext context, LessonsState lessonsState) {
+        converter: (Store<AppState> store) => ({
+              "lessons": store.state.lessonsState,
+              "groups": store.state.groupsState
+            }),
+        builder: (BuildContext context, Map<String, dynamic> lessonsState) {
           return SingleChildScrollView(
             child: Column(
               children: [
                 HomepageCard(
-                    content: getClosestLessonWidget(lessonsState),
-                    button: !lessonsState.isLoading && closestLesson == null
+                    content: getClosestLessonWidget(lessonsState["lessons"]),
+                    button: !lessonsState["lessons"].isLoading &&
+                            closestLesson == null
                         ? HomepageCard.buildCardButton(
                             "לקבוע תגבור?",
                             neonBlue,
@@ -81,11 +65,19 @@ class _HomeState extends MainPageState<Home> {
                                 .then((_) => setState(() {})))
                         : Container(),
                     color: closestLesson?.color ?? orange),
-                if (groupLesson != null)
-                  ...groupLesson!.map((lesson) => HomepageCard(
-                        content: _groupLesson(lesson!),
-                        color: lesson!.color ?? orange,
-                      )),
+                if (lessonsState["groups"].groups.isNotEmpty)
+                  ...(lessonsState["groups"]
+                      .groups
+                      .values
+                      .map((lesson) => HomepageCard(
+                            content: _groupLesson(lesson!),
+                            color: lesson!.color ?? orange,
+                          ))),
+                // if (groupLesson != null)
+                //   ...groupLesson!.map((lesson) => HomepageCard(
+                //         content: _groupLesson(lesson!),
+                //         color: lesson!.color ?? orange,
+                //       )),
                 HomepageCard(
                     content: tests.isEmpty ? noTestMessage() : noTestMessage(),
                     button: HomepageCard.buildCardButton("רוצה לשתף?", neonBlue,
@@ -154,7 +146,7 @@ class _HomeState extends MainPageState<Home> {
   }
 
   Widget _groupLesson(GroupLesson lesson) {
-    return _lesson(_groupLessonHeader(), _lessonDetails(lesson));
+    return _lesson(_groupLessonHeader(lesson), _lessonDetails(lesson));
   }
 
   Widget _closestLesson(Lesson lesson) {
@@ -187,8 +179,9 @@ class _HomeState extends MainPageState<Home> {
     );
   }
 
-  Row _groupLessonHeader() {
-    return _header("השיעור שלי:");
+  Row _groupLessonHeader(GroupLesson lesson) {
+    return _header(
+        "שיעור ${SubjectsHelper().getHebrew(SubjectsHelper().getEnum(lesson.subject)!)} שלי:");
   }
 
   Row _lessonDetails(AbsLesson lesson) {

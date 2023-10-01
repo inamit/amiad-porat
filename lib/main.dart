@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:amiadporat/dal/group.dal.dart';
 import 'package:amiadporat/dal/lesson.dal.dart';
+import 'package:amiadporat/models/lesson/groupLesson/groupLesson.dart';
 import 'package:amiadporat/models/lesson/tutorLesson/lesson.dart';
 import 'package:amiadporat/models/lesson/tutorLesson/studentStatus.dart';
+import 'package:amiadporat/store/groups/groups.actions.dart';
 import 'package:amiadporat/store/lessons/lessons.actions.dart';
 import 'package:amiadporat/store/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -131,22 +134,22 @@ class MyApp extends StatelessWidget {
                     builder: (_, authProviderRef, __) {
                   if (authProviderRef.status == Status.Authenticated) {
                     loadLessons(authProviderRef);
+                    loadGroups(authProviderRef);
                     return Template();
                   }
 
-                  if (authProviderRef.status ==
-                              Status.Unauthenticated ||
-                              authProviderRef.status == Status.Authenticating) {
-                            return LoginScreen();
-                          }
+                  if (authProviderRef.status == Status.Unauthenticated ||
+                      authProviderRef.status == Status.Authenticating) {
+                    return LoginScreen();
+                  }
 
                   return SplashScreen();
                 });
               }
 
               return SplashScreen();
-                },
-              ),
+            },
+          ),
         ),
       ),
     );
@@ -170,6 +173,19 @@ class MyApp extends StatelessWidget {
       this.store.dispatch(ChangeLessonError(error: e.toString()));
     } finally {
       this.store.dispatch(ChangeIsLoadingLessons(isLoading: false));
+    }
+  }
+
+  void loadGroups(AuthProvider service) async {
+    this.store.dispatch(ChangeIsLoadingGroups(isLoading: true));
+    try {
+      List<GroupLesson?> groups =
+          await GroupDal.getGroupLessonsByUser(service.user);
+      this.store.dispatch(AddManyGroups(groups: groups));
+    } catch (e) {
+      this.store.dispatch(ChangeGroupsError(error: e.toString()));
+    } finally {
+      this.store.dispatch(ChangeIsLoadingGroups(isLoading: false));
     }
   }
 }
