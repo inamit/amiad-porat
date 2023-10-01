@@ -28,11 +28,11 @@ class DefaultFirebaseOptions {
         return ios;
       case TargetPlatform.macOS:
         return macos;
+      default:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions are not supported for this platform.',
+        );
     }
-
-    throw UnsupportedError(
-      'DefaultFirebaseOptions are not supported for this platform.',
-    );
   }
 
   static FirebaseOptions web = FirebaseOptions(
@@ -52,14 +52,14 @@ class DefaultFirebaseOptions {
 
   static FirebaseOptions android = FirebaseOptions(
     apiKey: dotenv.env["FIREBASE_API_KEY"] ??
-        'AIzaSyDz1Mv-3_eAiwpU9Qcb9SG3-ayrtax-whk',
+        'AIzaSyCddV76XRuKtdHkEEnBLUQbrwNXd4epQLA',
     appId: dotenv.env["FIREBASE_ANDROID_APP_ID"] ??
-        '1:459963001535:android:ef6d86756034a66e8f340a',
+        '1:298508107993:android:d9fda3c4fc8359799bbec8',
     messagingSenderId:
-        dotenv.env["FIREBASE_MESSAGING_SENDER_ID"] ?? '459963001535',
-    projectId: dotenv.env["FIREBASE_PROJECT_ID"] ?? 'amiad-porat',
-    storageBucket:
-        dotenv.env["FIREBASE_STORAGE_BUCKET"] ?? 'amiad-porat.appspot.com',
+        dotenv.env["FIREBASE_MESSAGING_SENDER_ID"] ?? '298508107993',
+    projectId: dotenv.env["FIREBASE_PROJECT_ID"] ?? 'amiad-porat-staging',
+    storageBucket: dotenv.env["FIREBASE_STORAGE_BUCKET"] ??
+        'amiad-porat-staging.appspot.com',
   );
 
   static FirebaseOptions ios = FirebaseOptions(

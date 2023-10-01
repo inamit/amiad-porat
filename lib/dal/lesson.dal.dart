@@ -39,6 +39,8 @@ class LessonDal {
           "Tried to fetch all scheduled lessons for student: ${uid} from date: ${DateTime.now()}");
       FirebaseCrashlytics.instance.recordError(error, error.stackTrace,
           reason: "Finding the closest lesson");
+
+      throw error;
     }
 
     return null;
