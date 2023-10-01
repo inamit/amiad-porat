@@ -10,8 +10,8 @@ class DB {
     _firestore.collection('lessons').add({"date": date, "subject": subject});
   }
 
-  static Future<List<DateTime>> getLessonDates(
-      String? uid, Subjects subject) async {
+  static Future<List<DateTime>> getLessonDates(String? uid,
+      List<Subjects> subjects) async {
     List<DateTime> dates = [];
 
     DateTime now = DateTime.now().add(Duration(hours: 1));
@@ -25,7 +25,9 @@ class DB {
                     ? DateTime.thursday - now.weekday
                     : DateTime.thursday))) // TODO: Change this date
         .where('isOpen', isEqualTo: true)
-        .where('subject', isEqualTo: SubjectsHelper().getValue(subject))
+        .where('subject',
+            whereIn:
+                subjects.map((subject) => SubjectsHelper().getValue(subject)))
         .get();
 
     lessons.docs.forEach((lesson) {

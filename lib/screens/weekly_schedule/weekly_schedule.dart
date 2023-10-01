@@ -1,23 +1,20 @@
 import 'package:amiadporat/dal/group.dal.dart';
-
-import '../components/mainPage.dart';
+import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../dal/lesson.dal.dart';
+import '../../models/constants.dart';
 import '../../models/lesson/absLesson.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
-import '../../models/user/user.dart';
-import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
-import 'package:provider/provider.dart';
-
 import '../../models/lesson/tutorLesson/lesson.dart';
 import '../../models/lesson/tutorLesson/studentStatus.dart';
+import '../../models/user/user.dart';
 import '../../providers/auth_provider.dart';
-import '../components/lessonTile.dart';
-
-import '../../models/constants.dart';
-import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import '../../utils/date_ext.dart';
+import '../components/lessonTile.dart';
+import '../components/mainPage.dart';
 
 class WeeklySchedule extends StatefulWidget {
   const WeeklySchedule({Key? key}) : super(key: key);
@@ -31,7 +28,7 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
   List<AbsLesson> lessonsData = [];
   DateTime _selectedDay = DateTime.now();
   late List<AbsLesson> _selectedDayLessons;
-  GroupLesson? myGroup;
+  List<GroupLesson?> myGroups = [];
 
   @override
   void initState() {
@@ -72,11 +69,14 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
     MyUser? user = await authService.user;
 
     if (user != null && user.group != null) {
-      myGroup = await GroupDal.getGroupLesson(user.group!);
+      user.group!.forEach((element) async {
+        GroupLesson? lesson = await GroupDal.getGroupLesson(element);
+        myGroups.add(lesson);
 
-      if (myGroup != null && _selectedDay.weekday == myGroup?.date.weekday) {
-        _selectedDayLessons.add(myGroup!);
-      }
+        if (lesson != null && _selectedDay.weekday == lesson?.date.weekday) {
+          _selectedDayLessons.add(lesson!);
+        }
+      });
     }
   }
 
@@ -132,9 +132,11 @@ class _WeeklyScheduleState extends MainPageState<WeeklySchedule> {
             .toList()
       ];
 
-      if (myGroup != null && _selectedDay.weekday == myGroup?.date.weekday) {
-        _selectedDayLessons.add(myGroup!);
-      }
+      myGroups.forEach((group) {
+        if (group != null && _selectedDay.weekday == group?.date.weekday) {
+          _selectedDayLessons.add(group!);
+        }
+      });
 
       _selectedDayLessons.sort(
           (first, second) => first.date.difference(second.date).inMinutes);

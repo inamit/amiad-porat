@@ -21,7 +21,7 @@ class MyUser {
   final String phoneNo;
   final String birthDate;
   final int role;
-  final String? group;
+  final List<String>? group;
   final List<String>? subjects;
 
   MyUser(

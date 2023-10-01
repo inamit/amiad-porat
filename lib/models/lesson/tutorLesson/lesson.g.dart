@@ -135,8 +135,6 @@ abstract class LessonDocumentReference
     FieldValue subjectFieldValue,
     int maxStudents,
     FieldValue maxStudentsFieldValue,
-    String title,
-    FieldValue titleFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -152,8 +150,6 @@ abstract class LessonDocumentReference
     FieldValue subjectFieldValue,
     int maxStudents,
     FieldValue maxStudentsFieldValue,
-    String title,
-    FieldValue titleFieldValue,
   });
 }
 
@@ -172,32 +168,17 @@ class _$LessonDocumentReference
 
   @override
   Stream<LessonDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return LessonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(LessonDocumentSnapshot._);
   }
 
   @override
   Future<LessonDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return LessonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(LessonDocumentSnapshot._);
   }
 
   @override
   Future<LessonDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return LessonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(LessonDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -209,8 +190,6 @@ class _$LessonDocumentReference
     FieldValue? subjectFieldValue,
     Object? maxStudents = _sentinel,
     FieldValue? maxStudentsFieldValue,
-    Object? title = _sentinel,
-    FieldValue? titleFieldValue,
   }) async {
     assert(
       date == _sentinel || dateFieldValue == null,
@@ -228,21 +207,19 @@ class _$LessonDocumentReference
       maxStudents == _sentinel || maxStudentsFieldValue == null,
       "Cannot specify both maxStudents and maxStudentsFieldValue",
     );
-    assert(
-      title == _sentinel || titleFieldValue == null,
-      "Cannot specify both title and titleFieldValue",
-    );
     final json = {
-      if (date != _sentinel) 'date': date as DateTime,
-      if (dateFieldValue != null) 'date': dateFieldValue,
-      if (isOpen != _sentinel) 'isOpen': isOpen as bool,
-      if (isOpenFieldValue != null) 'isOpen': isOpenFieldValue,
-      if (subject != _sentinel) 'subject': subject as String,
-      if (subjectFieldValue != null) 'subject': subjectFieldValue,
-      if (maxStudents != _sentinel) 'maxStudents': maxStudents as int,
-      if (maxStudentsFieldValue != null) 'maxStudents': maxStudentsFieldValue,
-      if (title != _sentinel) 'title': title as String,
-      if (titleFieldValue != null) 'title': titleFieldValue,
+      if (date != _sentinel) _$LessonFieldMap['date']!: date as DateTime,
+      if (dateFieldValue != null) _$LessonFieldMap['date']!: dateFieldValue,
+      if (isOpen != _sentinel) _$LessonFieldMap['isOpen']!: isOpen as bool,
+      if (isOpenFieldValue != null)
+        _$LessonFieldMap['isOpen']!: isOpenFieldValue,
+      if (subject != _sentinel) _$LessonFieldMap['subject']!: subject as String,
+      if (subjectFieldValue != null)
+        _$LessonFieldMap['subject']!: subjectFieldValue,
+      if (maxStudents != _sentinel)
+        _$LessonFieldMap['maxStudents']!: maxStudents as int,
+      if (maxStudentsFieldValue != null)
+        _$LessonFieldMap['maxStudents']!: maxStudentsFieldValue,
     };
 
     return reference.update(json);
@@ -258,8 +235,6 @@ class _$LessonDocumentReference
     FieldValue? subjectFieldValue,
     Object? maxStudents = _sentinel,
     FieldValue? maxStudentsFieldValue,
-    Object? title = _sentinel,
-    FieldValue? titleFieldValue,
   }) {
     assert(
       date == _sentinel || dateFieldValue == null,
@@ -277,21 +252,19 @@ class _$LessonDocumentReference
       maxStudents == _sentinel || maxStudentsFieldValue == null,
       "Cannot specify both maxStudents and maxStudentsFieldValue",
     );
-    assert(
-      title == _sentinel || titleFieldValue == null,
-      "Cannot specify both title and titleFieldValue",
-    );
     final json = {
-      if (date != _sentinel) 'date': date as DateTime,
-      if (dateFieldValue != null) 'date': dateFieldValue,
-      if (isOpen != _sentinel) 'isOpen': isOpen as bool,
-      if (isOpenFieldValue != null) 'isOpen': isOpenFieldValue,
-      if (subject != _sentinel) 'subject': subject as String,
-      if (subjectFieldValue != null) 'subject': subjectFieldValue,
-      if (maxStudents != _sentinel) 'maxStudents': maxStudents as int,
-      if (maxStudentsFieldValue != null) 'maxStudents': maxStudentsFieldValue,
-      if (title != _sentinel) 'title': title as String,
-      if (titleFieldValue != null) 'title': titleFieldValue,
+      if (date != _sentinel) _$LessonFieldMap['date']!: date as DateTime,
+      if (dateFieldValue != null) _$LessonFieldMap['date']!: dateFieldValue,
+      if (isOpen != _sentinel) _$LessonFieldMap['isOpen']!: isOpen as bool,
+      if (isOpenFieldValue != null)
+        _$LessonFieldMap['isOpen']!: isOpenFieldValue,
+      if (subject != _sentinel) _$LessonFieldMap['subject']!: subject as String,
+      if (subjectFieldValue != null)
+        _$LessonFieldMap['subject']!: subjectFieldValue,
+      if (maxStudents != _sentinel)
+        _$LessonFieldMap['maxStudents']!: maxStudents as int,
+      if (maxStudentsFieldValue != null)
+        _$LessonFieldMap['maxStudents']!: maxStudentsFieldValue,
     };
 
     transaction.update(reference, json);
@@ -307,26 +280,6 @@ class _$LessonDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class LessonDocumentSnapshot extends FirestoreDocumentSnapshot<Lesson> {
-  LessonDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Lesson> snapshot;
-
-  @override
-  LessonDocumentReference get reference {
-    return LessonDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Lesson? data;
 }
 
 abstract class LessonQuery
@@ -467,17 +420,6 @@ abstract class LessonQuery
     List<int>? whereIn,
     List<int>? whereNotIn,
   });
-  LessonQuery whereTitle({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  });
 
   LessonQuery orderByDocumentId({
     bool descending = false,
@@ -538,18 +480,6 @@ abstract class LessonQuery
     LessonDocumentSnapshot? endBeforeDocument,
     LessonDocumentSnapshot? startAfterDocument,
   });
-
-  LessonQuery orderByTitle({
-    bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
-    LessonDocumentSnapshot? startAtDocument,
-    LessonDocumentSnapshot? endAtDocument,
-    LessonDocumentSnapshot? endBeforeDocument,
-    LessonDocumentSnapshot? startAfterDocument,
-  });
 }
 
 class _$LessonQuery extends QueryReference<Lesson, LessonQuerySnapshot>
@@ -565,37 +495,14 @@ class _$LessonQuery extends QueryReference<Lesson, LessonQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  LessonQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Lesson> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return LessonQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<LessonDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: LessonDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return LessonQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<LessonQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(LessonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<LessonQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(LessonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -879,35 +786,6 @@ class _$LessonQuery extends QueryReference<Lesson, LessonQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$LessonFieldMap['maxStudents']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  LessonQuery whereTitle({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    return _$LessonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$LessonFieldMap['title']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1282,78 +1160,6 @@ class _$LessonQuery extends QueryReference<Lesson, LessonQuerySnapshot>
     );
   }
 
-  LessonQuery orderByTitle({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    LessonDocumentSnapshot? startAtDocument,
-    LessonDocumentSnapshot? endAtDocument,
-    LessonDocumentSnapshot? endBeforeDocument,
-    LessonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor.orderBy(_$LessonFieldMap['title']!,
-        descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$LessonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     return other is _$LessonQuery &&
@@ -1365,6 +1171,23 @@ class _$LessonQuery extends QueryReference<Lesson, LessonQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class LessonDocumentSnapshot extends FirestoreDocumentSnapshot<Lesson> {
+  LessonDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Lesson> snapshot;
+
+  @override
+  LessonDocumentReference get reference {
+    return LessonDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Lesson? data;
+}
+
 class LessonQuerySnapshot
     extends FirestoreQuerySnapshot<Lesson, LessonQueryDocumentSnapshot> {
   LessonQuerySnapshot._(
@@ -1372,6 +1195,38 @@ class LessonQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory LessonQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Lesson> snapshot,
+  ) {
+    final docs = snapshot.docs.map(LessonQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        LessonDocumentSnapshot._,
+      );
+    }).toList();
+
+    return LessonQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<LessonDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    LessonDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<LessonDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Lesson> snapshot;
 
@@ -1384,18 +1239,18 @@ class LessonQuerySnapshot
 
 class LessonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Lesson>
     implements LessonDocumentSnapshot {
-  LessonQueryDocumentSnapshot._(this.snapshot, this.data);
+  LessonQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Lesson> snapshot;
 
   @override
+  final Lesson data;
+
+  @override
   LessonDocumentReference get reference {
     return LessonDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Lesson data;
 }
 
 // **************************************************************************

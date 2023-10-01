@@ -11,6 +11,11 @@ StudentInfo _$StudentInfoFromJson(Map<String, dynamic> json) => StudentInfo(
       status: json['status'] as String,
     );
 
+const _$StudentInfoFieldMap = <String, String>{
+  'student': 'student',
+  'status': 'status',
+};
+
 Map<String, dynamic> _$StudentInfoToJson(StudentInfo instance) =>
     <String, dynamic>{
       'student': instance.student,

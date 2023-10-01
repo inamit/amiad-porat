@@ -172,32 +172,17 @@ class _$GroupDocumentReference
 
   @override
   Stream<GroupDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return GroupDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(GroupDocumentSnapshot._);
   }
 
   @override
   Future<GroupDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return GroupDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(GroupDocumentSnapshot._);
   }
 
   @override
   Future<GroupDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return GroupDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(GroupDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -233,16 +218,20 @@ class _$GroupDocumentReference
       "Cannot specify both teacher and teacherFieldValue",
     );
     final json = {
-      if (name != _sentinel) 'name': name as String,
-      if (nameFieldValue != null) 'name': nameFieldValue,
-      if (dayInWeek != _sentinel) 'dayInWeek': dayInWeek as int,
-      if (dayInWeekFieldValue != null) 'dayInWeek': dayInWeekFieldValue,
-      if (hour != _sentinel) 'hour': hour as String,
-      if (hourFieldValue != null) 'hour': hourFieldValue,
-      if (subject != _sentinel) 'subject': subject as String,
-      if (subjectFieldValue != null) 'subject': subjectFieldValue,
-      if (teacher != _sentinel) 'teacher': teacher as String,
-      if (teacherFieldValue != null) 'teacher': teacherFieldValue,
+      if (name != _sentinel) _$GroupFieldMap['name']!: name as String,
+      if (nameFieldValue != null) _$GroupFieldMap['name']!: nameFieldValue,
+      if (dayInWeek != _sentinel)
+        _$GroupFieldMap['dayInWeek']!: dayInWeek as int,
+      if (dayInWeekFieldValue != null)
+        _$GroupFieldMap['dayInWeek']!: dayInWeekFieldValue,
+      if (hour != _sentinel) _$GroupFieldMap['hour']!: hour as String,
+      if (hourFieldValue != null) _$GroupFieldMap['hour']!: hourFieldValue,
+      if (subject != _sentinel) _$GroupFieldMap['subject']!: subject as String,
+      if (subjectFieldValue != null)
+        _$GroupFieldMap['subject']!: subjectFieldValue,
+      if (teacher != _sentinel) _$GroupFieldMap['teacher']!: teacher as String,
+      if (teacherFieldValue != null)
+        _$GroupFieldMap['teacher']!: teacherFieldValue,
     };
 
     return reference.update(json);
@@ -282,16 +271,20 @@ class _$GroupDocumentReference
       "Cannot specify both teacher and teacherFieldValue",
     );
     final json = {
-      if (name != _sentinel) 'name': name as String,
-      if (nameFieldValue != null) 'name': nameFieldValue,
-      if (dayInWeek != _sentinel) 'dayInWeek': dayInWeek as int,
-      if (dayInWeekFieldValue != null) 'dayInWeek': dayInWeekFieldValue,
-      if (hour != _sentinel) 'hour': hour as String,
-      if (hourFieldValue != null) 'hour': hourFieldValue,
-      if (subject != _sentinel) 'subject': subject as String,
-      if (subjectFieldValue != null) 'subject': subjectFieldValue,
-      if (teacher != _sentinel) 'teacher': teacher as String,
-      if (teacherFieldValue != null) 'teacher': teacherFieldValue,
+      if (name != _sentinel) _$GroupFieldMap['name']!: name as String,
+      if (nameFieldValue != null) _$GroupFieldMap['name']!: nameFieldValue,
+      if (dayInWeek != _sentinel)
+        _$GroupFieldMap['dayInWeek']!: dayInWeek as int,
+      if (dayInWeekFieldValue != null)
+        _$GroupFieldMap['dayInWeek']!: dayInWeekFieldValue,
+      if (hour != _sentinel) _$GroupFieldMap['hour']!: hour as String,
+      if (hourFieldValue != null) _$GroupFieldMap['hour']!: hourFieldValue,
+      if (subject != _sentinel) _$GroupFieldMap['subject']!: subject as String,
+      if (subjectFieldValue != null)
+        _$GroupFieldMap['subject']!: subjectFieldValue,
+      if (teacher != _sentinel) _$GroupFieldMap['teacher']!: teacher as String,
+      if (teacherFieldValue != null)
+        _$GroupFieldMap['teacher']!: teacherFieldValue,
     };
 
     transaction.update(reference, json);
@@ -307,26 +300,6 @@ class _$GroupDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class GroupDocumentSnapshot extends FirestoreDocumentSnapshot<Group> {
-  GroupDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Group> snapshot;
-
-  @override
-  GroupDocumentReference get reference {
-    return GroupDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Group? data;
 }
 
 abstract class GroupQuery implements QueryReference<Group, GroupQuerySnapshot> {
@@ -554,37 +527,14 @@ class _$GroupQuery extends QueryReference<Group, GroupQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  GroupQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Group> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return GroupQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<GroupDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: GroupDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return GroupQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<GroupQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(GroupQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<GroupQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(GroupQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -1328,6 +1278,23 @@ class _$GroupQuery extends QueryReference<Group, GroupQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class GroupDocumentSnapshot extends FirestoreDocumentSnapshot<Group> {
+  GroupDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Group> snapshot;
+
+  @override
+  GroupDocumentReference get reference {
+    return GroupDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Group? data;
+}
+
 class GroupQuerySnapshot
     extends FirestoreQuerySnapshot<Group, GroupQueryDocumentSnapshot> {
   GroupQuerySnapshot._(
@@ -1335,6 +1302,38 @@ class GroupQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory GroupQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Group> snapshot,
+  ) {
+    final docs = snapshot.docs.map(GroupQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        GroupDocumentSnapshot._,
+      );
+    }).toList();
+
+    return GroupQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<GroupDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    GroupDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<GroupDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Group> snapshot;
 
@@ -1347,18 +1346,18 @@ class GroupQuerySnapshot
 
 class GroupQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Group>
     implements GroupDocumentSnapshot {
-  GroupQueryDocumentSnapshot._(this.snapshot, this.data);
+  GroupQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Group> snapshot;
 
   @override
+  final Group data;
+
+  @override
   GroupDocumentReference get reference {
     return GroupDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Group data;
 }
 
 // **************************************************************************

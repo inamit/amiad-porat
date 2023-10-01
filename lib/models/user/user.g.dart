@@ -137,7 +137,7 @@ abstract class MyUserDocumentReference
     FieldValue birthDateFieldValue,
     int role,
     FieldValue roleFieldValue,
-    String? group,
+    List<String>? group,
     FieldValue groupFieldValue,
     List<String>? subjects,
     FieldValue subjectsFieldValue,
@@ -158,7 +158,7 @@ abstract class MyUserDocumentReference
     FieldValue birthDateFieldValue,
     int role,
     FieldValue roleFieldValue,
-    String? group,
+    List<String>? group,
     FieldValue groupFieldValue,
     List<String>? subjects,
     FieldValue subjectsFieldValue,
@@ -180,32 +180,17 @@ class _$MyUserDocumentReference
 
   @override
   Stream<MyUserDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return MyUserDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(MyUserDocumentSnapshot._);
   }
 
   @override
   Future<MyUserDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return MyUserDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(MyUserDocumentSnapshot._);
   }
 
   @override
   Future<MyUserDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return MyUserDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(MyUserDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -253,20 +238,30 @@ class _$MyUserDocumentReference
       "Cannot specify both subjects and subjectsFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-      if (phoneNo != _sentinel) 'phoneNo': phoneNo as String,
-      if (phoneNoFieldValue != null) 'phoneNo': phoneNoFieldValue,
-      if (birthDate != _sentinel) 'birthDate': birthDate as String,
-      if (birthDateFieldValue != null) 'birthDate': birthDateFieldValue,
-      if (role != _sentinel) 'role': role as int,
-      if (roleFieldValue != null) 'role': roleFieldValue,
-      if (group != _sentinel) 'group': group as String?,
-      if (groupFieldValue != null) 'group': groupFieldValue,
-      if (subjects != _sentinel) 'subjects': subjects as List<String>?,
-      if (subjectsFieldValue != null) 'subjects': subjectsFieldValue,
+      if (firstName != _sentinel)
+        _$MyUserFieldMap['firstName']!: firstName as String,
+      if (firstNameFieldValue != null)
+        _$MyUserFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$MyUserFieldMap['lastName']!: lastName as String,
+      if (lastNameFieldValue != null)
+        _$MyUserFieldMap['lastName']!: lastNameFieldValue,
+      if (phoneNo != _sentinel) _$MyUserFieldMap['phoneNo']!: phoneNo as String,
+      if (phoneNoFieldValue != null)
+        _$MyUserFieldMap['phoneNo']!: phoneNoFieldValue,
+      if (birthDate != _sentinel)
+        _$MyUserFieldMap['birthDate']!: birthDate as String,
+      if (birthDateFieldValue != null)
+        _$MyUserFieldMap['birthDate']!: birthDateFieldValue,
+      if (role != _sentinel) _$MyUserFieldMap['role']!: role as int,
+      if (roleFieldValue != null) _$MyUserFieldMap['role']!: roleFieldValue,
+      if (group != _sentinel)
+        _$MyUserFieldMap['group']!: group as List<String>?,
+      if (groupFieldValue != null) _$MyUserFieldMap['group']!: groupFieldValue,
+      if (subjects != _sentinel)
+        _$MyUserFieldMap['subjects']!: subjects as List<String>?,
+      if (subjectsFieldValue != null)
+        _$MyUserFieldMap['subjects']!: subjectsFieldValue,
     };
 
     return reference.update(json);
@@ -318,20 +313,30 @@ class _$MyUserDocumentReference
       "Cannot specify both subjects and subjectsFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-      if (phoneNo != _sentinel) 'phoneNo': phoneNo as String,
-      if (phoneNoFieldValue != null) 'phoneNo': phoneNoFieldValue,
-      if (birthDate != _sentinel) 'birthDate': birthDate as String,
-      if (birthDateFieldValue != null) 'birthDate': birthDateFieldValue,
-      if (role != _sentinel) 'role': role as int,
-      if (roleFieldValue != null) 'role': roleFieldValue,
-      if (group != _sentinel) 'group': group as String?,
-      if (groupFieldValue != null) 'group': groupFieldValue,
-      if (subjects != _sentinel) 'subjects': subjects as List<String>?,
-      if (subjectsFieldValue != null) 'subjects': subjectsFieldValue,
+      if (firstName != _sentinel)
+        _$MyUserFieldMap['firstName']!: firstName as String,
+      if (firstNameFieldValue != null)
+        _$MyUserFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$MyUserFieldMap['lastName']!: lastName as String,
+      if (lastNameFieldValue != null)
+        _$MyUserFieldMap['lastName']!: lastNameFieldValue,
+      if (phoneNo != _sentinel) _$MyUserFieldMap['phoneNo']!: phoneNo as String,
+      if (phoneNoFieldValue != null)
+        _$MyUserFieldMap['phoneNo']!: phoneNoFieldValue,
+      if (birthDate != _sentinel)
+        _$MyUserFieldMap['birthDate']!: birthDate as String,
+      if (birthDateFieldValue != null)
+        _$MyUserFieldMap['birthDate']!: birthDateFieldValue,
+      if (role != _sentinel) _$MyUserFieldMap['role']!: role as int,
+      if (roleFieldValue != null) _$MyUserFieldMap['role']!: roleFieldValue,
+      if (group != _sentinel)
+        _$MyUserFieldMap['group']!: group as List<String>?,
+      if (groupFieldValue != null) _$MyUserFieldMap['group']!: groupFieldValue,
+      if (subjects != _sentinel)
+        _$MyUserFieldMap['subjects']!: subjects as List<String>?,
+      if (subjectsFieldValue != null)
+        _$MyUserFieldMap['subjects']!: subjectsFieldValue,
     };
 
     transaction.update(reference, json);
@@ -347,26 +352,6 @@ class _$MyUserDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class MyUserDocumentSnapshot extends FirestoreDocumentSnapshot<MyUser> {
-  MyUserDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<MyUser> snapshot;
-
-  @override
-  MyUserDocumentReference get reference {
-    return MyUserDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final MyUser? data;
 }
 
 abstract class MyUserQuery
@@ -509,15 +494,15 @@ abstract class MyUserQuery
     List<int>? whereNotIn,
   });
   MyUserQuery whereGroup({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<String?>? whereIn,
-    List<String?>? whereNotIn,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
   });
   MyUserQuery whereSubjects({
     List<String>? isEqualTo,
@@ -605,10 +590,10 @@ abstract class MyUserQuery
 
   MyUserQuery orderByGroup({
     bool descending = false,
-    String? startAt,
-    String? startAfter,
-    String? endAt,
-    String? endBefore,
+    List<String>? startAt,
+    List<String>? startAfter,
+    List<String>? endAt,
+    List<String>? endBefore,
     MyUserDocumentSnapshot? startAtDocument,
     MyUserDocumentSnapshot? endAtDocument,
     MyUserDocumentSnapshot? endBeforeDocument,
@@ -641,37 +626,14 @@ class _$MyUserQuery extends QueryReference<MyUser, MyUserQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  MyUserQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<MyUser> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return MyUserQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<MyUserDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: MyUserDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return MyUserQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<MyUserQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(MyUserQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<MyUserQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(MyUserQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -973,15 +935,15 @@ class _$MyUserQuery extends QueryReference<MyUser, MyUserQuerySnapshot>
   }
 
   MyUserQuery whereGroup({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<String?>? whereIn,
-    List<String?>? whereNotIn,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
   }) {
     return _$MyUserQuery(
       _collection,
@@ -994,8 +956,8 @@ class _$MyUserQuery extends QueryReference<MyUser, MyUserQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
       ),
       $queryCursor: $queryCursor,
     );
@@ -1617,6 +1579,23 @@ class _$MyUserQuery extends QueryReference<MyUser, MyUserQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class MyUserDocumentSnapshot extends FirestoreDocumentSnapshot<MyUser> {
+  MyUserDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<MyUser> snapshot;
+
+  @override
+  MyUserDocumentReference get reference {
+    return MyUserDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final MyUser? data;
+}
+
 class MyUserQuerySnapshot
     extends FirestoreQuerySnapshot<MyUser, MyUserQueryDocumentSnapshot> {
   MyUserQuerySnapshot._(
@@ -1624,6 +1603,38 @@ class MyUserQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory MyUserQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<MyUser> snapshot,
+  ) {
+    final docs = snapshot.docs.map(MyUserQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        MyUserDocumentSnapshot._,
+      );
+    }).toList();
+
+    return MyUserQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<MyUserDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    MyUserDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<MyUserDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<MyUser> snapshot;
 
@@ -1636,18 +1647,18 @@ class MyUserQuerySnapshot
 
 class MyUserQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<MyUser>
     implements MyUserDocumentSnapshot {
-  MyUserQueryDocumentSnapshot._(this.snapshot, this.data);
+  MyUserQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<MyUser> snapshot;
 
   @override
+  final MyUser data;
+
+  @override
   MyUserDocumentReference get reference {
     return MyUserDocumentReference(snapshot.reference);
   }
-
-  @override
-  final MyUser data;
 }
 
 // **************************************************************************
@@ -1660,7 +1671,8 @@ MyUser _$MyUserFromJson(Map<String, dynamic> json) => MyUser(
       phoneNo: json['phoneNo'] as String,
       birthDate: json['birthDate'] as String,
       role: json['role'] as int,
-      group: json['group'] as String?,
+      group:
+          (json['group'] as List<dynamic>?)?.map((e) => e as String).toList(),
       subjects: (json['subjects'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),

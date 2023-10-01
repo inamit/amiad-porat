@@ -1,17 +1,15 @@
 import 'package:amiadporat/dal/lesson.dal.dart';
-
-import '../../dal/group.dal.dart';
-import '../../models/lesson/absLesson.dart';
-import '../../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../dal/group.dal.dart';
+import '../../models/lesson/absLesson.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
 import '../../models/lesson/tutorLesson/lesson.dart';
-import '../../models/lesson/tutorLesson/studentStatus.dart';
 import '../../models/user/user.dart';
+import '../../providers/auth_provider.dart';
 import '../components/lessonTile.dart';
 
 class AllLessons extends StatefulWidget {
@@ -50,13 +48,14 @@ class _AllLessonsState extends State<AllLessons> {
     MyUser? user = await authService.user;
 
     if (user != null) {
-      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group!);
-
-      if (groupLesson != null) {
-        setState(() {
-          this.lessons.add(groupLesson);
-        });
-      }
+      user.group!.forEach((element) async {
+        GroupLesson? groupLesson = await GroupDal.getGroupLesson(element!);
+        if (groupLesson != null) {
+          setState(() {
+            this.lessons.add(groupLesson);
+          });
+        }
+      });
     }
   }
 

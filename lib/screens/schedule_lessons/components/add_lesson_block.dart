@@ -80,8 +80,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
 
     if (authService.status == Status.Authenticated) {
       try {
-        List<DateTime> lessonsDates = await DB.getLessonDates(
-            authService.uid, widget.lesson.selectedSubject);
+        List<DateTime> lessonsDates = await DB.getLessonDates(authService.uid, [widget.lesson.selectedSubject]);
 
         widget.lessons
             .where((scheduledLesson) =>

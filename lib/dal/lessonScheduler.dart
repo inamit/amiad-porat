@@ -1,24 +1,24 @@
-import 'group.dal.dart';
-import 'lesson.dal.dart';
-import '../models/lesson/groupLesson/groupLesson.dart';
-import '../models/lesson_block.dart';
-import '../models/user/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/lesson/groupLesson/groupLesson.dart';
 import '../models/lesson/tutorLesson/lesson.dart';
 import '../models/lesson/tutorLesson/studentStatus.dart';
+import '../models/lesson_block.dart';
 import '../models/subjects.dart';
+import '../models/user/user.dart';
+import 'group.dal.dart';
+import 'lesson.dal.dart';
 
 class LessonScheduler {
   static Future<bool> _hasGroupLesson(MyUser student, DateTime date) async {
-    GroupLesson? groupLesson = await GroupDal.getGroupLesson(student.group!);
-    bool hasGroupLesson = true;
+    bool hasGroupLesson = false;
 
-    if (groupLesson == null) {
-      hasGroupLesson = false;
-    } else {
-      hasGroupLesson = date == groupLesson.date;
-    }
+    student.group!.forEach((element) async {
+      if (!hasGroupLesson) {
+        GroupLesson? groupLesson = await GroupDal.getGroupLesson(element!);
+        hasGroupLesson = date == groupLesson!.date;
+      }
+    });
 
     return hasGroupLesson;
   }

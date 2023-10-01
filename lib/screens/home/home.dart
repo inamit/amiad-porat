@@ -1,8 +1,12 @@
 import 'dart:async';
 
+import 'package:amiadporat/store/lessons/lessons.state.dart';
+import 'package:amiadporat/store/state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:redux/redux.dart';
 
 import '../../dal/group.dal.dart';
 import '../../dal/lesson.dal.dart';
@@ -31,7 +35,7 @@ class _HomeState extends MainPageState<Home> {
   late AuthProvider authService;
 
   Lesson? closestLesson;
-  GroupLesson? groupLesson;
+  List<GroupLesson?>? groupLesson;
   bool isLoadingClosestLesson = true;
 
   @override
@@ -67,68 +71,96 @@ class _HomeState extends MainPageState<Home> {
   getGroupLesson() async {
     MyUser? user = await authService.user;
 
-    if (user != null) {
-      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group!);
+    if (user != null && user.group != null) {
+      List<GroupLesson?>? lessons = [];
+      user.group!.forEach((element) async {
+        lessons.add(await GroupDal.getGroupLesson(element));
+      });
 
       setState(() {
-        this.groupLesson = groupLesson;
+        this.groupLesson = lessons;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          HomepageCard(
-              content: isLoadingClosestLesson
-                  ? _loadingLesson()
-                  : closestLesson == null
-                      ? noLessonMessage()
-                      : _closestLesson(),
-              button: closestLesson == null
-                  ? HomepageCard.buildCardButton(
-                      "לקבוע תגבור?",
-                      neonBlue,
-                      () => Navigator.of(context)
-                          .pushNamed(ScheduleLessons.route)
-                          .then((_) => setState(() {})))
-                  : Container(),
-              color: closestLesson?.color ?? orange),
-          if (groupLesson != null)
-            HomepageCard(
-              content: _groupLesson(),
-              color: groupLesson?.color ?? orange,
+    return StoreConnector(
+        converter: (Store<AppState> store) => store.state.lessonsState,
+        builder: (BuildContext context, LessonsState lessonsState) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                HomepageCard(
+                    content: getClosestLessonWidget(lessonsState),
+                    button: closestLesson == null
+                        ? HomepageCard.buildCardButton(
+                            "לקבוע תגבור?",
+                            neonBlue,
+                            () => Navigator.of(context)
+                                .pushNamed(ScheduleLessons.route)
+                                .then((_) => setState(() {})))
+                        : Container(),
+                    color: closestLesson?.color ?? orange),
+                if (groupLesson != null)
+                  ...groupLesson!.map((lesson) => HomepageCard(
+                        content: _groupLesson(lesson!),
+                        color: lesson!.color ?? orange,
+                      )),
+                HomepageCard(
+                    content: tests.isEmpty ? noTestMessage() : noTestMessage(),
+                    button: HomepageCard.buildCardButton("רוצה לשתף?", neonBlue,
+                        () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "הפיצ'ר הזה עוד לא קיים לצערנו. בקרוב מאוד יהיה אפשר לשתף בקליק!")));
+                    }),
+                    color: red),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 13.0),
+                  child: HomepageCard(
+                      content: messages.isEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Text(
+                                "אין הודעות",
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
+                              ),
+                            )
+                          : _messagesCardContent(),
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: redOrangeGradient)),
+                ),
+              ],
             ),
-          HomepageCard(
-              content: tests.isEmpty ? noTestMessage() : noTestMessage(),
-              button: HomepageCard.buildCardButton("רוצה לשתף?", neonBlue, () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "הפיצ'ר הזה עוד לא קיים לצערנו. בקרוב מאוד יהיה אפשר לשתף בקליק!")));
-              }),
-              color: red),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 13.0),
-            child: HomepageCard(
-                content: messages.isEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          "אין הודעות",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      )
-                    : _messagesCardContent(),
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: redOrangeGradient)),
-          ),
-        ],
-      ),
-    );
+          );
+        });
+  }
+
+  Widget getClosestLessonWidget(LessonsState lessonsState) {
+    if (lessonsState.isLoading) {
+      return _loadingLesson();
+    } else {
+      if (lessonsState.lessons.isEmpty) {
+        return noLessonMessage();
+      } else {
+        // Get map the map called lessons from the state, sort it by the date and get the first lesson that its date is after now
+        List<Lesson?> sortedLessonsFromNow = lessonsState.lessons.values
+            .where((element) => element.date.isAfter(DateTime.now()))
+            .toList()
+          ..sort(
+              (first, second) => first.date.difference(second.date).inMinutes);
+
+        if (sortedLessonsFromNow.first == null) {
+          return noLessonMessage();
+        } else {
+          return _closestLesson(sortedLessonsFromNow.first!);
+        }
+      }
+    }
   }
 
   Widget _lesson(Row header, Widget details) {
@@ -141,12 +173,12 @@ class _HomeState extends MainPageState<Home> {
     );
   }
 
-  Widget _groupLesson() {
-    return _lesson(_groupLessonHeader(), _lessonDetails(this.groupLesson!));
+  Widget _groupLesson(GroupLesson lesson) {
+    return _lesson(_groupLessonHeader(), _lessonDetails(lesson));
   }
 
-  Widget _closestLesson() {
-    return _lesson(_closestLessonHeader(), _lessonDetails(this.closestLesson!));
+  Widget _closestLesson(Lesson lesson) {
+    return _lesson(_closestLessonHeader(), _lessonDetails(lesson));
   }
 
   Widget _loadingLesson() {
