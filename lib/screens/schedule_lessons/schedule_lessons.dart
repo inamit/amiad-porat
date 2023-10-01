@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:amiadporat/models/user/user.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../../dal/lessonScheduler.dart';
 import 'package:intl/intl.dart';
@@ -137,44 +138,54 @@ class _ScheduleLessonsState extends State<ScheduleLessons> {
       width: MediaQuery.of(context).size.width / 2,
       child: TextButton(
         onPressed: () async {
-          if (validateForm()) {
-            if (authService.status == Status.Authenticated) {
-              setState(() {
-                this.isLoading = true;
-              });
+          try {
+            if (validateForm()) {
+              if (authService.status == Status.Authenticated) {
+                setState(() {
+                  this.isLoading = true;
+                });
 
-              ScheduleLessonsResponse response =
-                  await LessonScheduler.addStudentToLessons(
-                      (await authService.user)!,
-                      authService.uid!,
-                      this.lessons);
+                ScheduleLessonsResponse response =
+                    await LessonScheduler.addStudentToLessons(
+                        (await authService.user)!,
+                        authService.uid!,
+                        this.lessons);
 
-              setState(() {
-                this.isLoading = false;
-              });
-              if (response.failedLessons.length > 0) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(response.failureReason!),
-                  action: !response.isStudentFree
-                      ? SnackBarAction(
-                          label: "מתי קבעתי?",
-                          onPressed: () {
-                            showFailedLessonsAlert(response);
-                          },
-                        )
-                      : null,
-                ));
+                setState(() {
+                  this.isLoading = false;
+                });
+                if (response.failedLessons.length > 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(response.failureReason!),
+                    action: !response.isStudentFree
+                        ? SnackBarAction(
+                            label: "מתי קבעתי?",
+                            onPressed: () {
+                              showFailedLessonsAlert(response);
+                            },
+                          )
+                        : null,
+                  ));
+                } else {
+                  Navigator.pop(context, true);
+                }
               } else {
-                Navigator.pop(context, true);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("הייתה בעיה. נסה שנית מאוחר יותר"),
+                ));
+                Navigator.of(context).pop();
               }
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("הייתה בעיה. נסה שנית מאוחר יותר"),
-              ));
-              Navigator.of(context).pop();
+              // Form is not valid.
             }
-          } else {
-            // Form is not valid.
+          } catch (e) {
+            FirebaseCrashlytics.instance.recordError(e, null,
+                reason: 'Exception while trying to register for lessons');
+
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("הייתה בעיה. נסה שנית מאוחר יותר"),
+            ));
+            Navigator.of(context).pop();
           }
         },
         child: isLoading

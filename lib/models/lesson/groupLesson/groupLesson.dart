@@ -1,11 +1,21 @@
 import '../absLesson.dart';
 
 class GroupLesson extends AbsLesson {
+  String id;
   String? teacher;
 
-  GroupLesson(
-      {required String subject, String? this.teacher, required DateTime date})
-      : super(lessonType: 'שיעור', subject: subject, date: date);
+  static get groupLessonType => 'שיעור';
+
+  get isRecurring => true;
+
+  GroupLesson({required String this.id,
+    required String subject,
+    String? this.teacher,
+    required DateTime date})
+      : super(
+            lessonType: GroupLesson.groupLessonType,
+            subject: subject,
+            date: date);
 
   @override
   String get title =>

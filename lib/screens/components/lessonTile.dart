@@ -1,3 +1,5 @@
+import 'package:amiadporat/models/lesson/tutorLesson/lesson.dart';
+
 import '../../models/lesson/absLesson.dart';
 import 'package:flutter/material.dart';
 
@@ -13,14 +15,19 @@ class LessonTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HomepageCard(
-        color: lesson.getSubject == Subjects.Math ? mathColor : englishColor,
-        content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _lessonDetails(
-            lesson.getSubject,
-            lesson.date,
-          ),
-        ));
+      color: lesson.getSubject == Subjects.Math ? mathColor : englishColor,
+      content: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: _lessonDetails(
+          lesson.getSubject,
+          lesson.date,
+        ),
+      ),
+      button: lesson.lessonType == Lesson.tutorLessonType &&
+              lesson.date.difference(DateTime.now()).inHours >= 1
+          ? HomepageCard.buildCardButton("ביטול הגעה", red, () {}, width: 150)
+          : null,
+    );
   }
 
   Row _lessonDetails(Subjects? subject, DateTime lessonDate) {

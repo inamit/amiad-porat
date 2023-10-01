@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:amiadporat/store/lessons/lessons.state.dart';
+import 'package:amiadporat/store/state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:redux/redux.dart';
 
-import '../../dal/group.dal.dart';
-import '../../dal/lesson.dal.dart';
 import '../../data/messages.dart';
 import '../../data/tests.dart';
 import '../../models/constants.dart';
@@ -13,7 +15,6 @@ import '../../models/lesson/absLesson.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
 import '../../models/lesson/tutorLesson/lesson.dart';
 import '../../models/subjects.dart';
-import '../../models/user/user.dart';
 import '../../providers/auth_provider.dart';
 import '../all_lessons_list_screen/all_lessons_screen.dart';
 import '../components/mainPage.dart';
@@ -31,7 +32,6 @@ class _HomeState extends MainPageState<Home> {
   late AuthProvider authService;
 
   Lesson? closestLesson;
-  GroupLesson? groupLesson;
 
   @override
   void initState() {
@@ -40,85 +40,102 @@ class _HomeState extends MainPageState<Home> {
   }
 
   @override
-  refreshData() {
-    getLatestLesson();
-    getGroupLesson();
-  }
-
-  getLatestLesson() async {
-    if (authService.status == Status.Authenticated) {
-      Lesson? lesson = await LessonDal.getClosestLessonByUser(authService.uid!);
-
-      setState(() {
-        this.closestLesson = lesson;
-      });
-    }
-  }
-
-  getGroupLesson() async {
-    MyUser? user = await authService.user;
-
-    if (user != null) {
-      GroupLesson? groupLesson = await GroupDal.getGroupLesson(user.group!);
-
-      setState(() {
-        this.groupLesson = groupLesson;
-      });
-    }
-  }
+  refreshData() {}
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          HomepageCard(
-              content:
-                  closestLesson == null ? noLessonMessage() : _closestLesson(),
-              button: closestLesson == null
-                  ? buildButton(
-                      "לקבוע תגבור?",
-                      () => Navigator.of(context)
-                          .pushNamed(ScheduleLessons.route)
-                          .then((_) => setState(() {})))
-                  : Container(),
-              color: closestLesson?.color ?? orange),
-          if (groupLesson != null)
-            HomepageCard(
-              content: _groupLesson(),
-              color: groupLesson?.color ?? orange,
+    return StoreConnector(
+        converter: (Store<AppState> store) => ({
+              "lessons": store.state.lessonsState,
+              "groups": store.state.groupsState
+            }),
+        builder: (BuildContext context, Map<String, dynamic> lessonsState) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                HomepageCard(
+                    content: getClosestLessonWidget(lessonsState["lessons"]),
+                    button: !lessonsState["lessons"].isLoading &&
+                            closestLesson == null
+                        ? HomepageCard.buildCardButton(
+                            "לקבוע תגבור?",
+                            neonBlue,
+                            () => Navigator.of(context)
+                                .pushNamed(ScheduleLessons.route)
+                                .then((_) => setState(() {})))
+                        : Container(),
+                    color: closestLesson?.color ?? orange),
+                if (lessonsState["groups"].groups.isNotEmpty)
+                  ...(lessonsState["groups"]
+                      .groups
+                      .values
+                      .map((lesson) => HomepageCard(
+                            content: _groupLesson(lesson!),
+                            color: lesson!.color ?? orange,
+                          ))),
+                // if (groupLesson != null)
+                //   ...groupLesson!.map((lesson) => HomepageCard(
+                //         content: _groupLesson(lesson!),
+                //         color: lesson!.color ?? orange,
+                //       )),
+                HomepageCard(
+                    content: tests.isEmpty ? noTestMessage() : noTestMessage(),
+                    button: HomepageCard.buildCardButton("רוצה לשתף?", neonBlue,
+                        () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "הפיצ'ר הזה עוד לא קיים לצערנו. בקרוב מאוד יהיה אפשר לשתף בקליק!")));
+                    }),
+                    color: red),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 13.0),
+                  child: HomepageCard(
+                      content: messages.isEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Text(
+                                "אין הודעות",
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
+                              ),
+                            )
+                          : _messagesCardContent(),
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: redOrangeGradient)),
+                ),
+              ],
             ),
-          HomepageCard(
-              content: tests.isEmpty ? noTestMessage() : noTestMessage(),
-              button: buildButton("רוצה לשתף?", () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "הפיצ'ר הזה עוד לא קיים לצערנו. בקרוב מאוד יהיה אפשר לשתף בקליק!")));
-              }),
-              color: red),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 13.0),
-            child: HomepageCard(
-                content: messages.isEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          "אין הודעות",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      )
-                    : _messagesCardContent(),
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: redOrangeGradient)),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
-  Widget _lesson(Row header, Row details) {
+  Widget getClosestLessonWidget(LessonsState lessonsState) {
+    if (lessonsState.isLoading) {
+      return _loadingLesson();
+    } else {
+      if (lessonsState.lessons.isEmpty) {
+        return noLessonMessage();
+      } else {
+        // Get map the map called lessons from the state, sort it by the date and get the first lesson that its date is after now
+        List<Lesson?> sortedLessonsFromNow = lessonsState.lessons.values
+            .where((element) => element.date.isAfter(DateTime.now()))
+            .toList()
+          ..sort(
+              (first, second) => first.date.difference(second.date).inMinutes);
+
+        if (sortedLessonsFromNow.first == null) {
+          return noLessonMessage();
+        } else {
+          closestLesson = sortedLessonsFromNow.first;
+          return _closestLesson(closestLesson!);
+        }
+      }
+    }
+  }
+
+  Widget _lesson(Row header, Widget details) {
     return Padding(
       padding: const EdgeInsets.only(
           left: 20.0, right: 20.0, top: 8.0, bottom: 20.0),
@@ -128,12 +145,21 @@ class _HomeState extends MainPageState<Home> {
     );
   }
 
-  Widget _groupLesson() {
-    return _lesson(_groupLessonHeader(), _lessonDetails(this.groupLesson!));
+  Widget _groupLesson(GroupLesson lesson) {
+    return _lesson(_groupLessonHeader(lesson), _lessonDetails(lesson));
   }
 
-  Widget _closestLesson() {
-    return _lesson(_closestLessonHeader(), _lessonDetails(this.closestLesson!));
+  Widget _closestLesson(Lesson lesson) {
+    return _lesson(_closestLessonHeader(), _lessonDetails(lesson));
+  }
+
+  Widget _loadingLesson() {
+    return _lesson(
+        _closestLessonHeader(showAction: false),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(child: CircularProgressIndicator()),
+        ));
   }
 
   FutureOr onGoBack(dynamic value) {
@@ -153,8 +179,9 @@ class _HomeState extends MainPageState<Home> {
     );
   }
 
-  Row _groupLessonHeader() {
-    return _header("השיעור שלי:");
+  Row _groupLessonHeader(GroupLesson lesson) {
+    return _header(
+        "שיעור ${SubjectsHelper().getHebrew(SubjectsHelper().getEnum(lesson.subject)!)} שלי:");
   }
 
   Row _lessonDetails(AbsLesson lesson) {
@@ -184,19 +211,21 @@ class _HomeState extends MainPageState<Home> {
     );
   }
 
-  Row _closestLessonHeader() {
+  Row _closestLessonHeader({bool showAction = true}) {
     return _header(
       "התגבור הקרוב שלי:",
-      button: TextButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AllLessons()));
-        },
-        child: Text(
-          "כל התגבורים שלי",
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-      ),
+      button: showAction
+          ? TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => AllLessons()));
+              },
+              child: Text(
+                "כל התגבורים שלי",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            )
+          : null,
     );
   }
 
@@ -241,30 +270,6 @@ class _HomeState extends MainPageState<Home> {
       child: Text(
         "מתי המבחן הקרוב שלך?",
         style: TextStyle(fontSize: 18, color: Colors.white),
-      ),
-    );
-  }
-
-  Padding buildButton(String title, void Function() onPressed) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 18.0, bottom: 18.0),
-      child: Container(
-        height: 35,
-        width: 220,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 16),
-          ),
-          style: ButtonStyle(
-            elevation: MaterialStateProperty.all(6.0),
-            backgroundColor: MaterialStateProperty.all(neonBlue),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            ),
-          ),
-        ),
       ),
     );
   }

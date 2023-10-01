@@ -7,7 +7,7 @@ part of 'user.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -19,7 +19,9 @@ const _sentinel = _Sentinel();
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class MyUserCollectionReference
-    implements MyUserQuery, FirestoreCollectionReference<MyUserQuerySnapshot> {
+    implements
+        MyUserQuery,
+        FirestoreCollectionReference<MyUser, MyUserQuerySnapshot> {
   factory MyUserCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$MyUserCollectionReference;
@@ -37,6 +39,9 @@ abstract class MyUserCollectionReference
   ) {
     return _$MyUserToJson(value);
   }
+
+  @override
+  CollectionReference<MyUser> get reference;
 
   @override
   MyUserDocumentReference doc([String? id]);
@@ -61,7 +66,7 @@ class _$MyUserCollectionReference extends _$MyUserQuery
 
   _$MyUserCollectionReference._(
     CollectionReference<MyUser> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -71,6 +76,10 @@ class _$MyUserCollectionReference extends _$MyUserQuery
 
   @override
   MyUserDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return MyUserDocumentReference(
       reference.doc(id),
     );
@@ -93,7 +102,7 @@ class _$MyUserCollectionReference extends _$MyUserQuery
 }
 
 abstract class MyUserDocumentReference
-    extends FirestoreDocumentReference<MyUserDocumentSnapshot> {
+    extends FirestoreDocumentReference<MyUser, MyUserDocumentSnapshot> {
   factory MyUserDocumentReference(DocumentReference<MyUser> reference) =
       _$MyUserDocumentReference;
 
@@ -113,22 +122,51 @@ abstract class MyUserDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String firstName,
+    FieldValue firstNameFieldValue,
     String lastName,
+    FieldValue lastNameFieldValue,
     String phoneNo,
+    FieldValue phoneNoFieldValue,
     String birthDate,
+    FieldValue birthDateFieldValue,
     int role,
-    String? group,
+    FieldValue roleFieldValue,
+    List<String>? group,
+    FieldValue groupFieldValue,
     List<String>? subjects,
-    List<Subjects?>? getSubjects,
+    FieldValue subjectsFieldValue,
   });
 
-  Future<void> set(MyUser value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String firstName,
+    FieldValue firstNameFieldValue,
+    String lastName,
+    FieldValue lastNameFieldValue,
+    String phoneNo,
+    FieldValue phoneNoFieldValue,
+    String birthDate,
+    FieldValue birthDateFieldValue,
+    int role,
+    FieldValue roleFieldValue,
+    List<String>? group,
+    FieldValue groupFieldValue,
+    List<String>? subjects,
+    FieldValue subjectsFieldValue,
+  });
 }
 
 class _$MyUserDocumentReference
-    extends FirestoreDocumentReference<MyUserDocumentSnapshot>
+    extends FirestoreDocumentReference<MyUser, MyUserDocumentSnapshot>
     implements MyUserDocumentReference {
   _$MyUserDocumentReference(this.reference);
 
@@ -142,56 +180,166 @@ class _$MyUserDocumentReference
 
   @override
   Stream<MyUserDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return MyUserDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(MyUserDocumentSnapshot._);
   }
 
   @override
   Future<MyUserDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return MyUserDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(MyUserDocumentSnapshot._);
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<MyUserDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then(MyUserDocumentSnapshot._);
   }
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
     Object? phoneNo = _sentinel,
+    FieldValue? phoneNoFieldValue,
     Object? birthDate = _sentinel,
+    FieldValue? birthDateFieldValue,
     Object? role = _sentinel,
+    FieldValue? roleFieldValue,
     Object? group = _sentinel,
+    FieldValue? groupFieldValue,
     Object? subjects = _sentinel,
-    Object? getSubjects = _sentinel,
+    FieldValue? subjectsFieldValue,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      phoneNo == _sentinel || phoneNoFieldValue == null,
+      "Cannot specify both phoneNo and phoneNoFieldValue",
+    );
+    assert(
+      birthDate == _sentinel || birthDateFieldValue == null,
+      "Cannot specify both birthDate and birthDateFieldValue",
+    );
+    assert(
+      role == _sentinel || roleFieldValue == null,
+      "Cannot specify both role and roleFieldValue",
+    );
+    assert(
+      group == _sentinel || groupFieldValue == null,
+      "Cannot specify both group and groupFieldValue",
+    );
+    assert(
+      subjects == _sentinel || subjectsFieldValue == null,
+      "Cannot specify both subjects and subjectsFieldValue",
+    );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String,
-      if (lastName != _sentinel) "lastName": lastName as String,
-      if (phoneNo != _sentinel) "phoneNo": phoneNo as String,
-      if (birthDate != _sentinel) "birthDate": birthDate as String,
-      if (role != _sentinel) "role": role as int,
-      if (group != _sentinel) "group": group as String?,
-      if (subjects != _sentinel) "subjects": subjects as List<String>?,
-      if (getSubjects != _sentinel)
-        "getSubjects": getSubjects as List<Subjects?>?,
+      if (firstName != _sentinel)
+        _$MyUserFieldMap['firstName']!: firstName as String,
+      if (firstNameFieldValue != null)
+        _$MyUserFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$MyUserFieldMap['lastName']!: lastName as String,
+      if (lastNameFieldValue != null)
+        _$MyUserFieldMap['lastName']!: lastNameFieldValue,
+      if (phoneNo != _sentinel) _$MyUserFieldMap['phoneNo']!: phoneNo as String,
+      if (phoneNoFieldValue != null)
+        _$MyUserFieldMap['phoneNo']!: phoneNoFieldValue,
+      if (birthDate != _sentinel)
+        _$MyUserFieldMap['birthDate']!: birthDate as String,
+      if (birthDateFieldValue != null)
+        _$MyUserFieldMap['birthDate']!: birthDateFieldValue,
+      if (role != _sentinel) _$MyUserFieldMap['role']!: role as int,
+      if (roleFieldValue != null) _$MyUserFieldMap['role']!: roleFieldValue,
+      if (group != _sentinel)
+        _$MyUserFieldMap['group']!: group as List<String>?,
+      if (groupFieldValue != null) _$MyUserFieldMap['group']!: groupFieldValue,
+      if (subjects != _sentinel)
+        _$MyUserFieldMap['subjects']!: subjects as List<String>?,
+      if (subjectsFieldValue != null)
+        _$MyUserFieldMap['subjects']!: subjectsFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(MyUser value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
+    Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
+    Object? phoneNo = _sentinel,
+    FieldValue? phoneNoFieldValue,
+    Object? birthDate = _sentinel,
+    FieldValue? birthDateFieldValue,
+    Object? role = _sentinel,
+    FieldValue? roleFieldValue,
+    Object? group = _sentinel,
+    FieldValue? groupFieldValue,
+    Object? subjects = _sentinel,
+    FieldValue? subjectsFieldValue,
+  }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      phoneNo == _sentinel || phoneNoFieldValue == null,
+      "Cannot specify both phoneNo and phoneNoFieldValue",
+    );
+    assert(
+      birthDate == _sentinel || birthDateFieldValue == null,
+      "Cannot specify both birthDate and birthDateFieldValue",
+    );
+    assert(
+      role == _sentinel || roleFieldValue == null,
+      "Cannot specify both role and roleFieldValue",
+    );
+    assert(
+      group == _sentinel || groupFieldValue == null,
+      "Cannot specify both group and groupFieldValue",
+    );
+    assert(
+      subjects == _sentinel || subjectsFieldValue == null,
+      "Cannot specify both subjects and subjectsFieldValue",
+    );
+    final json = {
+      if (firstName != _sentinel)
+        _$MyUserFieldMap['firstName']!: firstName as String,
+      if (firstNameFieldValue != null)
+        _$MyUserFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$MyUserFieldMap['lastName']!: lastName as String,
+      if (lastNameFieldValue != null)
+        _$MyUserFieldMap['lastName']!: lastNameFieldValue,
+      if (phoneNo != _sentinel) _$MyUserFieldMap['phoneNo']!: phoneNo as String,
+      if (phoneNoFieldValue != null)
+        _$MyUserFieldMap['phoneNo']!: phoneNoFieldValue,
+      if (birthDate != _sentinel)
+        _$MyUserFieldMap['birthDate']!: birthDate as String,
+      if (birthDateFieldValue != null)
+        _$MyUserFieldMap['birthDate']!: birthDateFieldValue,
+      if (role != _sentinel) _$MyUserFieldMap['role']!: role as int,
+      if (roleFieldValue != null) _$MyUserFieldMap['role']!: roleFieldValue,
+      if (group != _sentinel)
+        _$MyUserFieldMap['group']!: group as List<String>?,
+      if (groupFieldValue != null) _$MyUserFieldMap['group']!: groupFieldValue,
+      if (subjects != _sentinel)
+        _$MyUserFieldMap['subjects']!: subjects as List<String>?,
+      if (subjectsFieldValue != null)
+        _$MyUserFieldMap['subjects']!: subjectsFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -206,33 +354,90 @@ class _$MyUserDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class MyUserDocumentSnapshot extends FirestoreDocumentSnapshot {
-  MyUserDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<MyUser> snapshot;
-
-  @override
-  MyUserDocumentReference get reference {
-    return MyUserDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final MyUser? data;
-}
-
-abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
+abstract class MyUserQuery
+    implements QueryReference<MyUser, MyUserQuerySnapshot> {
   @override
   MyUserQuery limit(int limit);
 
   @override
   MyUserQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  MyUserQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  MyUserQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  MyUserQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   MyUserQuery whereFirstName({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -289,15 +494,15 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
     List<int>? whereNotIn,
   });
   MyUserQuery whereGroup({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<String?>? whereIn,
-    List<String?>? whereNotIn,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
   });
   MyUserQuery whereSubjects({
     List<String>? isEqualTo,
@@ -307,17 +512,20 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   });
-  MyUserQuery whereGetSubjects({
-    List<Subjects?>? isEqualTo,
-    List<Subjects?>? isNotEqualTo,
-    List<Subjects?>? isLessThan,
-    List<Subjects?>? isLessThanOrEqualTo,
-    List<Subjects?>? isGreaterThan,
-    List<Subjects?>? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<Subjects?>? arrayContainsAny,
+
+  MyUserQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
   });
 
   MyUserQuery orderByFirstName({
@@ -382,10 +590,10 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
 
   MyUserQuery orderByGroup({
     bool descending = false,
-    String? startAt,
-    String? startAfter,
-    String? endAt,
-    String? endBefore,
+    List<String>? startAt,
+    List<String>? startAfter,
+    List<String>? endAt,
+    List<String>? endBefore,
     MyUserDocumentSnapshot? startAtDocument,
     MyUserDocumentSnapshot? endAtDocument,
     MyUserDocumentSnapshot? endBeforeDocument,
@@ -403,78 +611,181 @@ abstract class MyUserQuery implements QueryReference<MyUserQuerySnapshot> {
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   });
-
-  MyUserQuery orderByGetSubjects({
-    bool descending = false,
-    List<Subjects?>? startAt,
-    List<Subjects?>? startAfter,
-    List<Subjects?>? endAt,
-    List<Subjects?>? endBefore,
-    MyUserDocumentSnapshot? startAtDocument,
-    MyUserDocumentSnapshot? endAtDocument,
-    MyUserDocumentSnapshot? endBeforeDocument,
-    MyUserDocumentSnapshot? startAfterDocument,
-  });
 }
 
-class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
+class _$MyUserQuery extends QueryReference<MyUser, MyUserQuerySnapshot>
     implements MyUserQuery {
   _$MyUserQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<MyUser> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
   @override
-  final Query<MyUser> reference;
-
-  MyUserQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<MyUser> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return MyUserQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<MyUserDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: MyUserDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return MyUserQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
-  @override
   Stream<MyUserQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(MyUserQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<MyUserQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(MyUserQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   MyUserQuery limit(int limit) {
     return _$MyUserQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   MyUserQuery limitToLast(int limit) {
     return _$MyUserQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  MyUserQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
+  }) {
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  MyUserQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  MyUserQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -490,8 +801,9 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$MyUserQuery(
-      reference.where(
-        'firstName',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MyUserFieldMap['firstName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -502,7 +814,7 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -518,8 +830,9 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$MyUserQuery(
-      reference.where(
-        'lastName',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MyUserFieldMap['lastName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -530,7 +843,7 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -546,8 +859,9 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$MyUserQuery(
-      reference.where(
-        'phoneNo',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MyUserFieldMap['phoneNo']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -558,7 +872,7 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -574,8 +888,9 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$MyUserQuery(
-      reference.where(
-        'birthDate',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MyUserFieldMap['birthDate']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -586,7 +901,7 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -602,8 +917,9 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     List<int>? whereNotIn,
   }) {
     return _$MyUserQuery(
-      reference.where(
-        'role',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MyUserFieldMap['role']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -614,24 +930,25 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
   MyUserQuery whereGroup({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<String?>? whereIn,
-    List<String?>? whereNotIn,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
   }) {
     return _$MyUserQuery(
-      reference.where(
-        'group',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MyUserFieldMap['group']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -639,10 +956,10 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -654,11 +971,13 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   }) {
     return _$MyUserQuery(
-      reference.where(
-        'subjects',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MyUserFieldMap['subjects']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -666,35 +985,82 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
-  MyUserQuery whereGetSubjects({
-    List<Subjects?>? isEqualTo,
-    List<Subjects?>? isNotEqualTo,
-    List<Subjects?>? isLessThan,
-    List<Subjects?>? isLessThanOrEqualTo,
-    List<Subjects?>? isGreaterThan,
-    List<Subjects?>? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<Subjects?>? arrayContainsAny,
+  MyUserQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MyUserDocumentSnapshot? startAtDocument,
+    MyUserDocumentSnapshot? endAtDocument,
+    MyUserDocumentSnapshot? endBeforeDocument,
+    MyUserDocumentSnapshot? startAfterDocument,
   }) {
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
     return _$MyUserQuery(
-      reference.where(
-        'getSubjects',
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        arrayContainsAny: arrayContainsAny,
-      ),
       _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -709,35 +1075,65 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('firstName', descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$MyUserFieldMap['firstName']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MyUserQuery(query, _collection);
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MyUserQuery orderByLastName({
@@ -751,35 +1147,65 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('lastName', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$MyUserFieldMap['lastName']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MyUserQuery(query, _collection);
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MyUserQuery orderByPhoneNo({
@@ -793,35 +1219,65 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('phoneNo', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$MyUserFieldMap['phoneNo']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MyUserQuery(query, _collection);
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MyUserQuery orderByBirthDate({
@@ -835,35 +1291,65 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('birthDate', descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$MyUserFieldMap['birthDate']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MyUserQuery(query, _collection);
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MyUserQuery orderByRole({
@@ -877,35 +1363,65 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('role', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$MyUserFieldMap['role']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MyUserQuery(query, _collection);
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MyUserQuery orderByGroup({
@@ -919,35 +1435,65 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('group', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$MyUserFieldMap['group']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MyUserQuery(query, _collection);
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MyUserQuery orderBySubjects({
@@ -961,77 +1507,65 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
     MyUserDocumentSnapshot? endBeforeDocument,
     MyUserDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('subjects', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$MyUserFieldMap['subjects']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MyUserQuery(query, _collection);
-  }
-
-  MyUserQuery orderByGetSubjects({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    MyUserDocumentSnapshot? startAtDocument,
-    MyUserDocumentSnapshot? endAtDocument,
-    MyUserDocumentSnapshot? endBeforeDocument,
-    MyUserDocumentSnapshot? startAfterDocument,
-  }) {
-    var query = reference.orderBy('getSubjects', descending: descending);
-
-    if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
-    }
-    if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
-    }
-    if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
-    }
-    if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
-    }
-
-    if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
-    }
-    if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
-    }
-    if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
-    }
-    if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
-    }
-
-    return _$MyUserQuery(query, _collection);
+    return _$MyUserQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -1045,13 +1579,62 @@ class _$MyUserQuery extends QueryReference<MyUserQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class MyUserDocumentSnapshot extends FirestoreDocumentSnapshot<MyUser> {
+  MyUserDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<MyUser> snapshot;
+
+  @override
+  MyUserDocumentReference get reference {
+    return MyUserDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final MyUser? data;
+}
+
 class MyUserQuerySnapshot
-    extends FirestoreQuerySnapshot<MyUserQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<MyUser, MyUserQueryDocumentSnapshot> {
   MyUserQuerySnapshot._(
     this.snapshot,
     this.docs,
     this.docChanges,
   );
+
+  factory MyUserQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<MyUser> snapshot,
+  ) {
+    final docs = snapshot.docs.map(MyUserQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        MyUserDocumentSnapshot._,
+      );
+    }).toList();
+
+    return MyUserQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<MyUserDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    MyUserDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<MyUserDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<MyUser> snapshot;
 
@@ -1062,20 +1645,20 @@ class MyUserQuerySnapshot
   final List<FirestoreDocumentChange<MyUserDocumentSnapshot>> docChanges;
 }
 
-class MyUserQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class MyUserQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<MyUser>
     implements MyUserDocumentSnapshot {
-  MyUserQueryDocumentSnapshot._(this.snapshot, this.data);
+  MyUserQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<MyUser> snapshot;
 
   @override
+  final MyUser data;
+
+  @override
   MyUserDocumentReference get reference {
     return MyUserDocumentReference(snapshot.reference);
   }
-
-  @override
-  final MyUser data;
 }
 
 // **************************************************************************
@@ -1088,11 +1671,22 @@ MyUser _$MyUserFromJson(Map<String, dynamic> json) => MyUser(
       phoneNo: json['phoneNo'] as String,
       birthDate: json['birthDate'] as String,
       role: json['role'] as int,
-      group: json['group'] as String?,
+      group:
+          (json['group'] as List<dynamic>?)?.map((e) => e as String).toList(),
       subjects: (json['subjects'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
     );
+
+const _$MyUserFieldMap = <String, String>{
+  'firstName': 'firstName',
+  'lastName': 'lastName',
+  'phoneNo': 'phoneNo',
+  'birthDate': 'birthDate',
+  'role': 'role',
+  'group': 'group',
+  'subjects': 'subjects',
+};
 
 Map<String, dynamic> _$MyUserToJson(MyUser instance) => <String, dynamic>{
       'firstName': instance.firstName,

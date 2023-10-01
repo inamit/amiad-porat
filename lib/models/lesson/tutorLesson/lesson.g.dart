@@ -7,7 +7,7 @@ part of 'lesson.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -19,7 +19,9 @@ const _sentinel = _Sentinel();
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class LessonCollectionReference
-    implements LessonQuery, FirestoreCollectionReference<LessonQuerySnapshot> {
+    implements
+        LessonQuery,
+        FirestoreCollectionReference<Lesson, LessonQuerySnapshot> {
   factory LessonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$LessonCollectionReference;
@@ -28,15 +30,18 @@ abstract class LessonCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$LessonFromJson(snapshot.data()!);
+    return _$LessonFromJson({'id': snapshot.id, ...?snapshot.data()});
   }
 
   static Map<String, Object?> toFirestore(
     Lesson value,
     SetOptions? options,
   ) {
-    return _$LessonToJson(value);
+    return {..._$LessonToJson(value)}..remove('id');
   }
+
+  @override
+  CollectionReference<Lesson> get reference;
 
   @override
   LessonDocumentReference doc([String? id]);
@@ -61,7 +66,7 @@ class _$LessonCollectionReference extends _$LessonQuery
 
   _$LessonCollectionReference._(
     CollectionReference<Lesson> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -71,6 +76,10 @@ class _$LessonCollectionReference extends _$LessonQuery
 
   @override
   LessonDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return LessonDocumentReference(
       reference.doc(id),
     );
@@ -93,7 +102,7 @@ class _$LessonCollectionReference extends _$LessonQuery
 }
 
 abstract class LessonDocumentReference
-    extends FirestoreDocumentReference<LessonDocumentSnapshot> {
+    extends FirestoreDocumentReference<Lesson, LessonDocumentSnapshot> {
   factory LessonDocumentReference(DocumentReference<Lesson> reference) =
       _$LessonDocumentReference;
 
@@ -113,18 +122,39 @@ abstract class LessonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
+    DateTime date,
+    FieldValue dateFieldValue,
     bool isOpen,
+    FieldValue isOpenFieldValue,
     String subject,
-    List<Map<String, String>> students,
+    FieldValue subjectFieldValue,
     int maxStudents,
+    FieldValue maxStudentsFieldValue,
   });
 
-  Future<void> set(Lesson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    DateTime date,
+    FieldValue dateFieldValue,
+    bool isOpen,
+    FieldValue isOpenFieldValue,
+    String subject,
+    FieldValue subjectFieldValue,
+    int maxStudents,
+    FieldValue maxStudentsFieldValue,
+  });
 }
 
 class _$LessonDocumentReference
-    extends FirestoreDocumentReference<LessonDocumentSnapshot>
+    extends FirestoreDocumentReference<Lesson, LessonDocumentSnapshot>
     implements LessonDocumentReference {
   _$LessonDocumentReference(this.reference);
 
@@ -138,48 +168,106 @@ class _$LessonDocumentReference
 
   @override
   Stream<LessonDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return LessonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(LessonDocumentSnapshot._);
   }
 
   @override
   Future<LessonDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return LessonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(LessonDocumentSnapshot._);
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<LessonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then(LessonDocumentSnapshot._);
   }
 
   Future<void> update({
+    Object? date = _sentinel,
+    FieldValue? dateFieldValue,
     Object? isOpen = _sentinel,
+    FieldValue? isOpenFieldValue,
     Object? subject = _sentinel,
-    Object? students = _sentinel,
+    FieldValue? subjectFieldValue,
     Object? maxStudents = _sentinel,
+    FieldValue? maxStudentsFieldValue,
   }) async {
+    assert(
+      date == _sentinel || dateFieldValue == null,
+      "Cannot specify both date and dateFieldValue",
+    );
+    assert(
+      isOpen == _sentinel || isOpenFieldValue == null,
+      "Cannot specify both isOpen and isOpenFieldValue",
+    );
+    assert(
+      subject == _sentinel || subjectFieldValue == null,
+      "Cannot specify both subject and subjectFieldValue",
+    );
+    assert(
+      maxStudents == _sentinel || maxStudentsFieldValue == null,
+      "Cannot specify both maxStudents and maxStudentsFieldValue",
+    );
     final json = {
-      if (isOpen != _sentinel) "isOpen": isOpen as bool,
-      if (subject != _sentinel) "subject": subject as String,
-      if (students != _sentinel)
-        "students": students as List<Map<String, String>>,
-      if (maxStudents != _sentinel) "maxStudents": maxStudents as int,
+      if (date != _sentinel) _$LessonFieldMap['date']!: date as DateTime,
+      if (dateFieldValue != null) _$LessonFieldMap['date']!: dateFieldValue,
+      if (isOpen != _sentinel) _$LessonFieldMap['isOpen']!: isOpen as bool,
+      if (isOpenFieldValue != null)
+        _$LessonFieldMap['isOpen']!: isOpenFieldValue,
+      if (subject != _sentinel) _$LessonFieldMap['subject']!: subject as String,
+      if (subjectFieldValue != null)
+        _$LessonFieldMap['subject']!: subjectFieldValue,
+      if (maxStudents != _sentinel)
+        _$LessonFieldMap['maxStudents']!: maxStudents as int,
+      if (maxStudentsFieldValue != null)
+        _$LessonFieldMap['maxStudents']!: maxStudentsFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Lesson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? date = _sentinel,
+    FieldValue? dateFieldValue,
+    Object? isOpen = _sentinel,
+    FieldValue? isOpenFieldValue,
+    Object? subject = _sentinel,
+    FieldValue? subjectFieldValue,
+    Object? maxStudents = _sentinel,
+    FieldValue? maxStudentsFieldValue,
+  }) {
+    assert(
+      date == _sentinel || dateFieldValue == null,
+      "Cannot specify both date and dateFieldValue",
+    );
+    assert(
+      isOpen == _sentinel || isOpenFieldValue == null,
+      "Cannot specify both isOpen and isOpenFieldValue",
+    );
+    assert(
+      subject == _sentinel || subjectFieldValue == null,
+      "Cannot specify both subject and subjectFieldValue",
+    );
+    assert(
+      maxStudents == _sentinel || maxStudentsFieldValue == null,
+      "Cannot specify both maxStudents and maxStudentsFieldValue",
+    );
+    final json = {
+      if (date != _sentinel) _$LessonFieldMap['date']!: date as DateTime,
+      if (dateFieldValue != null) _$LessonFieldMap['date']!: dateFieldValue,
+      if (isOpen != _sentinel) _$LessonFieldMap['isOpen']!: isOpen as bool,
+      if (isOpenFieldValue != null)
+        _$LessonFieldMap['isOpen']!: isOpenFieldValue,
+      if (subject != _sentinel) _$LessonFieldMap['subject']!: subject as String,
+      if (subjectFieldValue != null)
+        _$LessonFieldMap['subject']!: subjectFieldValue,
+      if (maxStudents != _sentinel)
+        _$LessonFieldMap['maxStudents']!: maxStudents as int,
+      if (maxStudentsFieldValue != null)
+        _$LessonFieldMap['maxStudents']!: maxStudentsFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -194,33 +282,101 @@ class _$LessonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class LessonDocumentSnapshot extends FirestoreDocumentSnapshot {
-  LessonDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Lesson> snapshot;
-
-  @override
-  LessonDocumentReference get reference {
-    return LessonDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Lesson? data;
-}
-
-abstract class LessonQuery implements QueryReference<LessonQuerySnapshot> {
+abstract class LessonQuery
+    implements QueryReference<Lesson, LessonQuerySnapshot> {
   @override
   LessonQuery limit(int limit);
 
   @override
   LessonQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  LessonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  LessonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  LessonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  LessonQuery whereDate({
+    DateTime? isEqualTo,
+    DateTime? isNotEqualTo,
+    DateTime? isLessThan,
+    DateTime? isLessThanOrEqualTo,
+    DateTime? isGreaterThan,
+    DateTime? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<DateTime>? whereIn,
+    List<DateTime>? whereNotIn,
+  });
   LessonQuery whereIsOpen({
     bool? isEqualTo,
     bool? isNotEqualTo,
@@ -263,6 +419,30 @@ abstract class LessonQuery implements QueryReference<LessonQuerySnapshot> {
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
+  });
+
+  LessonQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
+  });
+
+  LessonQuery orderByDate({
+    bool descending = false,
+    DateTime startAt,
+    DateTime startAfter,
+    DateTime endAt,
+    DateTime endBefore,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
   });
 
   LessonQuery orderByIsOpen({
@@ -289,18 +469,6 @@ abstract class LessonQuery implements QueryReference<LessonQuerySnapshot> {
     LessonDocumentSnapshot? startAfterDocument,
   });
 
-  LessonQuery orderByStudents({
-    bool descending = false,
-    List<Map<String, String>> startAt,
-    List<Map<String, String>> startAfter,
-    List<Map<String, String>> endAt,
-    List<Map<String, String>> endBefore,
-    LessonDocumentSnapshot? startAtDocument,
-    LessonDocumentSnapshot? endAtDocument,
-    LessonDocumentSnapshot? endBeforeDocument,
-    LessonDocumentSnapshot? startAfterDocument,
-  });
-
   LessonQuery orderByMaxStudents({
     bool descending = false,
     int startAt,
@@ -314,64 +482,208 @@ abstract class LessonQuery implements QueryReference<LessonQuerySnapshot> {
   });
 }
 
-class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
+class _$LessonQuery extends QueryReference<Lesson, LessonQuerySnapshot>
     implements LessonQuery {
   _$LessonQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<Lesson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
   @override
-  final Query<Lesson> reference;
-
-  LessonQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Lesson> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return LessonQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<LessonDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: LessonDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return LessonQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
-  @override
   Stream<LessonQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(LessonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<LessonQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(LessonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   LessonQuery limit(int limit) {
     return _$LessonQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   LessonQuery limitToLast(int limit) {
     return _$LessonQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  LessonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
+  }) {
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  LessonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  LessonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  LessonQuery whereDate({
+    DateTime? isEqualTo,
+    DateTime? isNotEqualTo,
+    DateTime? isLessThan,
+    DateTime? isLessThanOrEqualTo,
+    DateTime? isGreaterThan,
+    DateTime? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<DateTime>? whereIn,
+    List<DateTime>? whereNotIn,
+  }) {
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$LessonFieldMap['date']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -387,8 +699,9 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     List<bool>? whereNotIn,
   }) {
     return _$LessonQuery(
-      reference.where(
-        'isOpen',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$LessonFieldMap['isOpen']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -399,7 +712,7 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -415,8 +728,9 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$LessonQuery(
-      reference.where(
-        'subject',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$LessonFieldMap['subject']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -427,7 +741,7 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -442,8 +756,9 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     List<Map<String, String>>? arrayContainsAny,
   }) {
     return _$LessonQuery(
-      reference.where(
-        'students',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$LessonFieldMap['students']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -453,7 +768,6 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
         isNull: isNull,
         arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
     );
   }
 
@@ -469,8 +783,9 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     List<int>? whereNotIn,
   }) {
     return _$LessonQuery(
-      reference.where(
-        'maxStudents',
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$LessonFieldMap['maxStudents']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -481,7 +796,151 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  LessonQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$LessonQuery(
       _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  LessonQuery orderByDate({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    LessonDocumentSnapshot? startAtDocument,
+    LessonDocumentSnapshot? endAtDocument,
+    LessonDocumentSnapshot? endBeforeDocument,
+    LessonDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$LessonFieldMap['date']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -496,35 +955,65 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     LessonDocumentSnapshot? endBeforeDocument,
     LessonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('isOpen', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$LessonFieldMap['isOpen']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$LessonQuery(query, _collection);
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   LessonQuery orderBySubject({
@@ -538,77 +1027,65 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     LessonDocumentSnapshot? endBeforeDocument,
     LessonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('subject', descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$LessonFieldMap['subject']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$LessonQuery(query, _collection);
-  }
-
-  LessonQuery orderByStudents({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    LessonDocumentSnapshot? startAtDocument,
-    LessonDocumentSnapshot? endAtDocument,
-    LessonDocumentSnapshot? endBeforeDocument,
-    LessonDocumentSnapshot? startAfterDocument,
-  }) {
-    var query = reference.orderBy('students', descending: descending);
-
-    if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
-    }
-    if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
-    }
-    if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
-    }
-    if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
-    }
-
-    if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
-    }
-    if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
-    }
-    if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
-    }
-    if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
-    }
-
-    return _$LessonQuery(query, _collection);
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   LessonQuery orderByMaxStudents({
@@ -622,35 +1099,65 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
     LessonDocumentSnapshot? endBeforeDocument,
     LessonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('maxStudents', descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$LessonFieldMap['maxStudents']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$LessonQuery(query, _collection);
+    return _$LessonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -664,13 +1171,62 @@ class _$LessonQuery extends QueryReference<LessonQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class LessonDocumentSnapshot extends FirestoreDocumentSnapshot<Lesson> {
+  LessonDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Lesson> snapshot;
+
+  @override
+  LessonDocumentReference get reference {
+    return LessonDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Lesson? data;
+}
+
 class LessonQuerySnapshot
-    extends FirestoreQuerySnapshot<LessonQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Lesson, LessonQueryDocumentSnapshot> {
   LessonQuerySnapshot._(
     this.snapshot,
     this.docs,
     this.docChanges,
   );
+
+  factory LessonQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Lesson> snapshot,
+  ) {
+    final docs = snapshot.docs.map(LessonQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        LessonDocumentSnapshot._,
+      );
+    }).toList();
+
+    return LessonQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<LessonDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    LessonDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<LessonDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Lesson> snapshot;
 
@@ -681,20 +1237,20 @@ class LessonQuerySnapshot
   final List<FirestoreDocumentChange<LessonDocumentSnapshot>> docChanges;
 }
 
-class LessonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class LessonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Lesson>
     implements LessonDocumentSnapshot {
-  LessonQueryDocumentSnapshot._(this.snapshot, this.data);
+  LessonQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Lesson> snapshot;
 
   @override
+  final Lesson data;
+
+  @override
   LessonDocumentReference get reference {
     return LessonDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Lesson data;
 }
 
 // **************************************************************************
@@ -702,6 +1258,7 @@ class LessonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 // **************************************************************************
 
 Lesson _$LessonFromJson(Map<String, dynamic> json) => Lesson(
+      id: json['id'] as String,
       date: const TimestampConverter().fromJson(json['date'] as Timestamp),
       isOpen: json['isOpen'] as bool,
       subject: json['subject'] as String,
@@ -711,7 +1268,17 @@ Lesson _$LessonFromJson(Map<String, dynamic> json) => Lesson(
       maxStudents: json['maxStudents'] as int,
     );
 
+const _$LessonFieldMap = <String, String>{
+  'id': 'id',
+  'date': 'date',
+  'isOpen': 'isOpen',
+  'subject': 'subject',
+  'students': 'students',
+  'maxStudents': 'maxStudents',
+};
+
 Map<String, dynamic> _$LessonToJson(Lesson instance) => <String, dynamic>{
+      'id': instance.id,
       'date': const TimestampConverter().toJson(instance.date),
       'isOpen': instance.isOpen,
       'subject': instance.subject,

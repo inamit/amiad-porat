@@ -5,8 +5,17 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'group.g.dart';
 
-@JsonSerializable()
+const firestoreSerializable = JsonSerializable(
+  converters: firestoreJsonConverters,
+  // The following values could alternatively be set inside your `build.yaml`
+  explicitToJson: true,
+  createFieldMap: true,
+);
+
+@firestoreSerializable
 class Group {
+  @Id()
+  final String id;
   final String name;
   final int dayInWeek;
   final String hour;
@@ -17,8 +26,8 @@ class Group {
       hour: int.parse(hour.split(':')[0]),
       minute: int.parse(hour.split(':')[1]));
 
-  Group(
-      {required this.name,
+  Group({required this.id,
+    required this.name,
       required this.dayInWeek,
       required this.hour,
       required this.subject,

@@ -80,8 +80,7 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
 
     if (authService.status == Status.Authenticated) {
       try {
-        List<DateTime> lessonsDates = await DB.getLessonDates(
-            authService.uid, widget.lesson.selectedSubject);
+        List<DateTime> lessonsDates = await DB.getLessonDates(authService.uid, [widget.lesson.selectedSubject]);
 
         widget.lessons
             .where((scheduledLesson) =>
@@ -233,31 +232,34 @@ class _AddLessonBlockState extends State<AddLessonBlock> {
 
                   return hasDate;
                 });
-            setState(() {
-              widget.lesson.selectedDate = picked ?? widget.lesson.selectedDate;
-              widget.lesson.selectedDay = new DateTime(
-                  picked!.year,
-                  picked.month,
-                  picked.day,
-                  widget.lesson.selectedDay != null
-                      ? widget.lesson.selectedDay!.hour
-                      : 0,
-                  widget.lesson.selectedDay != null
-                      ? widget.lesson.selectedDay!.minute
-                      : 0);
 
-              this._dropdownItems = {};
-              this
-                  .dates
-                  .where((date) => date.isSameDate(picked))
-                  .forEach((date) {
-                this._dropdownItems[
-                        "${date.hour}:${date.minute.toString().padLeft(2, '0')}"] =
-                    "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+            if (picked != null) {
+              setState(() {
+                widget.lesson.selectedDate = picked;
+                widget.lesson.selectedDay = new DateTime(
+                    picked.year,
+                    picked.month,
+                    picked.day,
+                    widget.lesson.selectedDay != null
+                        ? widget.lesson.selectedDay!.hour
+                        : 0,
+                    widget.lesson.selectedDay != null
+                        ? widget.lesson.selectedDay!.minute
+                        : 0);
+
+                this._dropdownItems = {};
+                this
+                    .dates
+                    .where((date) => date.isSameDate(picked))
+                    .forEach((date) {
+                  this._dropdownItems[
+                          "${date.hour}:${date.minute.toString().padLeft(2, '0')}"] =
+                      "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+                });
               });
-            });
 
-            widget.validateForm();
+              widget.validateForm();
+            }
           }),
         ),
         Container(

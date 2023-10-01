@@ -1,32 +1,39 @@
-import '../models/subjects.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../models/lesson/tutorLesson/lesson.dart';
 import '../models/lesson/tutorLesson/studentStatus.dart';
+import '../models/subjects.dart';
 
 class LessonDal {
-  static LessonQuery getLessonByUser(String uid) {
+  static Future<List<Lesson>?> getScheduledLessonsFromDateByUser(String uid,
+      DateTime date) async {
     Map<String, String> student = new Map();
     student.putIfAbsent('student', () => uid);
     student.putIfAbsent('status',
         () => StudentStatusHelper().getValue(StudentStatus.SCHEDULED));
 
-    return lessonsRef.whereStudents(arrayContainsAny: [student]);
-  }
+    try {
+      QuerySnapshot<Lesson> lessons = await FirebaseFirestore.instance
+          .collection('lessons')
+          .where('date', isGreaterThan: date)
+          .where('students', arrayContains: student)
+          .withConverter(
+              fromFirestore: LessonCollectionReference.fromFirestore,
+              toFirestore: LessonCollectionReference.toFirestore)
+          .get();
 
-  static Future<Lesson?> getClosestLessonByUser(String uid) async {
-    Map<String, String> student = new Map();
-    student.putIfAbsent('student', () => uid);
-    student.putIfAbsent('status',
-        () => StudentStatusHelper().getValue(StudentStatus.SCHEDULED));
+      return lessons.docs.map((e) => e.data()).toList();
+    } on FirebaseException catch (error) {
+      FirebaseCrashlytics.instance.log(
+          "Tried to fetch all scheduled lessons for student: ${uid} from date: ${DateTime.now()}");
+      FirebaseCrashlytics.instance.recordError(error, error.stackTrace,
+          reason: "Finding the closest lesson");
 
-    LessonQuerySnapshot querySnapshot =
-        await lessonsRef.whereStudents(arrayContainsAny: [student]).get();
+      throw error;
+    }
 
-    List<LessonQueryDocumentSnapshot> lessons = querySnapshot.docs;
-    lessons.sort(((a, b) => a.data.date.compareTo(b.data.date)));
-
-    return lessons.length > 0 ? lessons[0].data : null;
+    return null;
   }
 
   static Future<List<Lesson>> getLessonByUserAndDate(
