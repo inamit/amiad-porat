@@ -3,14 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
-import '../../dal/group.dal.dart';
 import '../../models/lesson/absLesson.dart';
-import '../../models/lesson/groupLesson/groupLesson.dart';
-import '../../models/user/user.dart';
-import '../../providers/auth_provider.dart';
 import '../components/lessonTile.dart';
 
 class AllLessons extends StatefulWidget {
@@ -21,31 +16,6 @@ class AllLessons extends StatefulWidget {
 }
 
 class _AllLessonsState extends State<AllLessons> {
-  late AuthProvider authService;
-  List<AbsLesson> lessons = [];
-
-  @override
-  void initState() {
-    authService = Provider.of<AuthProvider>(context, listen: false);
-    super.initState();
-    getGroupLesson();
-  }
-
-  getGroupLesson() async {
-    MyUser? user = await authService.user;
-
-    if (user != null) {
-      user.group!.forEach((element) async {
-        GroupLesson? groupLesson = await GroupDal.getGroupLesson(element!);
-        if (groupLesson != null) {
-          setState(() {
-            this.lessons.add(groupLesson);
-          });
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +24,10 @@ class _AllLessonsState extends State<AllLessons> {
         ),
         body: StoreConnector(
           converter: (Store<AppState> store) {
-            return [...store.state.lessonsState.lessons.values];
+            return [
+              ...store.state.lessonsState.lessons.values,
+              ...store.state.groupsState.groups.values
+            ];
           },
           builder: (BuildContext context, List<AbsLesson> values) {
             return GroupedListView<AbsLesson, DateTime>(
