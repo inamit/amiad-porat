@@ -1,13 +1,14 @@
-import 'package:amiadporat/dal/lesson.dal.dart';
+import 'package:amiadporat/store/state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:redux/redux.dart';
 
 import '../../dal/group.dal.dart';
 import '../../models/lesson/absLesson.dart';
 import '../../models/lesson/groupLesson/groupLesson.dart';
-import '../../models/lesson/tutorLesson/lesson.dart';
 import '../../models/user/user.dart';
 import '../../providers/auth_provider.dart';
 import '../components/lessonTile.dart';
@@ -27,21 +28,7 @@ class _AllLessonsState extends State<AllLessons> {
   void initState() {
     authService = Provider.of<AuthProvider>(context, listen: false);
     super.initState();
-    getMyLessons();
     getGroupLesson();
-  }
-
-  void getMyLessons() async {
-    if (authService.status == Status.Authenticated) {
-      List<Lesson>? lessons =
-          await LessonDal.getScheduledLessonsFromDateByUser(authService.uid!);
-
-      if (lessons != null) {
-        setState(() {
-          this.lessons = <AbsLesson>[...lessons];
-        });
-      }
-    }
   }
 
   getGroupLesson() async {
@@ -65,23 +52,30 @@ class _AllLessonsState extends State<AllLessons> {
         appBar: AppBar(
           title: Text("כל התגבורים שלי"),
         ),
-        body: GroupedListView<AbsLesson, DateTime>(
-          elements: lessons,
-          groupBy: (AbsLesson lesson) => lesson.date,
-          itemBuilder: (context, lesson) => LessonTile(
-            lesson: lesson,
-            title: lesson.title,
-          ),
-          groupSeparatorBuilder: (seperator) => Padding(
-            padding: const EdgeInsets.only(right: 18.0, top: 20.0),
-            child: Text(
-              "${DateFormat('EEEE', 'he_IL').format(seperator)}, ${seperator.day}/${seperator.month}/${seperator.year}",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+        body: StoreConnector(
+          converter: (Store<AppState> store) {
+            return [...store.state.lessonsState.lessons.values];
+          },
+          builder: (BuildContext context, List<AbsLesson> values) {
+            return GroupedListView<AbsLesson, DateTime>(
+              elements: values,
+              groupBy: (AbsLesson lesson) => lesson.date,
+              itemBuilder: (context, lesson) => LessonTile(
+                lesson: lesson,
+                title: lesson.title,
               ),
-            ),
-          ),
+              groupSeparatorBuilder: (seperator) => Padding(
+                padding: const EdgeInsets.only(right: 18.0, top: 20.0),
+                child: Text(
+                  "${DateFormat('EEEE', 'he_IL').format(seperator)}, ${seperator.day}/${seperator.month}/${seperator.year}",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            );
+          },
         ));
   }
 }
