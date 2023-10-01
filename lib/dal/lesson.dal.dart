@@ -6,15 +6,6 @@ import '../models/lesson/tutorLesson/studentStatus.dart';
 import '../models/subjects.dart';
 
 class LessonDal {
-  static LessonQuery getLessonByUser(String uid) {
-    Map<String, String> student = new Map();
-    student.putIfAbsent('student', () => uid);
-    student.putIfAbsent('status',
-        () => StudentStatusHelper().getValue(StudentStatus.SCHEDULED));
-
-    return lessonsRef.whereStudents(arrayContainsAny: [student]);
-  }
-
   static Future<List<Lesson>?> getScheduledLessonsFromDateByUser(String uid,
       DateTime date) async {
     Map<String, String> student = new Map();
@@ -40,34 +31,6 @@ class LessonDal {
           reason: "Finding the closest lesson");
 
       throw error;
-    }
-
-    return null;
-  }
-
-  static Future<Lesson?> getClosestLessonByUser(String uid) async {
-    Map<String, String> student = new Map();
-    student.putIfAbsent('student', () => uid);
-    student.putIfAbsent('status',
-        () => StudentStatusHelper().getValue(StudentStatus.SCHEDULED));
-
-    try {
-      QuerySnapshot<Lesson> lessons = await FirebaseFirestore.instance
-          .collection('lessons')
-          .where('date', isGreaterThan: DateTime.now())
-          .where('students', arrayContains: student)
-          .limit(1)
-          .withConverter(
-              fromFirestore: LessonCollectionReference.fromFirestore,
-              toFirestore: LessonCollectionReference.toFirestore)
-          .get();
-
-      return lessons.docs.isNotEmpty ? lessons.docs[0].data() : null;
-    } on FirebaseException catch (error) {
-      FirebaseCrashlytics.instance
-          .log("Tried to find the closest lesson for student: ${uid}");
-      FirebaseCrashlytics.instance.recordError(error, error.stackTrace,
-          reason: "Finding the closest lesson");
     }
 
     return null;
