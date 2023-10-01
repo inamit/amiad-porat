@@ -1,10 +1,9 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../models/subjects.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../models/lesson/tutorLesson/lesson.dart';
 import '../models/lesson/tutorLesson/studentStatus.dart';
+import '../models/subjects.dart';
 
 class LessonDal {
   static LessonQuery getLessonByUser(String uid) {
@@ -16,8 +15,8 @@ class LessonDal {
     return lessonsRef.whereStudents(arrayContainsAny: [student]);
   }
 
-  static Future<List<Lesson>?> getScheduledLessonsFromDateByUser(
-      String uid) async {
+  static Future<List<Lesson>?> getScheduledLessonsFromDateByUser(String uid,
+      DateTime date) async {
     Map<String, String> student = new Map();
     student.putIfAbsent('student', () => uid);
     student.putIfAbsent('status',
@@ -26,7 +25,7 @@ class LessonDal {
     try {
       QuerySnapshot<Lesson> lessons = await FirebaseFirestore.instance
           .collection('lessons')
-          .where('date', isGreaterThan: DateTime.now())
+          .where('date', isGreaterThan: date)
           .where('students', arrayContains: student)
           .withConverter(
               fromFirestore: LessonCollectionReference.fromFirestore,

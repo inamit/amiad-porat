@@ -160,9 +160,12 @@ class MyApp extends StatelessWidget {
         () => StudentStatusHelper().getValue(StudentStatus.SCHEDULED));
 
     try {
+      DateTime now = DateTime.now();
       List<Lesson>? lessons =
-          await LessonDal.getScheduledLessonsFromDateByUser(service.uid!);
-      this.store.dispatch(AddManyLessons(lessons: lessons!));
+          await LessonDal.getScheduledLessonsFromDateByUser(service.uid!, now);
+      this
+          .store
+          .dispatch(AddManyLessons(lessons: lessons!, earliestLesson: now));
     } catch (e) {
       this.store.dispatch(ChangeLessonError(error: e.toString()));
     } finally {

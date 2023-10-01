@@ -8,8 +8,9 @@ class AddLesson {
 
 class AddManyLessons {
   final List<Lesson> lessons;
+  final DateTime earliestLesson;
 
-  AddManyLessons({required this.lessons});
+  AddManyLessons({required this.lessons, required this.earliestLesson});
 }
 
 class RemoveLesson {

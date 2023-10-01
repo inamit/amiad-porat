@@ -14,6 +14,11 @@ LessonsState addManyLessons(LessonsState state, AddManyLessons action) {
   action.lessons.forEach((lesson) {
     lessons.putIfAbsent(lesson.id, () => lesson);
   });
+
+  if (action.earliestLesson.isBefore(state.firstLoadedDate!)) {
+    return state.copyWith(
+        lessons: lessons, firstLoadedDate: action.earliestLesson);
+  }
   return state.copyWith(lessons: lessons);
 }
 
